@@ -15,6 +15,7 @@ For Step By Step Guide Follow Video Tutorials:
 - [Part #3 - Automating Notification JS - Flutter Notification & FCM](https://youtu.be/dcrI-okFHfE?list=PLrTDw7ICfHFmv6F9owUC17QGA4J286kq2)
 
 <br><br>
+Creating Firebase Project and use this project here:
 - [How to use this source code](https://youtu.be/zg_WxgXWiZs)
 <br><br>
 Links used in project:
