@@ -7,13 +7,15 @@ It covers flutter notification (foreground, background) and receiving notificati
 
 Just clone the repo and add your firebase 'google-services.json'.<br><br>
 
-For More Info Follow Video Tutorials:
+For Step By Step Guide Follow Video Tutorials:
 
 - [Flutter Notification & FCM - Complete Tutorial](https://youtu.be/0IJsDXs9mr4?list=PLrTDw7ICfHFmv6F9owUC17QGA4J286kq2)
 - [Part #1 - Foreground Notification - Flutter Notification & FCM](https://youtu.be/QWIDjL9HTiE?list=PLrTDw7ICfHFmv6F9owUC17QGA4J286kq2)
 - [Part #2 - Background Notification - Flutter Notification & FCM](https://youtu.be/al_og4iUiqY?list=PLrTDw7ICfHFmv6F9owUC17QGA4J286kq2)
 - [Part #3 - Automating Notification JS - Flutter Notification & FCM](https://youtu.be/dcrI-okFHfE?list=PLrTDw7ICfHFmv6F9owUC17QGA4J286kq2)
 
+<br><br>
+- [How to use this source code](https://youtu.be/zg_WxgXWiZs)
 <br><br>
 Links used in project:
 
