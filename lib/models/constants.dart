@@ -1,0 +1,2 @@
+const String firebaseCloudserverToken = 'AAAAHp74qAY:APA91bFbJds0rERMG_tN6u_j6CVIZwqCi-0CMWBKps7FJPEt7TMqPGkoZgHI9fVC6tuJfGeMcAYY1uDd0FRUyAR_38zYK7v-NqnzeUizDhLOxcLSmQOPJSny1mBU3gISB9j3SCs3j0bL';
+const String youtubeChannelLink = 'https://www.youtube.com/channel/UCLNCErWFQ6LZoaV_JKOq_lQ';
