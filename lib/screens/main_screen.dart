@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:notification/screens/Matches.dart';
 import 'package:notification/screens/profile.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
@@ -15,7 +17,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   PageController _pageController;
   StateModel appState;  
-  int _page = 2;
+  int _page = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
         children: <Widget>[
           // ChatsOld(),
           // Home(),
-          GroupsSearch(uId: userId, uEmailId: email,),
+           DisplayMatches(uId: userId, uEmailId: email,),
           Chats(uId: userId, uEmailId: email,),
           // Notifications(),
           Profile(),
@@ -66,11 +68,12 @@ class _MainScreenState extends State<MainScreen> {
             //   ),
             //   title: Container(height: 0.0),
             // ),
+        
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.group,
+                FontAwesomeIcons.calendarAlt,
               ),
-              title: Container(height: 0.0),
+              title: Text("Schedule"),
             ),
 
            
@@ -78,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
               icon: Icon(
                 Icons.message,
               ),
-              title: Container(height: 0.0),
+              title: Text("Chats"),
             ),
             
 
@@ -91,9 +94,9 @@ class _MainScreenState extends State<MainScreen> {
 
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.person,
+                Icons.settings,
               ),
-              title: Container(height: 0.0),
+              title: Text("Profile"),
             ),
           ],
           onTap: navigationTapped,

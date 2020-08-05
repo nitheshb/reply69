@@ -39,7 +39,7 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
         leading: Stack(
           children: <Widget>[
             CircleAvatar(
-              backgroundImage: AssetImage(
+              backgroundImage: NetworkImage(
                 "${widget.dp}",
               ),
               radius: 25,

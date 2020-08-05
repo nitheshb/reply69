@@ -130,7 +130,7 @@ class _GroupsSearchState extends State<GroupsSearch> {
 
 
   if(followingGroups0.length <9){
-      Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion([ds.documentID])});
+      Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion([ds['chatId']])});
       return;
   }else if (followingGroups1.length <9){
       Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups1' : FieldValue.arrayUnion([ds.documentID]) });

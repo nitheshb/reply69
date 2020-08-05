@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:notification/pages/imageFullView.dart';
 
@@ -63,6 +64,7 @@ class _ChatBubbleState extends State<ChatBubble> {
     showDialog(
         context: context, builder: (BuildContext context) => profileDialog);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +195,7 @@ class _ChatBubbleState extends State<ChatBubble> {
       width: 220.0,
        decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(widget.message),
+                      image: CachedNetworkImageProvider(widget.message),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(20.0),

@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +17,7 @@ import 'package:image_editor_pro/modules/colors_picker.dart';
 import 'package:image_editor_pro/modules/text.dart';
 import 'package:image_editor_pro/modules/textview.dart';
 import 'package:notification/ImageEditorPack/GroupIconEmoji.dart';
+import 'package:notification/widgets/loading.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:signature/signature.dart';
@@ -34,8 +38,8 @@ SignatureController _controller =
 class MyImageEditorPro extends StatefulWidget {
   final Color appBarColor;
   final Color bottomBarColor;
-  final String groupLogo;
-  MyImageEditorPro({this.appBarColor, this.bottomBarColor, this.groupLogo});
+  final String groupLogo, userId, chatId;
+  MyImageEditorPro({this.appBarColor, this.bottomBarColor, this.groupLogo, this.userId, this.chatId});
 
   @override
   _MyImageEditorProState createState() => _MyImageEditorProState();
@@ -64,6 +68,7 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
   List<Offset> _points = <Offset>[];
   List type = [];
   List aligment = [];
+  bool _loadingVisible = false;
 
   final GlobalKey container = GlobalKey();
   final GlobalKey globalKey = new GlobalKey();
@@ -104,74 +109,21 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
     super.initState();
   }
 
+   Future<void> _changeLoadingVisible() async {
+    setState(() {
+      _loadingVisible = !_loadingVisible;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey,
         key: scaf,
         appBar: new AppBar(
+          backgroundColor: Colors.blue,
           actions: <Widget>[
-            new IconButton(
-                icon: Icon(FontAwesomeIcons.boxes),
-                onPressed: () {
-                  showCupertinoDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: new Text("Select Height Width"),
-                          actions: <Widget>[
-                            FlatButton(
-                                onPressed: () {
-                                  setState(() {
-                                    height = int.parse(heightcontroler.text);
-                                    width = int.parse(widthcontroler.text);
-                                  });
-                                  heightcontroler.clear();
-                                  widthcontroler.clear();
-                                  Navigator.pop(context);
-                                },
-                                child: new Text("Done"))
-                          ],
-                          content: new SingleChildScrollView(
-                            child: new Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                new Text("Define Height"),
-                                new SizedBox(
-                                  height: 10,
-                                ),
-                                TextField(
-                                    controller: heightcontroler,
-                                    keyboardType:
-                                        TextInputType.numberWithOptions(),
-                                    decoration: InputDecoration(
-                                        hintText: 'Height',
-                                        contentPadding:
-                                            EdgeInsets.only(left: 10),
-                                        border: OutlineInputBorder())),
-                                new SizedBox(
-                                  height: 10,
-                                ),
-                                new Text("Define Width"),
-                                new SizedBox(
-                                  height: 10,
-                                ),
-                                TextField(
-                                    controller: widthcontroler,
-                                    keyboardType:
-                                        TextInputType.numberWithOptions(),
-                                    decoration: InputDecoration(
-                                        hintText: 'Width',
-                                        contentPadding:
-                                            EdgeInsets.only(left: 10),
-                                        border: OutlineInputBorder())),
-                              ],
-                            ),
-                          ),
-                        );
-                      });
-                }),
+    
             new IconButton(
                 icon: Icon(Icons.clear),
                 onPressed: () {
@@ -180,13 +132,31 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                 }),
             new IconButton(
                 icon: Icon(Icons.camera),
-                onPressed: () {
-                  bottomsheets();
+                onPressed: () async{
+                  var image = await ImagePicker.pickImage(
+                                        source: ImageSource.gallery);
+                                    var decodedImage =
+                                        await decodeImageFromList(
+                                            image.readAsBytesSync());
+
+                                    setState(() {
+                                      height = decodedImage.height;
+                                      width = decodedImage.width;
+                                      _image = image;
+                                    });
+                                    setState(() => _controller.clear());
+                  // bottomsheets();
                 }),
             new FlatButton(
                 child: new Text("Done"),
                 textColor: Colors.white,
-                onPressed: () {
+                onPressed: ()async {
+                  if(_image == null){
+                    print('i was inside');
+                    _showBasicsFlash(context:  context, duration: Duration(seconds: 2), messageText : 'Please upload any pic to proceed ...!');
+                    return;
+                  }
+                  await _changeLoadingVisible();
                   File _imageFile;
                   _imageFile = null;
                   screenshotController
@@ -202,16 +172,41 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                         '/' +
                         DateTime.now().millisecondsSinceEpoch.toString() +
                         '.png');
+
+
+
+// save the pic to db
+
+     DateTime now = new DateTime.now();
+      
+    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('${widget.chatId}${now.millisecondsSinceEpoch}.jpg');
+    final StorageUploadTask uploadTask = await firebaseStorageRef.putFile(image);
+     var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    String url = dowurl.toString();
+    print('uploaded url is $url');
+        try {
+                        var body ={ "imageUrl":url, "date": now,"author": widget.userId, "type": "Image" };
+                      await  Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'messages' : FieldValue.arrayUnion([body])});
+                     image = null;
+                      } catch (e) {
+                        print('error was catched ${e}');
+                      }
+         // _image = null;
+          setState(() {});
+
                     Navigator.pop(context, image);
                   }).catchError((onError) {
+                    _changeLoadingVisible();
                     print(onError);
                   });
                 }),
           ],
-          backgroundColor: widget.appBarColor,
         ),
         body: Center(
-          child: Screenshot(
+          child: 
+          LoadingScreen(
+         inAsyncCall: _loadingVisible,
+         child: Screenshot(
             controller: screenshotController,
             child: Container(
               margin: EdgeInsets.all(20),
@@ -309,6 +304,7 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
             ),
           ),
         ),
+        ),
         bottomNavigationBar: openbottomsheet
             ? new Container()
             : Container(
@@ -394,127 +390,56 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                     BottomBarContainer(
                       icons: FontAwesomeIcons.smile,
                       ontap: () {
-                        Future getemojis = showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Emojies();
-                            });
-                        getemojis.then((value) {
-                          if (value != null) {
-                            type.add(1);
+type.add(1);
                             fontsize.add(20);
                             offsets.add(Offset.zero);
-                            multiwidget.add(value);
+                            multiwidget.add("😂");
                             howmuchwidgetis++;
-                          }
-                        });
+
+                        // Future getemojis = showModalBottomSheet(
+                        //     context: context,
+                        //     builder: (BuildContext context) {
+                        //       return Emojies();
+                        //     });
+                        // getemojis.then((value) {
+                        //   print('value is check  ${value}');
+                        //   if (value != null) {
+                        //     type.add(1);
+                        //     fontsize.add(20);
+                        //     offsets.add(Offset.zero);
+                        //     multiwidget.add("😂");
+                        //     howmuchwidgetis++;
+                        //   }
+                        // });
                       },
-                      title: 'Emoji',
+                      title: 'Logo',
                     ),
                   ],
                 ),
               ));
   }
-
-  void bottomsheets() {
-    openbottomsheet = true;
-    setState(() {});
-    Future<void> future = showModalBottomSheet<void>(
+ void _showBasicsFlash({
+    Duration duration,
+    flashStyle = FlashStyle.floating,BuildContext context, String messageText,
+  }) {
+    showFlash(
       context: context,
-      builder: (BuildContext context) {
-        return new Container(
-          decoration: BoxDecoration(color: Colors.white, boxShadow: [
-            BoxShadow(blurRadius: 10.9, color: Colors.grey[400])
-          ]),
-          height: 170,
-          child: new Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: new Text("Select Image Options"),
-              ),
-              Divider(
-                height: 1,
-              ),
-              new Container(
-                padding: EdgeInsets.all(20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      child: InkWell(
-                        onTap: () {},
-                        child: Container(
-                          child: Column(
-                            children: <Widget>[
-                              IconButton(
-                                  icon: Icon(Icons.photo_library),
-                                  onPressed: () async {
-                                    var image = await ImagePicker.pickImage(
-                                        source: ImageSource.gallery);
-                                    var decodedImage =
-                                        await decodeImageFromList(
-                                            image.readAsBytesSync());
-
-                                    setState(() {
-                                      height = decodedImage.height;
-                                      width = decodedImage.width;
-                                      _image = image;
-                                    });
-                                    setState(() => _controller.clear());
-                                    Navigator.pop(context);
-                                  }),
-                              SizedBox(width: 10),
-                              Text("Open Gallery")
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 24),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            IconButton(
-                                icon: Icon(Icons.camera_alt),
-                                onPressed: () async {
-                                  var image = await ImagePicker.pickImage(
-                                      source: ImageSource.camera);
-                                  var decodedImage = await decodeImageFromList(
-                                      image.readAsBytesSync());
-
-                                  setState(() {
-                                    height = decodedImage.height;
-                                    width = decodedImage.width;
-                                    _image = image;
-                                  });
-                                  setState(() => _controller.clear());
-                                  Navigator.pop(context);
-                                }),
-                            SizedBox(width: 10),
-                            Text("Open Camera")
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
+      duration: duration,
+      builder: (context, controller) {
+        return Flash(
+          controller: controller,
+          style: flashStyle,
+          boxShadows: kElevationToShadow[4],
+          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
+          child: FlashBar(
+            message: Text('$messageText'),
           ),
         );
       },
     );
-    future.then((void value) => _closeModal(value));
   }
 
-  void _closeModal(void value) {
-    openbottomsheet = false;
-    setState(() {});
-  }
+ 
 }
 
 class Signat extends StatefulWidget {

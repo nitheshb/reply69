@@ -1,4 +1,5 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,6 +23,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _email = new TextEditingController();
   final TextEditingController _password = new TextEditingController();
   final TextEditingController _referralCode = new TextEditingController();
+  final TextEditingController _userName = new TextEditingController();
 
     AutoCompleteTextField searchTextField;
   GlobalKey<AutoCompleteTextFieldState<User1>> key = new GlobalKey();
@@ -30,6 +32,7 @@ class _SignupPageState extends State<SignupPage> {
 
   bool _autoValidate = false;
   bool _loadingVisible = false;
+  String groupNameAlreadyExists;
   @override
   void initState() {
     super.initState();
@@ -83,7 +86,8 @@ class _SignupPageState extends State<SignupPage> {
               Column(
                 children: <Widget>[
                   FadeAnimation(1.2, makeEmailInput(label: "Email")),
-                  FadeAnimation(1.3, makePasswordInput(label: "Password", obscureText: true)),
+                  FadeAnimation(1.3, makePasswordInput(label: "Choose Password", obscureText: true)),
+                  FadeAnimation(1.2, makeUserNameInput(label: "Pick User Name")),
                   // FadeAnimation(1.4, makeReferralCodeInput(label: "Confirm Password", obscureText: true)),
                 ],
               ),
@@ -101,9 +105,30 @@ class _SignupPageState extends State<SignupPage> {
                 child: MaterialButton(
                   minWidth: double.infinity,
                   height: 60,
-                  onPressed: () {
+                  onPressed: () async{
+                                     Pattern pattern = r'^.{1,}$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(_userName.text))
+             setState(() {      
+                this.groupNameAlreadyExists = 'Please enter a name.';
+              }); 
+    else{
+                        var UserNameData =  await Firestore.instance.collection('IAM').where("firstName", isEqualTo: _userName.text).getDocuments(); 
+                        setState(() {      
+                this.groupNameAlreadyExists = UserNameData.documents.length> 0 ?'User Name Already Taken' : null; 
+              });
+                   if (_formKey.currentState.validate()) { 
+                     print('inside successful validation');
+                     try{
+    
                                                      _emailSignUp(
-                                 firstName: _firstName.text, phoneNumber: _phoneNumber.text,email: _email.text, password: _password.text, referralCode: _referralCode.text, region:"searchTextField.textField.controller.text", context: context);
+                                 firstName: _userName.text, phoneNumber: _phoneNumber.text,email: _email.text, password: _password.text, referralCode: _referralCode.text, region:"searchTextField.textField.controller.text", context: context);
+                   }catch (e) {
+        _changeLoadingVisible();
+        print("Sign In Error: $e");
+                   }
+                  };
+                  };
                   },
                   color: Colors.greenAccent,
                   elevation: 0,
@@ -164,6 +189,7 @@ class _SignupPageState extends State<SignupPage> {
       ],
     );
   }
+
     Widget makePasswordInput({label, obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,6 +205,39 @@ class _SignupPageState extends State<SignupPage> {
                                     obscureText: true,
                                     controller: _password,
                                     validator: Validator.validatePassword,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey[400])
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey[400])
+            ),
+          ),
+        ),
+        SizedBox(height: 30,),
+      ],
+    );
+  }
+    Widget makeUserNameInput({label, obscureText = false}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(label, style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+          color: Colors.black87
+        ),),
+        SizedBox(height: 5,),
+        TextFormField(
+          keyboardType: TextInputType.text,
+          autofocus: false,
+          controller: _userName,
+          // validator: Validator.validateEmail,
+          validator:(value){
+            return groupNameAlreadyExists;
+          },
+          obscureText: obscureText,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(

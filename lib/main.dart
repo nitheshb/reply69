@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:notification/pages/forget_password.dart';
 import 'package:notification/pages/sign_in.dart';
 import 'package:notification/pages/sign_up.dart';
@@ -58,6 +59,8 @@ const APP_STORE_URL =
 const PLAY_STORE_URL =
 'https://firebasestorage.googleapis.com/v0/b/teamplayers-f3b25.appspot.com/o/build%2Fapp-release.apk?alt=media&token=6af161a4-2467-4b1f-8161-34e6a412ad76';
 
+
+
 class MyApp extends StatefulWidget {
   MyApp() {
     //Navigation.initPaths();
@@ -66,17 +69,88 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
+Future<dynamic> myBackgroundHandler(Map<String, dynamic> message){
+  return _MyAppState()._showNotification(message);
+}
 
 class _MyAppState extends State<MyApp> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
+
+     Future _showNotification(Map<String, dynamic> message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      'channel id',
+      'channel name',
+      'channel desc',
+      importance: Importance.Max,
+      priority: Priority.High,
+    );
+ 
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, null);
+    await flutterLocalNotificationsPlugin.show(
+        0,
+      'new message arived',
+      'i want ${message['data']['title']} for ${message['data']['price']}',
+      platformChannelSpecifics,
+      payload: 'Default_Sound',
+    );
+  }
+ 
+
+  getTokenz() async {
+    String token = await _firebaseMessaging.getToken();
+    print('token is : ${token}');
+  }
+
+  Future selectNotification(String payload)async{
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+
+
 @override
   void initState() {
     // themeBloc.changeTheme(Themes.gameOrganizer);
+
+    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+
+var initializationSettings = InitializationSettings(
+    initializationSettingsAndroid, null);
+ flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    onSelectNotification: selectNotification);
+    super.initState();
+
+    _firebaseMessaging.configure(
+      onBackgroundMessage: myBackgroundHandler,
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage4: $message");
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text( 'new message arived'),
+                content: Text('i want ${message['data']['title']} for ${message['data']['price']}'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Ok'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+      },
+    );
+
+    getTokenz();
+
+
       try {
     versionCheck(context);
-        NotificationController.instance.takeFCMTokenWhenAppLaunch();
-    NotificationController.instance.initLocalNotification();
+       // NotificationController.instance.takeFCMTokenWhenAppLaunch();
+   // NotificationController.instance.initLocalNotification();
      String token =  _firebaseMessaging.getToken() as String;
     print('token is : ${token}');
       } catch (e) {
@@ -84,6 +158,8 @@ class _MyAppState extends State<MyApp> {
       }
        super.initState();
       }
+
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
       @override
       Widget build(BuildContext context) {

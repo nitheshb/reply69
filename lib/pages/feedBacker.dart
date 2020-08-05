@@ -9,10 +9,15 @@ import 'package:notification/widgets/linearPercentIndicator.dart';
 import 'package:notification/widgets/post_item.dart';
 
 class PowerFeedbacker extends StatefulWidget {
-   PowerFeedbacker({Key key, this.groupId, this.groupTitle, this.groupCategories, this.votingBalletHeapData}) : super(key: key);
+   PowerFeedbacker({Key key, this.groupId, 
+   this.groupCategoriesArray,
+   this.groupTitle, 
+   this.groupCategories, 
+   this.votingBalletHeapData}) : super(key: key);
       final String groupId, groupTitle;
-      final List groupCategories;
+      final List groupCategories, groupCategoriesArray;
       List votingBalletHeapData;
+     
   @override
   _PowerFeedbackerState createState() => _PowerFeedbackerState();
 }
@@ -21,8 +26,14 @@ class _PowerFeedbackerState extends State<PowerFeedbacker> {
   String selectedValue;
    StateModel appState; 
    List snapShot; 
+
+  
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   
   
+  }
   votingBallet(matchId, groupId, voterId, votedFor,category, )async{
 // this creates feedback entry for newGroup or a group which does not have entry yet in DB
         print('values of real ${widget.votingBalletHeapData}');
@@ -127,7 +138,7 @@ if(reqGroupA.length == 0){
 
       body: 
          StreamBuilder(
-        stream:  Firestore.instance.collection('feedbackMatches').where("category", arrayContainsAny: widget.groupCategories).snapshots(),
+        stream:  Firestore.instance.collection('Matches').where("category", arrayContainsAny: widget.groupCategoriesArray).where("status", isEqualTo: "FbStart").snapshots(),
         builder: (context,snapshot){
                      if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');
@@ -143,9 +154,9 @@ if(reqGroupA.length == 0){
           List reqGroupA =  widget.votingBalletHeapData.where((i) => i["gameId"] == ds['id']).toList();
           Map post = posts[index];
           if(reqGroupA.length == 0){
-return QuestionCard(true,{'TotalVotes': 1,'Loss': 0, 'Even': 0, 'Win': 1},ds['team1Url'],ds['team1Name'], ds['team2Url'], ds['team2Name'], ds['category'], ds['id'], widget.groupId, userId);
+return QuestionCard(true,{'TotalVotes': 1,'Loss': 0, 'Even': 0, 'Win': 1},ds['matchDetails']['team_1_pic'],ds['matchDetails']['team-1'], ds['matchDetails']['team_2_pic'], ds['matchDetails']['team-2'], ds['category'][0], ds['matchDetails']['unique_id'], widget.groupId, userId, ds['matchDetails']['type'],);
           }
-           return QuestionCard(!reqGroupA[0]['VotedBy'].contains(userId),reqGroupA[0],ds['team1Url'],ds['team1Name'], ds['team2Url'], ds['team2Name'], ds['category'], ds['id'], widget.groupId, userId);
+           return QuestionCard(!reqGroupA[0]['VotedBy'].contains(userId),reqGroupA[0],ds['matchDetails']['team_1_pic'],ds['matchDetails']['team-1'], ds['matchDetails']['team_2_pic'], ds['matchDetails']['team-2'], ds['category'][0], ds['matchDetails']['unique_id'], widget.groupId, userId, ds['matchDetails']['type'],);
           return PostItem(
             img: post['img'],
             name: post['name'],
@@ -155,7 +166,7 @@ return QuestionCard(true,{'TotalVotes': 1,'Loss': 0, 'Even': 0, 'Win': 1},ds['te
         },
       );
           }
-          return Text('Loading ${widget.groupCategories}');
+          return Text('Loading ${widget.groupCategoriesArray}');
         }
     )
           
@@ -225,7 +236,7 @@ return QuestionCard(true,{'TotalVotes': 1,'Loss': 0, 'Even': 0, 'Win': 1},ds['te
             ),
           );
   }
-  Widget QuestionCard(visiableQuestion,votesResultsBallets,team1Url,team1Name, team2Url, team2Name, category, matchId , groupId,voterId,){
+  Widget QuestionCard(visiableQuestion,votesResultsBallets,team1Url,team1Name, team2Url, team2Name, category, matchId , groupId,voterId,title){
     return Card(
                   elevation: 8,
                   shape: RoundedRectangleBorder(
@@ -263,8 +274,13 @@ return QuestionCard(true,{'TotalVotes': 1,'Loss': 0, 'Even': 0, 'Win': 1},ds['te
                           //       team2Url
                           // )
                           //       ),
-                                  Text('${category}'),
-                                  Text('${matchId}'),
+                                  Column(
+                                    children: <Widget>[
+                                      Text('${category}'),
+                                      Text('${title}'),
+                                    ],
+                                  ),
+                                  
                               ],
                             ),
                               Row(

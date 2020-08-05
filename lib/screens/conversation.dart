@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/ImageEditorPack/image_editorHome.dart';
+import 'package:notification/bid365_app_theme.dart';
 import 'package:notification/controllers/notificationController.dart';
 import 'package:notification/pages/feedBacker.dart';
 import 'package:notification/pages/imageEditor.dart';
@@ -21,7 +23,7 @@ import 'joinPremium.dart';
 import 'joinRequestApproval.dart';
 
 class Conversation extends StatefulWidget {
-  Conversation({Key key, this.groupFullDetails,this.chatId,this.groupSportCategory,this.userId,this.groupLogo,this.groupTitle,this.senderMailId, this.chatType, this.waitingGroups, this.approvedGroups,this.followers, this.chatOwnerId, this.approvedGroupsJson, this.AllDeviceTokens, this.FDeviceTokens});
+  Conversation({Key key,this.groupFullDetails,this.chatId,this.groupSportCategory,this.userId,this.groupLogo,this.groupTitle,this.senderMailId, this.chatType, this.waitingGroups, this.approvedGroups,this.followers, this.chatOwnerId, this.approvedGroupsJson, this.AllDeviceTokens, this.FDeviceTokens});
   final String chatId, userId,chatType, chatOwnerId, senderMailId, groupTitle, groupLogo ;
   List waitingGroups, approvedGroups, AllDeviceTokens,FDeviceTokens, groupSportCategory, followers;
   List approvedGroupsJson;
@@ -39,6 +41,8 @@ class _ConversationState extends State<Conversation> {
    int selectedRadio;
    bool msgDeliveryMode = true;
    List votingBalletHeapData;
+   List groupCategoriesArray = [];
+
 
    // Changes the selected value on 'onChanged' click on each radio button
 setSelectedRadio(int val) {
@@ -73,6 +77,19 @@ scrollToBottomFun(){
     }
   }
 
+void initState() {
+    // TODO: implement initState
+    super.initState();
+    print('what was here ${widget.groupSportCategory}');
+  widget.groupSportCategory.forEach((data){
+    print('values are ${data}');
+        groupCategoriesArray.add(data['categoryName']);
+    });
+    
+  
+  }
+ 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,8 +109,8 @@ scrollToBottomFun(){
               Padding(
                 padding: EdgeInsets.only(left: 0.0, right: 10.0),
                 child: CircleAvatar(
-                  backgroundImage: AssetImage(
-                    "assets/cm${random.nextInt(10)}.jpeg",
+                  backgroundImage: NetworkImage(
+                    "${widget.groupLogo}",
                   ),
                 ),
               ),
@@ -149,7 +166,12 @@ if (snapShot == null || !snapShot.exists) {
              await   Navigator.push(
                                   context,
                                  new  MaterialPageRoute(
-                                      builder: (BuildContext context) => PowerFeedbacker(groupCategories: widget.groupSportCategory ,groupId: widget.chatId,groupTitle: widget.groupTitle, votingBalletHeapData: votingBalletHeapData ?? []),
+                                      builder: (BuildContext context) => PowerFeedbacker(
+                                      groupCategories: widget.groupSportCategory ,
+                                      groupCategoriesArray : groupCategoriesArray,
+                                      groupId: widget.chatId,
+                                      groupTitle: widget.groupTitle, 
+                                      votingBalletHeapData: votingBalletHeapData ?? []),
                                       ),
                                );
             },
@@ -241,6 +263,10 @@ if (snapShot == null || !snapShot.exists) {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: <Widget>[
+            Container(
+              height: 10,
+            ),
+
             Flexible(
               child: StreamBuilder(
         stream:  Firestore.instance.collection('groups').document(widget.chatId).snapshots(),
@@ -284,11 +310,120 @@ if (snapShot == null || !snapShot.exists) {
                 },
               );
           }
-          return Text('Empty Chat'); 
+            return 
+                     Align(
+                       alignment: Alignment.center,
+                     child: Column(
+                       children: <Widget>[
+                         SizedBox(height: MediaQuery.of(context).size.height/4.5),
+                         
+                         new Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: Image(image: AssetImage('assets/emptyMsgs.png'),),
+            
+            ),
+
+            new Text('Empty Chat', style: TextStyle(color: Colors.black, fontSize: 20),),
+                         
+                       ],
+                     )
+                     );
           }
               )
             ),
+            Visibility(
+              visible:!widget.waitingGroups.contains(widget.chatId) && !widget.approvedGroups.contains(widget.chatId),
+              child:
+ Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+            padding: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 8),
+            child: Container(
+              height: 48,
+              decoration: new BoxDecoration(
+                color: Colors.blue,
+                borderRadius: const BorderRadius.all(
+                                          Radius.circular(16.0),
+                                        ),
+                 boxShadow: <BoxShadow>[
+                                          BoxShadow(
+                                              color: Bid365AppTheme
+                                                  .nearlyBlue
+                                                  .withOpacity(0.5),
+                                              offset: const Offset(1.1, 1.1),
+                                              blurRadius: 10.0),
+                                        ],
+              ),
+              child: InkWell(
+                onTap: () {
+                   Navigator.push(
+                                  context,
+                                 new  MaterialPageRoute(
+                                      builder: (BuildContext context) => JoinPremiumGroup(chatId: widget.chatId,userId: widget.userId,lock: false,
+                                      title: widget.groupTitle,feeArray: widget.groupFullDetails['FeeDetails'] ?? [], 
+                                      paymentScreenshotNo: widget.groupFullDetails['paymentNo'] ?? "", 
+                                      avatarUrl: widget.groupFullDetails['logo']?? "", 
+                                      // categories:widget.groupFullDetails['category'] ?? [],
+                                      followers: widget.groupFullDetails['followers'] ?? [], 
+                                      groupOwnerName : widget.groupFullDetails['groupOwnerName']?? '',
+                                      seasonRating: widget.groupFullDetails['seasonRating'] ?? 'NA',
+                                       thisWeekRating: widget.groupFullDetails['thisWeekRating'] ?? 'NA',
+                                      lastWeekRating: widget.groupFullDetails['lastWeekRating'] ?? 'NA'
+                                      ),
+                                      ),
+                               );
+                // if(lock){
+                //   // showInSnackBar('Doc already uploaded');
+                //     Scaffold.of(context).showSnackBar(SnackBar(content: Text("Doc already uploaded"),));
+                // }else{
+                //   getImage();
+                // }
 
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        SizedBox(height: 6),
+                        Align(
+                          alignment: Alignment.topCenter,
+                        child:Icon(
+                          FontAwesomeIcons.crown,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 13),
+                    Align(
+                      alignment: Alignment.center,
+                    child:
+                    Column(
+                      children: <Widget>[
+                        SizedBox(height: 13),
+                        Text(
+                          !widget.waitingGroups.contains(widget.chatId) ? "Join Premium Rs ${widget.groupFullDetails['FeeDetails'][0]['fee']}/-" : "Under Review",
+                          style: TextStyle(
+                            color:
+                                Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w600
+                          ),
+                        ),
+                      ],
+                    ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+            ),
+            ),
             Visibility(
                visible: widget.chatOwnerId == widget.userId,
               child: Align(
@@ -318,6 +453,8 @@ if (snapShot == null || !snapShot.exists) {
         appBarColor: Colors.blue,
         bottomBarColor: Colors.blue,
         groupLogo: widget.groupLogo,
+        chatId: widget.chatId,
+        userId: widget.userId
       );
     })).then((geteditimage) {
       if (geteditimage != null) {
@@ -363,7 +500,26 @@ if (snapShot == null || !snapShot.exists) {
                             maxLines: null,
                           ),
                         ),
-
+                        Visibility(
+                          visible: msgDeliveryMode,
+                          child:
+ IconButton(
+                          icon: Icon(
+                            FontAwesomeIcons.crown,
+                            color: Theme.of(context).accentColor,
+                          ),
+ ),
+                        ),
+                         Visibility(
+                          visible: !msgDeliveryMode,
+                          child:
+  IconButton(
+                          icon: Icon(
+                            FontAwesomeIcons.users,
+                            color: Theme.of(context).accentColor,
+                          ),
+ ),
+                         ),
                         IconButton(
                           icon: Icon(
                             Icons.send,
@@ -402,27 +558,11 @@ if (snapShot == null || !snapShot.exists) {
         ),
       ),
       
-      floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-     floatingActionButton: Row(
+
+     floatingActionButton: 
        
-       children: <Widget>[
-         Visibility(
-           visible: !widget.waitingGroups.contains(widget.chatId) && !widget.approvedGroups.contains(widget.chatId) ,
-           child:
-         FloatingActionButton.extended(
-  onPressed: () {
-          Navigator.push(
-                                  context,
-                                 new  MaterialPageRoute(
-                                      builder: (BuildContext context) => JoinPremiumGroup(chatId: widget.chatId,userId: widget.userId,lock: false,title: widget.groupTitle,feeArray: widget.groupFullDetails['FeeDetails'] ?? [], paymentScreenshotNo: widget.groupFullDetails['paymentNo'] ?? "", avatarUrl: widget.groupFullDetails['logo']?? "" ),
-                                      ),
-                               );
-  },
-  icon: Icon(Icons.save),
-  label: Text(!widget.waitingGroups.contains(widget.chatId) ? "Subscribe Rs 100/-" : "Under Review"),
-),
-         ),
+
+   
      Visibility(
       visible: widget.approvedGroups.contains(widget.chatId), 
       child:
@@ -442,19 +582,24 @@ if (snapShot == null || !snapShot.exists) {
   // List reqGroupA =  data.where((i) => i["gameId"] == matchId).toList();
   // List homeGroup =  data.where((i) => i["gameId"] != matchId).toList();
 }
+
+
               // powerPredictor
              await   Navigator.push(
                                   context,
                                  new  MaterialPageRoute(
-                                      builder: (BuildContext context) => PowerFeedbacker(groupCategories: widget.groupSportCategory ,groupId: widget.chatId,groupTitle: widget.groupTitle, votingBalletHeapData: votingBalletHeapData ?? []),
+                                      builder: (BuildContext context) => PowerFeedbacker(
+                                      groupCategories: widget.groupSportCategory ,groupCategoriesArray : groupCategoriesArray,
+                                      groupId: widget.chatId,groupTitle: widget.groupTitle, 
+                                      votingBalletHeapData: votingBalletHeapData ?? []),
                                       ),
                                );
   },
   icon: Icon(Icons.save),
   label: Text("Feedback"),
 ),
-     ),
-       ],
+     
+       
      ),
 
     );

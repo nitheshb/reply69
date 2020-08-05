@@ -4,7 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:notification/controllers/notificationController.dart';
+import 'package:notification/pages/AlgoliaFullTextSearch.dart';
 import 'package:notification/pages/chatWindow.dart';
+import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/conversation.dart';
 import 'package:notification/screens/createGroup.dart';
 import 'package:notification/util/data.dart';
@@ -31,7 +34,7 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
   StateModel appState;  
   List waitingGroups = [], approvedGroups =[], followingGroups =[];
   List chatIdGroups = ['nQ4T04slkEdANneRb4k6','nQ4T04slkEdANneRb4k61','nQ4T04slkEdANneRb4k62','nQ4T04slkEdANneRb4k63','nQ4T04slkEdANneRb4k64','nQ4T04slkEdANneRb4k65','nQ4T04slkEdANneRb4k66','nQ4T04slkEdANneRb4k67','nQ4T04slkEdANneRb4k68','btl5r2JUwn5imaTToPKq'];
-
+  String _searchTerm;
   @override
   void initState() {
     super.initState();
@@ -74,8 +77,53 @@ getUserData(userId)async {
             //  print('chat data is ${chatDataIs}');
   }
 
+  List<Widget> _buildSelectedOptions(dynamic values) {
+          List<Widget> selectedOptions = [];
+
+          if (values != null) {
+            values.forEach((item) {
+              print('item vaue is ${item}');
+              selectedOptions.add(
+                Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(20),
+                                        ),
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6,),
+                                      child: Center(
+                                        child: Text(
+                                          "${item['categoryName'] ?? item }",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w700
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+              );
+            });
+          }
+
+          return selectedOptions;
+        }
+
+  searchGroupsQuery(query){
+    if(query != null){
+var check = Firestore.instance.collection('groups').where("caseSearch", arrayContains: query).snapshots();
+return check;
+    }else{
+      return;
+    }
+  }
+
  Future<List<DocumentSnapshot>> getFollowedGroups(userId) async {
-  // print('aread details are ${areaId}');
+
+   var query = await Firestore.instance.collection('groups').where("caseSearch", arrayContains: 'dre').getDocuments();
+   print('aread details are1 ${query.documents}');
   // Stream stream1 = manager.contactListNow;
   // getLengthMatches(areaId);
   var response = await  Firestore.instance.collection('IAM').document(userId).get();
@@ -125,20 +173,8 @@ print("--->check1");
     print('check ${followingGroups}');
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          decoration: InputDecoration.collapsed(
-            hintText: 'Search',
-          ),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.filter_list,
-            ),
-            onPressed: (){},
-          ),
-        ],
-        bottom: TabBar(
+        
+        title: TabBar(
           controller: _tabController,
           indicatorColor: Theme.of(context).accentColor,
           labelColor: Theme.of(context).accentColor,
@@ -199,7 +235,7 @@ print("--->check1");
                       );
                    },
                 child: ChatMenuIcon(
-                  dp: chat['dp'],
+                  dp: ds['logo'],
                   groupName: ds['title'],
                   isOnline: chat['isOnline'],
                   counter: 0,
@@ -216,56 +252,225 @@ print("--->check1");
             child: Text('No Groups Selected'),
           );
         })),
-            Container(child: StreamBuilder(
-        stream:  Firestore.instance.collection('groups').snapshots(),
-        builder: (context,snapshot){
-                     if (snapshot.hasError) {
-          return Text('Error ${snapshot.error}');
-        }
-          if(snapshot.hasData && snapshot.data.documents.length > 0 ){
-            // return Text('value is ');
-        return  ListView.separated(
-            padding: EdgeInsets.all(10),
-            separatorBuilder: (BuildContext context, int index) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  height: 0.5,
-                  width: MediaQuery.of(context).size.width / 1.3,
-                  child: Divider(),
-                ),
-              );
-            },
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (BuildContext context, int index) {
-              DocumentSnapshot ds = snapshot.data.documents[index];
-              var lastMessagesIs = ds['lastMessageDetails'] ?? {"lastMsg":"No msg", "lastMsgTime": ""};
-              Map chat = chats[index];
-              return InkWell(
-                   onTap: (){
-            Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatWindow(chatId: ds.documentID, chatOwnerId: ds.data['creatorBy'],approvedGroupsJson: ds.data['approvedGroupsJson'], userId: userId, senderMailId: email,chatType: "", waitingGroups: waitingGroups, approvedGroups: approvedGroups, title: ds.data['title'],feeArray:ds.data['FeeDetails'], paymentScreenshotNo:ds.data['paymentNo'] , avatarUrl: ds.data['logo'] ),
-                        ),
-                      );
-                   },
-                child: ChatMenuIcon(
-                  dp: chat['dp'],
-                  groupName: ds['title'],
-                  isOnline: chat['isOnline'],
-                  counter: chat['counter'],
-                  msg:  lastMessagesIs['lastMsg'],
-                  time: lastMessagesIs['lastMsgTime'] =="" ? "" :Jiffy(lastMessagesIs['lastMsgTime'].toDate()).fromNow().toString(),
-                ),
-              );
-            },
           
-          );
-          }
-          return Text('Loading');
-        })),
-        ],
+          // second tab
+SingleChildScrollView(
+                  child: Column(
+            children:<Widget>[ 
+              TextField(
+                  onChanged: (val) {
+                  setState(() {
+                    _searchTerm = val;
+                    print('search term ${_searchTerm}');
+                  });
+                },
+                style: new TextStyle(color: Colors.black, fontSize: 20),
+                  decoration: new InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Search Group Name....',
+                      hintStyle: TextStyle(color: Colors.black),
+                      prefixIcon: const Icon(Icons.search, color: Colors.black
+              ))),
+              StreamBuilder(
+                  stream : searchGroupsQuery(_searchTerm),
+                  // stream: Firestore.instance.collection('groups').where("caseSearch", arrayContains: _searchTerm).snapshots(),
+                  builder: (context, snapshot) {
+                    if(!snapshot.hasData) 
+                     return 
+                     Align(
+                       alignment: Alignment.center,
+                     child: Column(
+                       children: <Widget>[
+                         SizedBox(height: 20),
+                         
+                         new Container(
+              height: MediaQuery.of(context).size.height / 3,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/searchFind.png'),
+                  fit: BoxFit.cover
+                )
+              ),
+            ),
+
+            new Text('Start Typing for a Group', style: TextStyle(color: Colors.black, fontSize: 20),),
+                         
+                       ],
+                     )
+                     );
+                    
+                    
+                    // return Text("Start Typing for a Group", style: TextStyle(color: Colors.black ),);
+
+                    else if(snapshot.hasData && snapshot.data.documents.length > 0 ){
+
+                      
+   
+                    //  return Text('data');
+                  print('data fetch ${_searchTerm}');
+                  return  CustomScrollView(shrinkWrap: true,
+                      slivers: <Widget>[
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            ( context,  index) {
+                                 var ds = snapshot.data.documents[index].data; 
+                                 var followersA = ds['followers'] ?? [];
+                                return ListTile(
+                                   title: Text(ds['title'] ?? "", style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w800 ),),
+                                   subtitle: Column(
+                                     children: <Widget>[
+                                       Padding(
+                                         padding: const EdgeInsets.only(bottom:8.0, top: 2.0),
+                                         child: Align(
+                                           alignment: Alignment.centerLeft,
+                                      child: Text("@ ${ds['groupOwnerName'] ?? ""}" ?? "", style: TextStyle(color: Colors.black ),),
+                                         ),
+                                       ),
+                                       Row(
+                                         children: <Widget>[
+                                           Wrap(
+                    spacing: 4.0, // gap between adjacent chips
+                    runSpacing: 1.0, // gap between lines
+                    children:
+                    _buildSelectedOptions(ds['category']),
+                  ),
+                                         ],
+                                       ),
+                                      
+                                     ],
+                                   ),
+                                   trailing: followersA.contains(widget.uId) ? 
+                                   FlatButton(
+                      child: Text(
+                        "Unfollow",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      color: Colors.grey,
+                      onPressed: ()async{
+                        //  this is for token 
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+      String userToken = prefs.get('FCMToken');
+                        Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayRemove([userId]),'AlldeviceTokens': FieldValue.arrayRemove([userToken])});
+                        Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayRemove([ds['chatId']])});
+                        Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups1' : FieldValue.arrayRemove([ds['chatId']])});
+                        Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups2' : FieldValue.arrayRemove([ds['chatId']])});
+                        Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups3' : FieldValue.arrayRemove([ds['chatId']])});
+                      },
+                    ):
+                                 FlatButton(
+                      child: Text(
+                        "Follow",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      color: Theme.of(context).accentColor,
+                      onPressed: ()async{
+                        print("check for doc id of group ${ds['chatId']}  id is ${userId}");
+                        // make an entry in db as joinedGroups
+                       try {
+                         //  this is for token 
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+      String userToken = prefs.get('FCMToken');
+                        Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayUnion([userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
+  
+   var q1 = await Firestore.instance.collection('IAM').document(userId).get();
+
+   var followingGroups0 = q1.data['followingGroups0'] ?? [];
+   var followingGroups1 = q1.data['followingGroups1'] ?? [];
+   var followingGroups2 = q1.data['followingGroups2'] ?? [];
+   var followingGroup3 = q1.data['followingGroups3'] ?? [];
+
+
+
+
+
+  if(followingGroups0.length <9){
+    print('i was at following groups 0 ${ds['chatId']}');
+      Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion([ds['chatId']])});
+      return;
+  }else if (followingGroups1.length <9){
+      Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups1' : FieldValue.arrayUnion([ds['chatId']]) });
+      return;
+  }else if (followingGroups2.length <9){
+      Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups2' : FieldValue.arrayUnion([ds['chatId']]) });
+      return;
+  }else if(followingGroup3.length <9){
+      Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups3' : FieldValue.arrayUnion([ds['chatId']])});
+  // ds.documentID
+ NotificationController.instance.subScribeChannelNotification("${ds['chatId']}");
+      return;
+  }
+                       } catch (e) {
+                         print('error at joining a group ${e}');
+                       }
+          
+ 
+                      },
+                    ),
+                      onTap: (){
+
+                        Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Profile3(
+                title: ds['title'],
+                avatarUrl: ds['logo'],
+                categories: ds['category'],
+                following: followersA.contains(widget.uId),
+                chatId: ds['chatId'],
+                userId: userId,
+                followers: ds['followers'] ?? [],
+                groupOwnerName : ds['groupOwnerName']?? '',
+                feeDetails: ds['FeeDetails'] ?? [],
+                seasonRating: ds['seasonRating'] ?? 'NA',
+                thisWeekRating: ds['thisWeekRating'] ?? 'NA',
+                lastWeekRating: ds['lastWeekRating'] ?? 'NA'
+
+
+              )),
+            );
+                      },          
+                    );
+                    
+                              
+                            },
+                            childCount: snapshot.data.documents.length ?? 0,
+                          ),
+                        ),
+            
+                    ],
+                  );
+                    
+                   //  print('data length ${snapshot.data.documents.length} ');
+                           
+
+                    }
+                     return 
+                     Align(
+                       alignment: Alignment.center,
+                     child: Column(
+                       children: <Widget>[
+                         SizedBox(height: 20),
+                         new Container(
+              height: MediaQuery.of(context).size.height / 3,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/searchFind.png'),
+                  fit: BoxFit.cover
+                )
+              ),
+            ),
+                         new Text('No Matched Data Found'),
+                       ],
+                     )
+                     );
+                  },
+                ),
+            ]),
+        ),
+        ]
       ),
 
       floatingActionButton: FloatingActionButton(

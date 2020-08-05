@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -117,6 +118,83 @@ File _image;
     {"id": '33', "image": "assets/banks/ocbc.png", "name": "Pondicherry"},
 
   ];
+    void _showBasicsFlash({
+    Duration duration,
+    flashStyle = FlashStyle.floating,BuildContext context, String messageText,
+  }) {
+    showFlash(
+      context: context,
+      duration: duration,
+      builder: (context, controller) {
+        return Flash(
+          controller: controller,
+          style: flashStyle,
+          boxShadows: kElevationToShadow[4],
+          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
+          child: FlashBar(
+            message: Text('$messageText'),
+          ),
+        );
+      },
+    );
+  }
+  void _showBottomFlash(
+      {bool persistent = true, EdgeInsets margin = EdgeInsets.zero, BuildContext context}) {
+    showFlash(
+      context: context,
+      persistent: persistent,
+      builder: (_, controller) {
+        return Flash(
+          controller: controller,
+          margin: margin,
+          borderRadius: BorderRadius.circular(8.0),
+          borderColor: Colors.blue,
+          boxShadows: kElevationToShadow[8],
+          backgroundGradient: RadialGradient(
+            colors: [Colors.amber, Colors.black87],
+            center: Alignment.topLeft,
+            radius: 2,
+          ),
+          onTap: () => controller.dismiss(),
+          forwardAnimationCurve: Curves.easeInCirc,
+          reverseAnimationCurve: Curves.bounceIn,
+          child: DefaultTextStyle(
+            style: TextStyle(color: Colors.white),
+            child: FlashBar(
+              title: Text('Hello Flash'),
+              message: Text('You can put any message of any length here.'),
+              leftBarIndicatorColor: Colors.red,
+              icon: Icon(Icons.info_outline),
+              primaryAction: FlatButton(
+                onPressed: () => controller.dismiss(),
+                child: Text('DISMISS'),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () => controller.dismiss('Yes, I do!'),
+                    child: Text('YES')),
+                FlatButton(
+                    onPressed: () => controller.dismiss('No, I do not!'),
+                    child: Text('NO')),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((_) {
+      return;
+    });
+  }
+  setSearchParam(String caseNumber) {
+  List<String> caseSearchList = List();
+  String temp = "";
+  // caseNumber.length > 9 ? 9: caseNumber.length;
+  for (int i = 0; i < caseNumber.length; i++) {
+    temp = temp + caseNumber[i];
+    caseSearchList.add(temp);
+  }
+  return caseSearchList;
+}
   @override
   Widget build(BuildContext context) {
         appState = StateWidget.of(context).state;
@@ -263,7 +341,8 @@ File _image;
                         minWidth: double.infinity,
                         height: 60,
                         onPressed: () async{
-                           Pattern pattern = r'^.{6,}$';
+                           
+                           Pattern pattern = r'^.{1,}$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(_groupTitle.text))
              setState(() {      
@@ -276,12 +355,26 @@ File _image;
               });
     }
 
+    if(_image == null){
+      _showBasicsFlash(context:  context, duration: Duration(seconds: 2), messageText : 'Please upload group DP ...!');
+      // _showBottomFlash(context:  context);
+      //  Flushbar(
+      //             title:  "Hey Ninja",
+      //             message:  "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+      //             duration:  Duration(seconds: 3),              
+      //           )..show(context);
+                return;
+    }
+
                    if (_formKey.currentState.validate()) { 
                     //  the below save line is to trigger the save of multi select category
                     _formKey.currentState.save();  
                       // 
                      try{   
-String fileName =  basename(_image.path);
+                      // data name split
+                       
+
+    String fileName =  basename(_image.path);
        StorageReference firebaseStorageRef =   FirebaseStorage.instance.ref().child("$userId.jpg");
        StorageUploadTask uploadTask =  firebaseStorageRef.putFile(_image);
            var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
@@ -303,7 +396,8 @@ String fileName =  basename(_image.path);
                                           "logo": ImageUrl,
                                           "paymentNo": _paymentScreenshotPhoneNo.text,
                                           "state": _selected,
-                                          "FeeDetails": [{"fee": _premiumPrice1.text, "days": _premiumDays1.text }] 
+                                          "FeeDetails": [{"fee": _premiumPrice1.text, "days": _premiumDays1.text }],
+                                          "caseSearch": setSearchParam(_groupTitle.text), 
 
                                         };
                var check1 =     await Firestore.instance.collection("groups").add(body);
@@ -468,7 +562,7 @@ Widget groupCategoryFieldCustomField(){
   onSaved: (value) {
     print('The value is $value');
     for(var x in value){
-      print('cateog ${categoryArray[x]}');
+      // print('cateog ${categoryArray[x]}');
       selCategoryValue.add(categoryArray[x]);
     }
       // selCategoryValue = value;
@@ -678,4 +772,5 @@ Widget makeCagegoryField({label, obscureText = false}) {
       ],
     );
   }
+  
 }
