@@ -122,8 +122,8 @@ return check;
 
  Future<List<DocumentSnapshot>> getFollowedGroups(userId) async {
 
-   var query = await Firestore.instance.collection('groups').where("caseSearch", arrayContains: 'dre').getDocuments();
-   print('aread details are1 ${query.documents}');
+  //  var query = await Firestore.instance.collection('groups').where("caseSearch", arrayContains: 'dre').getDocuments();
+  //  print('aread details are1 ${query.documents}');
   // Stream stream1 = manager.contactListNow;
   // getLengthMatches(areaId);
   var response = await  Firestore.instance.collection('IAM').document(userId).get();
@@ -247,10 +247,24 @@ print("--->check1");
           
           );
           }
-          return Padding(
-            padding: const EdgeInsets.all(28.0),
-            child: Text('No Groups Selected'),
-          );
+         return 
+                     Align(
+                       alignment: Alignment.center,
+                     child: Column(
+                       children: <Widget>[
+                         SizedBox(height: MediaQuery.of(context).size.height/4.5),
+                         
+                         new Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: Image(image: AssetImage('assets/emptyMsgs.png'),),
+            
+            ),
+
+            new Text('Loading or No added Groups', style: TextStyle(color: Colors.black, fontSize: 20),),
+                         
+                       ],
+                     )
+                     );
         })),
           
           // second tab
@@ -452,7 +466,7 @@ SingleChildScrollView(
                        alignment: Alignment.center,
                      child: Column(
                        children: <Widget>[
-                         SizedBox(height: 20),
+                         SizedBox(height: 60),
                          new Container(
               height: MediaQuery.of(context).size.height / 3,
               decoration: BoxDecoration(

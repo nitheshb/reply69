@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
@@ -89,6 +90,28 @@ void initState() {
   
   }
  
+profileRoute(context, origin){
+    Navigator.push(
+                                  context,
+                                                                new  MaterialPageRoute(
+                                      builder: (BuildContext context) => JoinPremiumGroup(chatId: widget.chatId,userId: widget.userId,lock: false,
+                                      title: widget.groupTitle,feeArray: widget.groupFullDetails['FeeDetails'] ?? [], 
+                                      paymentScreenshotNo: widget.groupFullDetails['paymentNo'] ?? "", 
+                                      avatarUrl: widget.groupFullDetails['logo']?? "", 
+                                      categories:widget.groupFullDetails['category'] ?? [],
+                                      followers: widget.groupFullDetails['followers'] ?? [], 
+                                      groupOwnerName : widget.groupFullDetails['groupOwnerName']?? '',
+                                      seasonRating: widget.groupFullDetails['seasonRating'] ?? 'NA',
+                                       thisWeekRating: widget.groupFullDetails['thisWeekRating'] ?? 'NA',
+                                      lastWeekRating: widget.groupFullDetails['lastWeekRating'] ?? 'NA',
+                                      accessingBy: origin
+                                      ),
+                                      ),
+                                //  new  MaterialPageRoute(
+                                //       builder: (BuildContext context) => JoinPremiumGroup(chatId: widget.chatId,userId: widget.userId,lock: false,title: widget.groupTitle,feeArray: widget.groupFullDetails['FeeDetails'] ?? [], paymentScreenshotNo: widget.groupFullDetails['paymentNo'] ?? "", avatarUrl: widget.groupFullDetails['logo']?? "" ),
+                                //       ),
+                               );
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -185,12 +208,7 @@ if (snapShot == null || !snapShot.exists) {
             onSelected: (value){
               print('selected value si   $value');
               if(value == "Profile"){
-                   Navigator.push(
-                                  context,
-                                 new  MaterialPageRoute(
-                                      builder: (BuildContext context) => JoinPremiumGroup(chatId: widget.chatId,userId: widget.userId,lock: false,title: widget.groupTitle,feeArray: widget.groupFullDetails['FeeDetails'] ?? [], paymentScreenshotNo: widget.groupFullDetails['paymentNo'] ?? "", avatarUrl: widget.groupFullDetails['logo']?? "" ),
-                                      ),
-                               );
+                profileRoute(context, 'member');
               }
             },
               itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
@@ -215,7 +233,7 @@ if (snapShot == null || !snapShot.exists) {
             child:
           new PopupMenuButton(
             onSelected: (value){
-              print('selected value si   $value');
+              print('selected value is ${widget.chatOwnerId}  $value');
               if(value == "Approve Payments"){
                Navigator.push(
                                     context,
@@ -232,6 +250,8 @@ if (snapShot == null || !snapShot.exists) {
                                         GroupMembersHome(groupMembersJson : widget.approvedGroupsJson ?? [], chatId: widget.chatId),
                                         ),
                                  );
+              }else if (value == "Edit Details"){
+                   profileRoute(context, 'owner');
               }
             },
               itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
@@ -250,7 +270,7 @@ if (snapShot == null || !snapShot.exists) {
                     ),
                     PopupMenuItem(
                       value: "Edit Details",
-                      child: Text("Starred message"),
+                      child: Text("Edit Profile"),
                     ),
                   ]),
           )
@@ -319,7 +339,7 @@ if (snapShot == null || !snapShot.exists) {
                          
                          new Container(
               height: MediaQuery.of(context).size.height / 3,
-              child: Image(image: AssetImage('assets/emptyMsgs.png'),),
+              child: SvgPicture.asset('assets/emptyBox.svg'),
             
             ),
 
@@ -341,37 +361,15 @@ if (snapShot == null || !snapShot.exists) {
             child: Container(
               height: 48,
               decoration: new BoxDecoration(
-                color: Colors.blue,
+                color: Theme.of(context).accentColor,
                 borderRadius: const BorderRadius.all(
-                                          Radius.circular(16.0),
+                                          Radius.circular(2.0),
                                         ),
-                 boxShadow: <BoxShadow>[
-                                          BoxShadow(
-                                              color: Bid365AppTheme
-                                                  .nearlyBlue
-                                                  .withOpacity(0.5),
-                                              offset: const Offset(1.1, 1.1),
-                                              blurRadius: 10.0),
-                                        ],
               ),
               child: InkWell(
                 onTap: () {
-                   Navigator.push(
-                                  context,
-                                 new  MaterialPageRoute(
-                                      builder: (BuildContext context) => JoinPremiumGroup(chatId: widget.chatId,userId: widget.userId,lock: false,
-                                      title: widget.groupTitle,feeArray: widget.groupFullDetails['FeeDetails'] ?? [], 
-                                      paymentScreenshotNo: widget.groupFullDetails['paymentNo'] ?? "", 
-                                      avatarUrl: widget.groupFullDetails['logo']?? "", 
-                                      // categories:widget.groupFullDetails['category'] ?? [],
-                                      followers: widget.groupFullDetails['followers'] ?? [], 
-                                      groupOwnerName : widget.groupFullDetails['groupOwnerName']?? '',
-                                      seasonRating: widget.groupFullDetails['seasonRating'] ?? 'NA',
-                                       thisWeekRating: widget.groupFullDetails['thisWeekRating'] ?? 'NA',
-                                      lastWeekRating: widget.groupFullDetails['lastWeekRating'] ?? 'NA'
-                                      ),
-                                      ),
-                               );
+                   profileRoute(context, 'member');
+    
                 // if(lock){
                 //   // showInSnackBar('Doc already uploaded');
                 //     Scaffold.of(context).showSnackBar(SnackBar(content: Text("Doc already uploaded"),));
@@ -410,8 +408,8 @@ if (snapShot == null || !snapShot.exists) {
                           style: TextStyle(
                             color:
                                 Colors.white,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w600
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w400
                           ),
                         ),
                       ],
@@ -566,9 +564,11 @@ if (snapShot == null || !snapShot.exists) {
      Visibility(
       visible: widget.approvedGroups.contains(widget.chatId), 
       child:
-      FloatingActionButton.extended(
+      Padding(
+            padding: const EdgeInsets.only(bottom: 50.0),
+        child: FloatingActionButton.extended(
   onPressed: () async {
-           var  snapShot = await Firestore.instance
+             var  snapShot = await Firestore.instance
   .collection('votingBalletHeap')
   .document(widget.chatId)
   .get();
@@ -584,20 +584,21 @@ if (snapShot == null || !snapShot.exists) {
 }
 
 
-              // powerPredictor
-             await   Navigator.push(
-                                  context,
-                                 new  MaterialPageRoute(
-                                      builder: (BuildContext context) => PowerFeedbacker(
-                                      groupCategories: widget.groupSportCategory ,groupCategoriesArray : groupCategoriesArray,
-                                      groupId: widget.chatId,groupTitle: widget.groupTitle, 
-                                      votingBalletHeapData: votingBalletHeapData ?? []),
-                                      ),
-                               );
+                // powerPredictor
+               await   Navigator.push(
+                                    context,
+                                   new  MaterialPageRoute(
+                                        builder: (BuildContext context) => PowerFeedbacker(
+                                        groupCategories: widget.groupSportCategory ,groupCategoriesArray : groupCategoriesArray,
+                                        groupId: widget.chatId,groupTitle: widget.groupTitle, 
+                                        votingBalletHeapData: votingBalletHeapData ?? []),
+                                        ),
+                                 );
   },
-  icon: Icon(Icons.save),
+  icon: Icon(FontAwesomeIcons.check),
   label: Text("Feedback"),
 ),
+      ),
      
        
      ),

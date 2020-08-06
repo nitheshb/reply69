@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
 import 'package:notification/pages/forget_password.dart';
@@ -45,18 +46,44 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Column(
                     children: <Widget>[
-                      FadeAnimation(1, Text("Login", style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold
-                      ),)),
+
+                      Align(
+                        alignment: Alignment.center,
+                        child: new Container(
+              height: MediaQuery.of(context).size.height / 12,
+              child: Image(image: AssetImage('assets/logo.png')),
+            
+            ),
+                    //  child: Container(
+                    //   width: 160,
+                    //     child: Row(
+                    //       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //       // crossAxisAlignment: CrossAxisAlignment.stretch,
+                    //       children: <Widget>[
+                    //         FadeAnimation(1, Text("Chat", style: TextStyle(
+                    //           fontSize: 30,
+                    //           fontWeight: FontWeight.bold
+                    //         ),)),
+                    //         FadeAnimation(1, Text("O", style: TextStyle(
+                    //           fontSize: 30,
+                    //           fontWeight: FontWeight.bold
+                    //         ),)),
+                    //         FadeAnimation(1, Text("gram", style: TextStyle(
+                    //           fontSize: 30,
+                    //           fontWeight: FontWeight.bold
+                    //         ),)),
+                    //       ],
+                    //     ),
+                    //   ),
+                      ),
                       SizedBox(height: 20,),
                       FadeAnimation(1.2, Text("Login to your account", style: TextStyle(
                         fontSize: 15,
@@ -148,16 +175,6 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                 ],
               ),
             ),
-            FadeAnimation(1.2, Container(
-              height: MediaQuery.of(context).size.height / 3,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/background.png'),
-                  fit: BoxFit.cover
-                )
-              ),
-            )
-            )
           ],
         ),
       ),
@@ -282,6 +299,9 @@ Widget buildPasswordBox(){
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)
+            ),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
@@ -310,6 +330,9 @@ Widget buildPasswordBox(){
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)
             ),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])

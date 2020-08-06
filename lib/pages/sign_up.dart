@@ -180,6 +180,9 @@ class _SignupPageState extends State<SignupPage> {
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)
+            ),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
@@ -209,6 +212,9 @@ class _SignupPageState extends State<SignupPage> {
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)
             ),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
@@ -242,6 +248,9 @@ class _SignupPageState extends State<SignupPage> {
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black)
             ),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])

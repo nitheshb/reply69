@@ -26,7 +26,24 @@ class _ProfileState extends State<Profile> {
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: Container(
+           margin: EdgeInsets.only(
+              top: 15,
+              
+              bottom: 100,
+            ),
+            padding: EdgeInsets.all(10),
           width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(6),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade100,
+                  blurRadius: 6,
+                  spreadRadius: 10,
+                )
+              ],
+            ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,7 +66,7 @@ class _ProfileState extends State<Profile> {
               ),
               SizedBox(height: 3),
               Text(
-                "Status should be here",
+                "Winner Choice",
                 style: TextStyle(
                 ),
               ),
@@ -57,39 +74,39 @@ class _ProfileState extends State<Profile> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  FlatButton(
-                    child: Icon(
-                      Icons.message,
-                      color: Colors.white,
-                    ),
-                    color: Colors.grey,
-                    onPressed: (){
-                       Navigator.of(context, rootNavigator: true).push(
-            MaterialPageRoute(
-              builder: (BuildContext context){
-                return Conversation();
-              },
-            ),
-          );
-                    },
-                  ),
+          //         FlatButton(
+          //           child: Icon(
+          //             Icons.message,
+          //             color: Colors.white,
+          //           ),
+          //           color: Colors.grey,
+          //           onPressed: (){
+          //              Navigator.of(context, rootNavigator: true).push(
+          //   MaterialPageRoute(
+          //     builder: (BuildContext context){
+          //       return Conversation();
+          //     },
+          //   ),
+          // );
+          //           },
+          //         ),
               
                   
-                  SizedBox(width: 10),
-                  FlatButton(
-                    child: Icon(
-                      Icons.phone,
-                      color: Colors.white,
-                    ),
-                    color: Theme.of(context).accentColor,
-                    onPressed: (){
-                                Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context)
-                          => PhoneLoginScreen(),
-                                  ));
-                    },
-                  ),
-                  SizedBox(width: 10),
+                  // SizedBox(width: 10),
+              //     FlatButton(
+              //       child: Icon(
+              //         Icons.phone,
+              //         color: Colors.white,
+              //       ),
+              //       color: Theme.of(context).accentColor,
+              //       onPressed: (){
+              //                   Navigator.of(context).push(MaterialPageRoute(
+              // builder: (BuildContext context)
+              //             => PhoneLoginScreen(),
+              //                     ));
+              //       },
+              //     ),
+              //     SizedBox(width: 10),
                    FlatButton(
                     child: Icon(
                       Icons.exit_to_app,
@@ -125,26 +142,7 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               SizedBox(height: 20),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                primary: false,
-                padding: EdgeInsets.all(5),
-                itemCount: 15,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 200 / 200,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Image.asset(
-                      "assets/cm${random.nextInt(10)}.jpeg",
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                },
-              ),
+         
             ],
           ),
         ),
@@ -156,7 +154,7 @@ class _ProfileState extends State<Profile> {
     return Column(
       children: <Widget>[
         Text(
-          random.nextInt(10000).toString(),
+          'NA',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 22,

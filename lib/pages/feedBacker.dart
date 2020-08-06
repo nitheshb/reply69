@@ -150,12 +150,15 @@ if(reqGroupA.length == 0){
         itemCount: snapshot.data.documents.length,
         itemBuilder: (BuildContext context, int index) {
           var ds = snapshot.data.documents[index].data;
-        print('values of real me ${widget.votingBalletHeapData}');
-          List reqGroupA =  widget.votingBalletHeapData.where((i) => i["gameId"] == ds['id']).toList();
+          DocumentSnapshot ds1 = snapshot.data.documents[index];
+        print('values of real mee ${widget.votingBalletHeapData} ds id is ${ds1.documentID}');
+          List reqGroupA =  widget.votingBalletHeapData.where((i) => i["gameId"] == ds1.documentID).toList();
           Map post = posts[index];
           if(reqGroupA.length == 0){
+            print('i was at empty');
 return QuestionCard(true,{'TotalVotes': 1,'Loss': 0, 'Even': 0, 'Win': 1},ds['matchDetails']['team_1_pic'],ds['matchDetails']['team-1'], ds['matchDetails']['team_2_pic'], ds['matchDetails']['team-2'], ds['category'][0], ds['matchDetails']['unique_id'], widget.groupId, userId, ds['matchDetails']['type'],);
           }
+           print('i was at scoring');
            return QuestionCard(!reqGroupA[0]['VotedBy'].contains(userId),reqGroupA[0],ds['matchDetails']['team_1_pic'],ds['matchDetails']['team-1'], ds['matchDetails']['team_2_pic'], ds['matchDetails']['team-2'], ds['category'][0], ds['matchDetails']['unique_id'], widget.groupId, userId, ds['matchDetails']['type'],);
           return PostItem(
             img: post['img'],

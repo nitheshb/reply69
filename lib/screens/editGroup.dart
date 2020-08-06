@@ -14,18 +14,28 @@ import 'package:notification/widgets/loading.dart';
 import 'package:path/path.dart';
 import 'package:flutter_multiselect/flutter_multiselect.dart';
 
-class CreateGroupProfile extends StatefulWidget {
-  final String primaryButtonRoute;
+class EditGroupProfile extends StatefulWidget {
+  final String primaryButtonRoute, groupName,phNumber
+  ;
+  final List groupCategory;
+  final fee, selState,
+  expiryDays;
   
-  CreateGroupProfile(
+  EditGroupProfile(
       {
       @required this.primaryButtonRoute,
+      this.groupName,
+      this.groupCategory,
+      this.fee,
+      this.expiryDays,
+      this.phNumber,
+      this.selState
 });
   @override
-  _CreateGroupProfileState createState() => _CreateGroupProfileState();
+  _EditGroupProfileState createState() => _EditGroupProfileState();
 }
 
-class _CreateGroupProfileState extends State<CreateGroupProfile> {
+class _EditGroupProfileState extends State<EditGroupProfile> {
   StateModel appState; 
   static Random random = Random();
   
@@ -49,9 +59,36 @@ File _image;
   bool _autoValidate = false;
 
   bool _loadingVisible = false;
-  bool configImageCompression = false;
+  bool configImageCompression = true;
   List selCategoryValue = [];
   String groupNameAlreadyExists;
+  List PastCategory =[];
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _groupTitle.text = widget.groupName;
+    _premiumPrice1.text = widget.fee[0]['fee'];
+    _premiumDays1.text = widget.fee[0]['days'];
+    _paymentScreenshotPhoneNo.text = widget.phNumber;
+    widget.groupCategory.map((data)=> {
+      PastCategory.add(data['categoryName'])
+      
+    });
+//  for(var x in widget.groupCategory){
+//       print('cateog ${widget.groupCategory[x]}');
+//       // PastCategory.add({'categoryName':categoryArray[x], 'rating': 20});
+//     }
+
+    print('check for fee ${widget.fee}');
+  //   print('what was here ${widget.groupSportCategory}');
+  // widget.groupSportCategory.forEach((data){
+  //   print('values are ${data}');
+  //       groupCategoriesArray.add(data['categoryName']);
+    
+    
+  
+  }
 
   Future getImage() async{
    var image =  await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -315,8 +352,8 @@ File _image;
                             //      FadeAnimation(1.2, makePremiumDays(label: "Days", obscureText: false, controlValue: _premiumDays1),),
                             //   ],
                             // ),
-                                                  FadeAnimation(1.3,  stateSelection()
-                          ),
+                                                  // FadeAnimation(1.3,  stateSelection()
+                         // ),
 
    
       
@@ -437,7 +474,7 @@ File _image;
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)
                         ),
-                        child: Text("Create Group", style: TextStyle(
+                        child: Text("Edit Group", style: TextStyle(
                           fontWeight: FontWeight.w600, 
                           fontSize: 18,
                           color: Colors.white
@@ -568,7 +605,7 @@ Widget groupCategoryFieldCustomField(){
   valueField: 'value',
   filterable: true,
   required: true,
-  value: null,
+  value: PastCategory,
   onSaved: (value) {
     print('The value is $value');
     for(var x in value){
@@ -586,53 +623,7 @@ Widget groupCategoryFieldCustomField(){
 
 }  
 
-Widget stateSelection(){
-  return Center(
-        child: Container(
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.grey),
-              borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: DropdownButtonHideUnderline(
-                  child: ButtonTheme(
-                    alignedDropdown: true,
-                    child: DropdownButton<String>(
-                      isDense: true,
-                      hint: new Text("Select State"),
-                      value: _selected,
-                      onChanged: (String newValue) {
-                          setState(() {
-                            _selected = newValue;
-                          });
 
-                          print(_selected);
-                      },
-                      items: _myJson.map((Map map) {
-                          return new DropdownMenuItem<String>(
-                            value: map["id"].toString(),
-                            // value: _mySelection,
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    child: Text(map["name"])),
-                              ],
-                            ),
-                          );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-}
 
 Widget makeCagegoryField({label, obscureText = false}) {
     return Column(

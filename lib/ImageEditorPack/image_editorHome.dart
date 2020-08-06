@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_editor_pro/modules/all_emojies.dart';
@@ -121,7 +122,7 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
         backgroundColor: Colors.grey,
         key: scaf,
         appBar: new AppBar(
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.white,
           actions: <Widget>[
     
             new IconButton(
@@ -131,7 +132,7 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                   setState(() {});
                 }),
             new IconButton(
-                icon: Icon(Icons.camera),
+                icon: Icon(FontAwesomeIcons.images, color: Colors.redAccent),
                 onPressed: () async{
                   var image = await ImagePicker.pickImage(
                                         source: ImageSource.gallery);
@@ -148,8 +149,8 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                   // bottomsheets();
                 }),
             new FlatButton(
-                child: new Text("Done"),
-                textColor: Colors.white,
+                child: new Text("Upload"),
+                textColor: Colors.black,
                 onPressed: ()async {
                   if(_image == null){
                     print('i was inside');
@@ -224,7 +225,26 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                               width: width.toDouble(),
                               fit: BoxFit.cover,
                             )
-                          : Container(),
+                          : Container(
+                            child:    
+                     Align(
+                       alignment: Alignment.center,
+                     child: Column(
+                       children: <Widget>[
+                         SizedBox(height: MediaQuery.of(context).size.height/4.5),
+                         
+                         new Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: SvgPicture.asset('assets/emptyBox.svg'),
+            
+            ),
+
+            new Text('Upload Image', style: TextStyle(color: Colors.black, fontSize: 20),),
+                         
+                       ],
+                     )
+                     )
+                          ),
                       Container(
                         child: GestureDetector(
                             onPanUpdate: (DragUpdateDetails details) {
@@ -315,36 +335,63 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                 child: new ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
-                    BottomBarContainer(
-                      colors: widget.bottomBarColor,
-                      icons: FontAwesomeIcons.brush,
+                            BottomBarContainer(
+                      icons: FontAwesomeIcons.smile,
                       ontap: () {
-                        // raise the [showDialog] widget
-                        showDialog(
-                            context: context,
-                            child: AlertDialog(
-                              title: const Text('Pick a color!'),
-                              content: SingleChildScrollView(
-                                child: ColorPicker(
-                                  pickerColor: pickerColor,
-                                  onColorChanged: changeColor,
-                                  showLabel: true,
-                                  pickerAreaHeightPercent: 0.8,
-                                ),
-                              ),
-                              actions: <Widget>[
-                                FlatButton(
-                                  child: const Text('Got it'),
-                                  onPressed: () {
-                                    setState(() => currentColor = pickerColor);
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            ));
+type.add(1);
+                            fontsize.add(20);
+                            offsets.add(Offset.zero);
+                            multiwidget.add("😂");
+                            howmuchwidgetis++;
+
+                        // Future getemojis = showModalBottomSheet(
+                        //     context: context,
+                        //     builder: (BuildContext context) {
+                        //       return Emojies();
+                        //     });
+                        // getemojis.then((value) {
+                        //   print('value is check  ${value}');
+                        //   if (value != null) {
+                        //     type.add(1);
+                        //     fontsize.add(20);
+                        //     offsets.add(Offset.zero);
+                        //     multiwidget.add("😂");
+                        //     howmuchwidgetis++;
+                        //   }
+                        // });
                       },
-                      title: 'Brush',
+                      title: 'Logo',
                     ),
+                    // BottomBarContainer(
+                    //   colors: widget.bottomBarColor,
+                    //   icons: FontAwesomeIcons.brush,
+                    //   ontap: () {
+                    //     // raise the [showDialog] widget
+                    //     showDialog(
+                    //         context: context,
+                    //         child: AlertDialog(
+                    //           title: const Text('Pick a color!'),
+                    //           content: SingleChildScrollView(
+                    //             child: ColorPicker(
+                    //               pickerColor: pickerColor,
+                    //               onColorChanged: changeColor,
+                    //               showLabel: true,
+                    //               pickerAreaHeightPercent: 0.8,
+                    //             ),
+                    //           ),
+                    //           actions: <Widget>[
+                    //             FlatButton(
+                    //               child: const Text('Got it'),
+                    //               onPressed: () {
+                    //                 setState(() => currentColor = pickerColor);
+                    //                 Navigator.of(context).pop();
+                    //               },
+                    //             ),
+                    //           ],
+                    //         ));
+                    //   },
+                    //   title: 'Brush',
+                    // ),
                     BottomBarContainer(
                       icons: Icons.text_fields,
                       ontap: () async {

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/controllers/notificationController.dart';
 import 'package:notification/pages/chatWindow.dart';
@@ -75,53 +77,14 @@ getUserData(userId)async {
             //  print('chat data is ${chatDataIs}');
   }
 
- Future<List<DocumentSnapshot>> getFollowedGroups(userId) async {
-  // print('aread details are ${areaId}');
-  // Stream stream1 = manager.contactListNow;
-  // getLengthMatches(areaId);
-  var response = await  Firestore.instance.collection('IAM').document(userId).get();
-  var followingGroups0 = response.data['followingGroups0'] ?? ['check'];
-  var followingGroups1 = response.data['followingGroups1'] ?? ['check'];
-  var followingGroups2 = response.data['followingGroups2'] ?? ['check'];
-  var followingGroups3 = response.data['followingGroups3'] ?? ['check'];
-    List<DocumentSnapshot> listSnaps = List();
-     QuerySnapshot q1 = await Firestore.instance.collection('groups').where(
-        'chatId', whereIn: followingGroups0.length >0 ? followingGroups0 : ['check'] )
-        .getDocuments();
-    QuerySnapshot q2 = await Firestore.instance.collection('groups').where(
-        'chatId', whereIn: followingGroups1.length >0 ? followingGroups1 : ['check'] )
-        .getDocuments();
-    QuerySnapshot q3 = await Firestore.instance.collection('groups').where(
-        'chatId', whereIn: followingGroups2.length >0 ? followingGroups2 : ['check'] )
-        .getDocuments();
-     QuerySnapshot q4 = await Firestore.instance.collection('groups').where(
-        'chatId', whereIn: followingGroups3.length >0 ? followingGroups3 : ['check'] )
-        .getDocuments();
-    listSnaps.addAll(q1.documents);
-    listSnaps.addAll(q2.documents);
-    listSnaps.addAll(q3.documents);
-    listSnaps.addAll(q4.documents);
-print("--->check1");
-    return listSnaps;
-//    return stream1;
-//     return StreamZip([stream1,stream2]);
-//    Stream stream = StreamGroup.merge([stream1, stream2]).asBroadcastStream();
-//    stream.listen((event) {
-//      print(event);
-//    });
-//    return stream;
-    // return Firestore.instance.collection(collectionName).where("mother_match_Id", isEqualTo: widget.matchId ).where("areaId",isEqualTo: areaId).where("status",isEqualTo: 'Start').snapshots();
-  }
 
-   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
          Future<SharedPreferences> prefs =  SharedPreferences.getInstance();
   @override
   Widget build(BuildContext context) {
     super.build(context);
     //followingGroups =  ['nQ4T04slkEdANneRb4k62'];
         appState = StateWidget.of(context).state;
-    final userId = appState?.firebaseUserAuth?.uid ?? '';
-    final email = appState?.firebaseUserAuth?.email ?? '';
    // getUserData(userId);
     print('check ${followingGroups}');
     return Scaffold(
@@ -172,7 +135,24 @@ print("--->check1");
           return Text('Error ${snapshot.error}');
         }
         if(snapshot.hasData && snapshot.data.documents.length == 0 ){
-          return Container(child: Text('No ${categoryName} Matches Scedules'));
+          var imgLink;
+          if(categoryName =="Basketball") {
+            imgLink = "https://static.sports.roanuz.com/images/plans/performance.svg";
+          }
+          return 
+                     Align(
+                       alignment: Alignment.center,
+                     child: Column(
+                       children: <Widget>[
+                         SizedBox(height: MediaQuery.of(context).size.height/4.5),                   
+                         new Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: SvgPicture.asset('assets/performance.svg'),       
+            ),
+            new Text('No ${categoryName} Matches Scedules', style: TextStyle(color: Colors.black, fontSize: 20),),                
+                       ],
+                     )
+                     );
         }
           if(snapshot.hasData && snapshot.data.documents.length > 0 ){
               // return Text("snapshot ${snapshot.data.documents.length}");  
@@ -184,8 +164,8 @@ print("--->check1");
             alignment: Alignment.centerRight,
             child: Container(
               height: 0.5,
-              width: MediaQuery.of(context).size.width / 1.3,
-              child: Divider(),
+              // width: MediaQuery.of(context).size.width / 1.3,
+              child: Divider(color: Colors.grey,),
             ),
           );
         },
@@ -194,41 +174,52 @@ print("--->check1");
           Map friend = friends[index];
           DocumentSnapshot ds = snapshot.data.documents[index];
           var matchDetails = ds['matchDetails'] ?? {};
+          var format = DateFormat('d-MMMM HH:mm a');
 
-          return Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        matchDetails['team_1_pic'],
+                      ),
+                      radius: 25,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top:8.0),
+                      child: Text("${matchDetails['team-1']}", style: TextStyle(fontWeight: FontWeight.w500)),
+                    )
+                  ],
+                ),
+                 Column(
+                  children: <Widget>[
+                    Text("${matchDetails['type']}", style: TextStyle(fontWeight: FontWeight.w500)),
+                    SizedBox(height: 30),
+                    Text("${format.format(DateTime.fromMicrosecondsSinceEpoch(int.parse(ds['startTime']) * 1000))}"),
+                  ],
+                ),
                 Column(
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      matchDetails['team_1_pic'],
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        matchDetails['team_2_pic'],
+                      ),
+                      radius: 25,
                     ),
-                    radius: 25,
-                  ),
-                  Text("${matchDetails['team-1']}")
-                ],
-              ),
-               Column(
-                children: <Widget>[
-                  Text("${matchDetails['type']}"),
-                  Text("${ds['startTime']}")
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      matchDetails['team_2_pic'],
-                    ),
-                    radius: 25,
-                  ),
-                  Text("${matchDetails['team-2']}")
-                ],
-              ),
-              ]
-            )
+                    Padding(
+                      padding: const EdgeInsets.only(top:8.0),
+                      child: Text("${matchDetails['team-2']}", style: TextStyle(fontWeight: FontWeight.w500),),
+                    )
+                  ],
+                ),
+                ]
+              )
+            ),
           );
         },
       );
