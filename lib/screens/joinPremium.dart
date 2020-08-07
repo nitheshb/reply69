@@ -843,8 +843,8 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
         DateTime now = new DateTime.now();
           var datestamp = new DateFormat("yyyyMMdd'T'HHmmss");
           String currentdate = datestamp.format(now);
-        
-    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('myimage1.jpg');
+        // myimage1
+    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('${currentdate}.jpg');
     final StorageUploadTask uploadTask = await firebaseStorageRef.putFile(_image);
        var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
     String url = dowurl.toString();

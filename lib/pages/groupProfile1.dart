@@ -229,18 +229,22 @@ Widget winStats(context, _media, gameName, rating){
     final _media = MediaQuery.of(context).size;
 
     return Scaffold(
+           backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: GestureDetector(
-          onTap: () {
-            
-          },
-          child: Icon(
-            Icons.keyboard_arrow_left,
-            color: Colors.white,
-            size: 32,
+        elevation: 0.4,
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
+        title: Text(
+          'Summary',
+          style: TextStyle(
+            color: Colors.black,
           ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black,),
         ),
       ),
       body: ListView(
@@ -249,6 +253,22 @@ Widget winStats(context, _media, gameName, rating){
           left: 20,
         ),
         children: <Widget>[
+                    SizedBox(height: 20),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "Profile",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    fontFamily: "Varela",
+                  ),
+                ),
+              ],
+            ),
+          ),
        
  Align(
               alignment: Alignment.topCenter,

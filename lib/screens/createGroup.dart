@@ -49,7 +49,7 @@ File _image;
   bool _autoValidate = false;
 
   bool _loadingVisible = false;
-  bool configImageCompression = false;
+  bool configImageCompression = true;
   List selCategoryValue = [];
   String groupNameAlreadyExists;
 
@@ -201,6 +201,24 @@ File _image;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
     return Scaffold(
+          backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0.4,
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
+        title: Text(
+          'Create Profile',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black,),
+        ),
+      ),
       body: 
        LoadingScreen(
          inAsyncCall: _loadingVisible,
@@ -209,57 +227,29 @@ File _image;
         child: Container(
           width: MediaQuery.of(context).size.width,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
 
-              SizedBox(height: 60),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                   CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Color(0xff476cfb),
-                      child: ClipOval(
-                        child: new SizedBox(
-                          width: 180.0,
-                          height: 180.0,
-                          child: (_image!=null)?Image.file(
-                            _image,
-                            fit: BoxFit.fill,
-                          ):Image.network(
-                            "https://i.picsum.photos/id/314/200/200.jpg?hmac=bCAc2iO5ovLPrvwDQV31aBPS13QTyv33ut2H2wY4QXU",
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                    ),
-                  Padding(padding: EdgeInsets.only(top:60.0),
-                  child: IconButton(icon: Icon(Icons.edit,),
-                  onPressed: (){
-                    getImage();
-                  },
-                  
-                  ))
-                ],
-              ),
+              // SizedBox(height: 60),
+     
+              // Text(
+              //   '${email}',
+              //   style: TextStyle(
+              //     fontWeight: FontWeight.bold,
+              //     fontSize: 22,
+              //   ),
+              // ),
               SizedBox(height: 10),
               Text(
-                '${email}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                ),
-              ),
-              SizedBox(height: 3),
-              Text(
                 "Create Your Group Profile",
-                style: TextStyle(
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18
                 ),
               ),
           
 
               SizedBox(height: 10),
+                
            Form(
               key: _formKey,
               autovalidate: _autoValidate,
@@ -273,6 +263,51 @@ File _image;
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                       Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: 
+                    InkWell(
+                       onTap: (){
+                      getImage();
+                    },
+                      child:Row(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                     CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Color(0xff476cfb),
+                        child: ClipOval(
+                          child: new SizedBox(
+                            width: 180.0,
+                            height: 180.0,
+                            child: (_image!=null)?Image.file(
+                              _image,
+                              fit: BoxFit.fill,
+                            ):Image.network(
+                              "https://img.icons8.com/bubbles/344/upload.png",
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      ),
+                    Padding(padding: EdgeInsets.only(top:60.0),
+                    child: IconButton(icon: Icon(Icons.edit,),
+                    onPressed: (){
+                      getImage();
+                    },
+                    
+                    )),
+                      Text(
+                "Upload Group Profile Pic",
+                style: TextStyle(
+                    fontWeight: FontWeight.w700
+                ),
+              ),
+                ],
+              ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -350,7 +385,8 @@ File _image;
                 this.groupNameAlreadyExists = 'Please enter a name.';
               }); 
     else{
-                        var UserNameData =  await Firestore.instance.collection('groups').where("title", isEqualTo: _groupTitle.text).getDocuments(); 
+      String groupTitle = _groupTitle.text.toLowerCase().replaceAll(new RegExp(r"\s+"), "");
+                        var UserNameData =  await Firestore.instance.collection('groups').where("title", isEqualTo: groupTitle).getDocuments(); 
                         setState(() {      
                 this.groupNameAlreadyExists = UserNameData.documents.length> 0 ?'Group Name Already Taken' : null; 
               });
@@ -387,9 +423,10 @@ File _image;
           print("Profile Picture uploaded $fileName");
          // Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
        });
+       String groupTitle = _groupTitle.text.toLowerCase().replaceAll(new RegExp(r"\s+"), "");
                         //TODO: Implement sign out
                               var body ={
-                                          "title": _groupTitle.text,
+                                          "title": groupTitle,
                                           "createdBy":userId,
                                           "createdOn": new DateTime.now().millisecondsSinceEpoch,
                                           "category": selCategoryValue,
@@ -401,7 +438,7 @@ File _image;
                                           "paymentNo": _paymentScreenshotPhoneNo.text,
                                           "state": _selected,
                                           "FeeDetails": [{"fee": _premiumPrice1.text, "days": _premiumDays1.text }],
-                                          "caseSearch": setSearchParam(_groupTitle.text), 
+                                          "caseSearch": setSearchParam(groupTitle), 
                                           "AlldevicesTokens": [],
                                           "FdeviceToken": [],
 
@@ -654,6 +691,10 @@ Widget makeCagegoryField({label, obscureText = false}) {
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueAccent
+            ),
+             ),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
@@ -683,6 +724,10 @@ Widget makeCagegoryField({label, obscureText = false}) {
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueAccent
+            ),
+             ),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
@@ -712,6 +757,10 @@ Widget makeCagegoryField({label, obscureText = false}) {
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueAccent
+            ),
+             ),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
@@ -741,6 +790,10 @@ Widget makeCagegoryField({label, obscureText = false}) {
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueAccent
+            ),
+             ),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
@@ -773,8 +826,12 @@ Widget makeCagegoryField({label, obscureText = false}) {
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey[400])
             ),
+             focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueAccent
+            ),
+             ),
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey[400])
+              borderSide: BorderSide(color: Colors.grey[400], width: 4)
             ),
           ),
         ),

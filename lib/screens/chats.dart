@@ -60,6 +60,30 @@ getUserData(userId)async {
   return response.data;
   }
 
+Widget popularSearchTextContainer(searchText){
+  return     Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                           decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomRight,
+                            stops: [0.1, 1],
+                            colors: [
+                              Color(0xFF8C68EC),
+                              Color(0xFF3E8DF3),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                  // color: Colors.blueGrey,
+                   child:Padding(
+                     padding: const EdgeInsets.all(8.0),
+                     child: Text(searchText, style: TextStyle(color: Colors.white, fontSize: 12),),
+                   )
+                 ),
+                      );
+}
   saveLocal(index,lastMessagesIs, chatDocId)async{
       SharedPreferences prefs = await SharedPreferences.getInstance();
   
@@ -271,47 +295,87 @@ print("--->check1");
 SingleChildScrollView(
                   child: Column(
             children:<Widget>[ 
-              TextField(
-                  onChanged: (val) {
-                  setState(() {
-                    _searchTerm = val;
-                    print('search term ${_searchTerm}');
-                  });
-                },
-                style: new TextStyle(color: Colors.black, fontSize: 20),
-                  decoration: new InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Search Group Name....',
-                      hintStyle: TextStyle(color: Colors.black),
-                      prefixIcon: const Icon(Icons.search, color: Colors.black
-              ))),
+           
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                      onChanged: (val) {
+                      setState(() {
+                        _searchTerm = val;
+                        print('search term ${_searchTerm}');
+                      });
+                    },
+                    style: new TextStyle(color: Colors.black, fontSize: 20),
+                      decoration: new InputDecoration(
+                         contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[400], width: 4)
+            ),
+            focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black)
+            ),
+            border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[400], width: 5)
+            ),
+                        // border: InputBorder.none,
+                          hintText: 'Search Group Name....',
+                          hintStyle: TextStyle(color: Colors.black),
+                          prefixIcon: const Icon(Icons.search, color: Colors.black
+                  ))),
+                ),
+              ),
               StreamBuilder(
                   stream : searchGroupsQuery(_searchTerm),
                   // stream: Firestore.instance.collection('groups').where("caseSearch", arrayContains: _searchTerm).snapshots(),
                   builder: (context, snapshot) {
                     if(!snapshot.hasData) 
                      return 
-                     Align(
-                       alignment: Alignment.center,
-                     child: Column(
+                      Column(
                        children: <Widget>[
-                         SizedBox(height: 20),
-                         
+                         SizedBox(height: 30),
+                         Align(
+                       alignment: Alignment.center,
+                     child:
                          new Container(
-              height: MediaQuery.of(context).size.height / 3,
+              height: 160,
+              width: 160,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/searchFind.png'),
-                  fit: BoxFit.cover
+                  fit: BoxFit.fill
                 )
               ),
             ),
+                         ),
+         
+          SizedBox(height: 30),
+                        Align(
+                          alignment: Alignment.topLeft,
+                       child: new Container(
+              height: 160,
+             // width: 160,
+             child: Column(
+               children: <Widget>[
+                 Text("Popular Searches To Try", style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w400),),
+                 Row(
+                   children: <Widget>[
+                     popularSearchTextContainer('helloPredictors'),
+                     popularSearchTextContainer('allGamesPredictor'),
+                     popularSearchTextContainer('Dream11Pro'),
+                 
+                
+                   ],
+                 ),
+                
 
-            new Text('Start Typing for a Group', style: TextStyle(color: Colors.black, fontSize: 20),),
-                         
+               ],
+             ),
+            ),    
+                        )      
                        ],
-                     )
                      );
+                     
                     
                     
                     // return Text("Start Typing for a Group", style: TextStyle(color: Colors.black ),);

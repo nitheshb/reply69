@@ -66,8 +66,11 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
         onPressed: () async {
           print('i was clicked');
                DateTime now = new DateTime.now();
-      
-    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('myimage1.jpg');
+    
+          var datestamp = new DateFormat("yyyyMMdd'T'HHmmss");
+          String currentdate = datestamp.format(now);
+      // myimage1
+    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('${currentdate}.jpg');
     final StorageUploadTask uploadTask = await firebaseStorageRef.putFile(_image);
      var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
     String url = dowurl.toString();

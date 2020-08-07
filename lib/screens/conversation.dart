@@ -352,75 +352,78 @@ if (snapShot == null || !snapShot.exists) {
               )
             ),
             Visibility(
-              visible:!widget.waitingGroups.contains(widget.chatId) && !widget.approvedGroups.contains(widget.chatId),
-              child:
+              visible: (widget.chatOwnerId != widget.userId),
+              child: Visibility(
+                visible:(!widget.waitingGroups.contains(widget.chatId) && !widget.approvedGroups.contains(widget.chatId)),
+                child:
  Align(
-              alignment: Alignment.topCenter,
+                alignment: Alignment.topCenter,
+                child: Container(
+              padding: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 8),
               child: Container(
-            padding: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 8),
-            child: Container(
-              height: 48,
-              decoration: new BoxDecoration(
-                color: Theme.of(context).accentColor,
-                borderRadius: const BorderRadius.all(
-                                          Radius.circular(2.0),
-                                        ),
-              ),
-              child: InkWell(
-                onTap: () {
-                   profileRoute(context, 'member');
+                height: 48,
+                decoration: new BoxDecoration(
+                  color: Theme.of(context).accentColor,
+                  borderRadius: const BorderRadius.all(
+                                            Radius.circular(2.0),
+                                          ),
+                ),
+                child: InkWell(
+                  onTap: () {
+                     profileRoute(context, 'member');
     
-                // if(lock){
-                //   // showInSnackBar('Doc already uploaded');
-                //     Scaffold.of(context).showSnackBar(SnackBar(content: Text("Doc already uploaded"),));
-                // }else{
-                //   getImage();
-                // }
+                  // if(lock){
+                  //   // showInSnackBar('Doc already uploaded');
+                  //     Scaffold.of(context).showSnackBar(SnackBar(content: Text("Doc already uploaded"),));
+                  // }else{
+                  //   getImage();
+                  // }
 
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        SizedBox(height: 6),
-                        Align(
-                          alignment: Alignment.topCenter,
-                        child:Icon(
-                          FontAwesomeIcons.crown,
-                          color: Colors.white,
-                          size: 28,
-                        ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 13),
-                    Align(
-                      alignment: Alignment.center,
-                    child:
-                    Column(
-                      children: <Widget>[
-                        SizedBox(height: 13),
-                        Text(
-                          !widget.waitingGroups.contains(widget.chatId) ? "Join Premium Rs ${widget.groupFullDetails['FeeDetails'][0]['fee']}/-" : "Under Review",
-                          style: TextStyle(
-                            color:
-                                Colors.white,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w400
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          SizedBox(height: 6),
+                          Align(
+                            alignment: Alignment.topCenter,
+                          child:Icon(
+                            FontAwesomeIcons.crown,
+                            color: Colors.white,
+                            size: 28,
                           ),
-                        ),
-                      ],
-                    ),
-                    ),
-                  ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 13),
+                      Align(
+                        alignment: Alignment.center,
+                      child:
+                      Column(
+                        children: <Widget>[
+                          SizedBox(height: 13),
+                          Text(
+                            !widget.waitingGroups.contains(widget.chatId) ? "Join Premium Rs ${widget.groupFullDetails['FeeDetails'][0]['fee']}/-" : "Under Review",
+                            style: TextStyle(
+                              color:
+                                  Colors.white,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w400
+                            ),
+                          ),
+                        ],
+                      ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
           ),
-            ),
+              ),
+              ),
             ),
             Visibility(
                visible: widget.chatOwnerId == widget.userId,
