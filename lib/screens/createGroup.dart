@@ -393,7 +393,7 @@ File _image;
     }
 
     if(_image == null){
-      _showBasicsFlash(context:  context, duration: Duration(seconds: 2), messageText : 'Please upload group DP ...!');
+      _showBasicsFlash(context:  context, duration: Duration(seconds: 3), messageText : 'Please upload group DP ...!');
       // _showBottomFlash(context:  context);
       //  Flushbar(
       //             title:  "Hey Ninja",

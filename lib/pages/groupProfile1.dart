@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:notification/controllers/notificationController.dart';
@@ -45,6 +46,26 @@ class _Profile3State extends State<Profile3> {
     followCountModify = widget.followers;
   }
 
+ void _showBasicsFlash({
+    Duration duration,
+    flashStyle = FlashStyle.floating,BuildContext context, String messageText,
+  }) {
+    showFlash(
+      context: context,
+      duration: duration,
+      builder: (context, controller) {
+        return Flash(
+          controller: controller,
+          style: flashStyle,
+          boxShadows: kElevationToShadow[4],
+          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
+          child: FlashBar(
+            message: Text('$messageText'),
+          ),
+        );
+    },
+    );
+  }
 
 
   List<Widget> _buildStatsView(dynamic values, _media) {
@@ -110,9 +131,9 @@ return lockModify ? FlatButton(
       String userToken = prefs.get('FCMToken');
                         Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayRemove([widget.userId]),'AlldeviceTokens': FieldValue.arrayRemove([userToken])});
                         Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups0' : FieldValue.arrayRemove([widget.chatId])});
-                        Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups1' : FieldValue.arrayRemove([widget.chatId])});
-                        Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups2' : FieldValue.arrayRemove([widget.chatId])});
-                        Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups3' : FieldValue.arrayRemove([widget.chatId])});
+                        // Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups1' : FieldValue.arrayRemove([widget.chatId])});
+                        // Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups2' : FieldValue.arrayRemove([widget.chatId])});
+                        // Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups3' : FieldValue.arrayRemove([widget.chatId])});
                       
                       setState(() {
                         lockModify = !lockModify;
@@ -141,14 +162,14 @@ return lockModify ? FlatButton(
                          //  this is for token 
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
-                        Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayUnion([widget.userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
+                        // Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayUnion([widget.userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
   
    var q1 = await Firestore.instance.collection('IAM').document(widget.userId).get();
 
    var followingGroups0 = q1.data['followingGroups0'] ?? [];
-   var followingGroups1 = q1.data['followingGroups1'] ?? [];
-   var followingGroups2 = q1.data['followingGroups2'] ?? [];
-   var followingGroup3 = q1.data['followingGroups3'] ?? [];
+  //  var followingGroups1 = q1.data['followingGroups1'] ?? [];
+  //  var followingGroups2 = q1.data['followingGroups2'] ?? [];
+  //  var followingGroup3 = q1.data['followingGroups3'] ?? [];
 
 
 
@@ -156,22 +177,27 @@ return lockModify ? FlatButton(
  
   if(followingGroups0.length <9){
     print('i was at following groups 0 ${widget.chatId}');
+      Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayUnion([widget.userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
       Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion([widget.chatId])});
       return;
-  }else if (followingGroups1.length <9){
-      Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups1' : FieldValue.arrayUnion([widget.chatId]) });
-      return;
-  }else if (followingGroups2.length <9){
-      Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups2' : FieldValue.arrayUnion([widget.chatId]) });
-      return;
-  }else if(followingGroup3.length <9){
-      Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups3' : FieldValue.arrayUnion([widget.chatId])});
-  // ds.documentID
-
- NotificationController.instance.subScribeChannelNotification("${widget.chatId}");
-  
-      return;
+  }else{
+   
+ _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Overall max 9 group can be followed...!');
   }
+//   else if (followingGroups1.length <9){
+//       Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups1' : FieldValue.arrayUnion([widget.chatId]) });
+//       return;
+//   }else if (followingGroups2.length <9){
+//       Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups2' : FieldValue.arrayUnion([widget.chatId]) });
+//       return;
+//   }else if(followingGroup3.length <9){
+//       Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups3' : FieldValue.arrayUnion([widget.chatId])});
+//   // ds.documentID
+
+//  NotificationController.instance.subScribeChannelNotification("${widget.chatId}");
+  
+//       return;
+//   }
                        } catch (e) {
                          print('error at joining a group ${e}');
                        }
@@ -516,7 +542,7 @@ Widget winStats(context, _media, gameName, rating){
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: "Win Stastics",
+                  text: "Win Statistics",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,

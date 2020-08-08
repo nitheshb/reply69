@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/controllers/notificationController.dart';
@@ -54,7 +55,7 @@ getUserData(userId)async {
   setState(() {
    waitingGroups = response.data['WaitingGroups'] ?? [];
    approvedGroups = response.data['approvedGroups'] ?? [];
-   followingGroups = response.data['followingGroups'] ?? ['nQ4T04slkEdANneRb4k63'];
+   followingGroups = response.data['followingGroups'] ?? [];
 
   });
   return response.data;
@@ -99,6 +100,26 @@ Widget popularSearchTextContainer(searchText){
               return (lastMessagesIs.length - chatDataIs);
             }
             //  print('chat data is ${chatDataIs}');
+  }
+  void _showBasicsFlash({
+    Duration duration,
+    flashStyle = FlashStyle.floating,BuildContext context, String messageText,
+  }) {
+    showFlash(
+      context: context,
+      duration: duration,
+      builder: (context, controller) {
+        return Flash(
+          controller: controller,
+          style: flashStyle,
+          boxShadows: kElevationToShadow[4],
+          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
+          child: FlashBar(
+            message: Text('$messageText'),
+          ),
+        );
+      },
+    );
   }
 
   List<Widget> _buildSelectedOptions(dynamic values) {
@@ -206,7 +227,7 @@ print("--->check1");
           isScrollable: false,
           tabs: <Widget>[
             Tab(
-              text: "Message",
+              text: "Messages",
             ),
             Tab(
               text: "Groups",
@@ -432,9 +453,9 @@ SingleChildScrollView(
       String userToken = prefs.get('FCMToken');
                         Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayRemove([userId]),'AlldeviceTokens': FieldValue.arrayRemove([userToken])});
                         Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayRemove([ds['chatId']])});
-                        Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups1' : FieldValue.arrayRemove([ds['chatId']])});
-                        Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups2' : FieldValue.arrayRemove([ds['chatId']])});
-                        Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups3' : FieldValue.arrayRemove([ds['chatId']])});
+                        // Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups1' : FieldValue.arrayRemove([ds['chatId']])});
+                        // Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups2' : FieldValue.arrayRemove([ds['chatId']])});
+                        // Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups3' : FieldValue.arrayRemove([ds['chatId']])});
                       },
                     ):
                                  FlatButton(
@@ -452,14 +473,14 @@ SingleChildScrollView(
                          //  this is for token 
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
-                        Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayUnion([userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
+                        // Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayUnion([userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
   
    var q1 = await Firestore.instance.collection('IAM').document(userId).get();
 
    var followingGroups0 = q1.data['followingGroups0'] ?? [];
-   var followingGroups1 = q1.data['followingGroups1'] ?? [];
-   var followingGroups2 = q1.data['followingGroups2'] ?? [];
-   var followingGroup3 = q1.data['followingGroups3'] ?? [];
+  //  var followingGroups1 = q1.data['followingGroups1'] ?? [];
+  //  var followingGroups2 = q1.data['followingGroups2'] ?? [];
+  //  var followingGroup3 = q1.data['followingGroups3'] ?? [];
 
 
 
@@ -468,19 +489,26 @@ SingleChildScrollView(
   if(followingGroups0.length <9){
     print('i was at following groups 0 ${ds['chatId']}');
       Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion([ds['chatId']])});
-      return;
-  }else if (followingGroups1.length <9){
-      Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups1' : FieldValue.arrayUnion([ds['chatId']]) });
-      return;
-  }else if (followingGroups2.length <9){
-      Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups2' : FieldValue.arrayUnion([ds['chatId']]) });
-      return;
-  }else if(followingGroup3.length <9){
-      Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups3' : FieldValue.arrayUnion([ds['chatId']])});
-  // ds.documentID
- NotificationController.instance.subScribeChannelNotification("${ds['chatId']}");
-      return;
+      Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayUnion([userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
+  
+    
+  }else{
+
+ _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Overall max 9 group can be followed...!');
   }
+  
+//   else if (followingGroups1.length <9){
+//       Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups1' : FieldValue.arrayUnion([ds['chatId']]) });
+//       return;
+//   }else if (followingGroups2.length <9){
+//       Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups2' : FieldValue.arrayUnion([ds['chatId']]) });
+//       return;
+//   }else if(followingGroup3.length <9){
+//       Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups3' : FieldValue.arrayUnion([ds['chatId']])});
+//   // ds.documentID
+// //  NotificationController.instance.subScribeChannelNotification("${ds['chatId']}");
+//       return;
+//   }
                        } catch (e) {
                          print('error at joining a group ${e}');
                        }

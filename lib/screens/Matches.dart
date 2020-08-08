@@ -40,7 +40,6 @@ class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProvid
     super.initState();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 4);
     print('iwas called');
-     getUserData(widget.uId);
     
   }
 
@@ -48,17 +47,7 @@ class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProvid
   //   super.dispose();
   // }
 
-getUserData(userId)async {
-  var response = await  Firestore.instance.collection('IAM').document(userId).get();
-  print(('respnse is ${response.data}'));
-  setState(() {
-   waitingGroups = response.data['WaitingGroups'] ?? [];
-   approvedGroups = response.data['approvedGroups'] ?? [];
-   followingGroups = response.data['followingGroups'] ?? ['nQ4T04slkEdANneRb4k63'];
 
-  });
-  return response.data;
-  }
 
   saveLocal(index,lastMessagesIs, chatDocId)async{
       SharedPreferences prefs = await SharedPreferences.getInstance();

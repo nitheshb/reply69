@@ -40,7 +40,7 @@ getUserData(userId)async {
     appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
-    getUserData(userId);
+   // getUserData(userId);
     return Scaffold(
       appBar: AppBar(
         elevation: 0.4,
