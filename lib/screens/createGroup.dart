@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
+import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:notification/widgets/loading.dart';
 import 'package:path/path.dart';
 import 'package:flutter_multiselect/flutter_multiselect.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateGroupProfile extends StatefulWidget {
   final String primaryButtonRoute;
@@ -424,6 +426,13 @@ File _image;
          // Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
        });
        String groupTitle = _groupTitle.text.toLowerCase().replaceAll(new RegExp(r"\s+"), "");
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+
+               var q1 = await Firestore.instance.collection('IAM').document(userId).get();
+
+   var followingGroups0 = q1.data['followingGroups0'] ?? [];
+
+      String userToken = prefs.get('FCMToken');
                         //TODO: Implement sign out
                               var body ={
                                           "title": groupTitle,
@@ -433,7 +442,7 @@ File _image;
                                           "groupType": configImageCompression,
                                           "members": [],
                                           "messages":[],
-                                          "followers":[],
+                                          "followers":['${userId}'],
                                           "color": '',
                                           "logo": ImageUrl,
                                           "paymentNo": _paymentScreenshotPhoneNo.text,
@@ -442,17 +451,33 @@ File _image;
                                           "caseSearch": setSearchParam(groupTitle), 
                                           "AlldevicesTokens": [],
                                           "FdeviceToken": [],
-
-
-
                                         };
+              if(followingGroups0.length <9){
+
+
+
                var check1 =     await Firestore.instance.collection("groups").add(body);
                var documentId = { "chatId": "${check1.documentID}"} ;
                await Firestore.instance.collection("groups").document("${check1.documentID}").updateData(documentId);
+              await   Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion(['${check1.documentID}'])});
                print('added group value is ${check1.documentID}');
-                  await  Navigator.of(context).pop();
-                await    Navigator.of(context)
-                        .pushReplacementNamed(widget.primaryButtonRoute);
+                  print('i was at following created groups 0 ${userId}');
+                       await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+        builder: (BuildContext context)
+        => MainScreen(),
+        ),(Route<dynamic> route) => false);
+                //   await  Navigator.of(context).pop();
+                // await    Navigator.of(context)
+                //         .pushReplacementNamed(widget.primaryButtonRoute);
+
+                      
+
+    
+      return;
+  }else{
+   
+ _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Cannot Create Group ');
+  }    
                      }catch (e) {
         _changeLoadingVisible();
         print("Create Group Creation Error: $e");

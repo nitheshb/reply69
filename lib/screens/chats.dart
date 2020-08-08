@@ -36,6 +36,7 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
   List waitingGroups = [], approvedGroups =[], followingGroups =[];
   List chatIdGroups = ['nQ4T04slkEdANneRb4k6','nQ4T04slkEdANneRb4k61','nQ4T04slkEdANneRb4k62','nQ4T04slkEdANneRb4k63','nQ4T04slkEdANneRb4k64','nQ4T04slkEdANneRb4k65','nQ4T04slkEdANneRb4k66','nQ4T04slkEdANneRb4k67','nQ4T04slkEdANneRb4k68','btl5r2JUwn5imaTToPKq'];
   String _searchTerm;
+  bool allowGroupCreation = true;
   @override
   void initState() {
     super.initState();
@@ -173,27 +174,30 @@ return check;
   // getLengthMatches(areaId);
   var response = await  Firestore.instance.collection('IAM').document(userId).get();
   var followingGroups0 = response.data['followingGroups0'] ?? ['check'];
-  var followingGroups1 = response.data['followingGroups1'] ?? ['check'];
-  var followingGroups2 = response.data['followingGroups2'] ?? ['check'];
-  var followingGroups3 = response.data['followingGroups3'] ?? ['check'];
+  // var followingGroups1 = response.data['followingGroups1'] ?? ['check'];
+  // var followingGroups2 = response.data['followingGroups2'] ?? ['check'];
+  // var followingGroups3 = response.data['followingGroups3'] ?? ['check'];
+  if(followingGroups0.length >8){
+    allowGroupCreation = false;
+  }
     List<DocumentSnapshot> listSnaps = List();
      QuerySnapshot q1 = await Firestore.instance.collection('groups').where(
         'chatId', whereIn: followingGroups0.length >0 ? followingGroups0 : ['check'] )
         .getDocuments();
-    QuerySnapshot q2 = await Firestore.instance.collection('groups').where(
-        'chatId', whereIn: followingGroups1.length >0 ? followingGroups1 : ['check'] )
-        .getDocuments();
-    QuerySnapshot q3 = await Firestore.instance.collection('groups').where(
-        'chatId', whereIn: followingGroups2.length >0 ? followingGroups2 : ['check'] )
-        .getDocuments();
-     QuerySnapshot q4 = await Firestore.instance.collection('groups').where(
-        'chatId', whereIn: followingGroups3.length >0 ? followingGroups3 : ['check'] )
-        .getDocuments();
+    // QuerySnapshot q2 = await Firestore.instance.collection('groups').where(
+    //     'chatId', whereIn: followingGroups1.length >0 ? followingGroups1 : ['check'] )
+    //     .getDocuments();
+    // QuerySnapshot q3 = await Firestore.instance.collection('groups').where(
+    //     'chatId', whereIn: followingGroups2.length >0 ? followingGroups2 : ['check'] )
+    //     .getDocuments();
+    //  QuerySnapshot q4 = await Firestore.instance.collection('groups').where(
+    //     'chatId', whereIn: followingGroups3.length >0 ? followingGroups3 : ['check'] )
+    //     .getDocuments();
     listSnaps.addAll(q1.documents);
-    listSnaps.addAll(q2.documents);
-    listSnaps.addAll(q3.documents);
-    listSnaps.addAll(q4.documents);
-print("--->check1");
+    // listSnaps.addAll(q2.documents);
+    // listSnaps.addAll(q3.documents);
+    // listSnaps.addAll(q4.documents);
+print("--->check12 ${followingGroups0}");
     return listSnaps;
 //    return stream1;
 //     return StreamZip([stream1,stream2]);
@@ -589,7 +593,7 @@ SingleChildScrollView(
         onPressed: () async{
     String token = await _firebaseMessaging.getToken();
     print('token is : ${token}');
-
+        if(allowGroupCreation){
           // 
             Navigator.push(
                         context,
@@ -597,6 +601,9 @@ SingleChildScrollView(
                           builder: (context) => CreateGroupProfile(primaryButtonRoute: "/home"),
                         ),
                       );
+        }else{
+           _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Limit Reached.Unfollow any group to proceed');
+        }
         },
       ),
     );
