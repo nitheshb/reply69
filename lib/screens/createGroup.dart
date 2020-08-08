@@ -433,6 +433,7 @@ File _image;
                                           "groupType": configImageCompression,
                                           "members": [],
                                           "messages":[],
+                                          "followers":[],
                                           "color": '',
                                           "logo": ImageUrl,
                                           "paymentNo": _paymentScreenshotPhoneNo.text,

@@ -14,6 +14,7 @@ import 'package:notification/controllers/notificationController.dart';
 import 'package:notification/pages/feedBacker.dart';
 import 'package:notification/pages/imageEditor.dart';
 import 'package:notification/pages/imageFullView.dart';
+import 'package:notification/pages/reports.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/widgets/chat_bubble.dart';
 import 'dart:math';
@@ -209,6 +210,14 @@ if (snapShot == null || !snapShot.exists) {
               print('selected value si   $value');
               if(value == "Profile"){
                 profileRoute(context, 'member');
+              }else if(value == "Report"){
+                  Navigator.push(
+                                    context,
+                                   new  MaterialPageRoute(
+                                        builder: (BuildContext context) => 
+                                        ReportScreen(chatId: widget.chatId,uId: widget.userId),
+                                        ),
+                                 );
               }
             },
               itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
@@ -221,10 +230,10 @@ if (snapShot == null || !snapShot.exists) {
                       value: "Report",
                       child: Text("Report"),
                     ),
-                    PopupMenuItem(
-                      value: "Exit Group",
-                      child: Text("Exit Group"),
-                    ),
+                    // PopupMenuItem(
+                    //   value: "Exit Group",
+                    //   child: Text("Exit Group"),
+                    // ),
                   ]),
           ),
           // display for group owners
@@ -263,10 +272,6 @@ if (snapShot == null || !snapShot.exists) {
                     PopupMenuItem(
                       value: "Expired Memberships",
                       child: Text("Expired Membersips"),
-                    ),
-                    PopupMenuItem(
-                      value: "Member Feedback",
-                      child: Text("Member Feedback"),
                     ),
                     PopupMenuItem(
                       value: "Edit Details",

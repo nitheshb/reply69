@@ -1,5 +1,7 @@
 import 'dart:async';
 //import 'dart:convert';
+import 'package:flash/flash.dart';
+import 'package:flutter/material.dart';
 import 'package:notification/models/settings.dart';
 import 'package:notification/models/users.dart';
 
@@ -48,6 +50,33 @@ class Auth {
         print("user ${user.firstName} ${user.email} exists");
       }
     });
+  }
+ static showBasicsFlash({
+    Duration duration,
+    flashStyle = FlashStyle.floating,BuildContext context, String messageText,
+  }) {
+    showFlash(
+      context: context,
+      duration: duration,
+      builder: (context, controller) {
+        return Flash(
+          controller: controller,
+          style: flashStyle,
+          boxShadows: kElevationToShadow[4],
+          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
+          child: FlashBar(
+            message: Text('$messageText'),
+          ),
+        );
+      },
+    );
+  }
+      static addReportData(uId, chatId, category, description) async {
+        var jsonData = {'uid': uId, 'chatId':chatId, 'category': category, 'description': description};
+             var userId =  await Firestore.instance.collection('complaints')
+            .document()
+            .setData(jsonData);
+
   }
 
   static Future<bool> checkUserExist(String userId) async {

@@ -52,11 +52,7 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
 
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          decoration: InputDecoration.collapsed(
-            hintText: 'Search',
-          ),
-        ),
+        title: Text("Members"),
         actions: <Widget>[
           IconButton(
             icon: Icon(
