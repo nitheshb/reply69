@@ -40,7 +40,8 @@ class MyImageEditorPro extends StatefulWidget {
   final Color appBarColor;
   final Color bottomBarColor;
   final String groupLogo, userId, chatId;
-  MyImageEditorPro({this.appBarColor, this.bottomBarColor, this.groupLogo, this.userId, this.chatId});
+  final bool premiumMode;
+  MyImageEditorPro({this.appBarColor, this.premiumMode,this.bottomBarColor, this.groupLogo, this.userId, this.chatId});
 
   @override
   _MyImageEditorProState createState() => _MyImageEditorProState();
@@ -186,7 +187,7 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
     String url = dowurl.toString();
     print('uploaded url is $url');
         try {
-                        var body ={ "imageUrl":url, "date": now,"author": widget.userId, "type": "Image" };
+                        var body ={ "imageUrl":url, "date": now,"author": widget.userId, "type": "Image", "premium": widget.premiumMode };
                       await  Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'messages' : FieldValue.arrayUnion([body])});
                      image = null;
                       } catch (e) {

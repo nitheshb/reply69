@@ -18,10 +18,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateGroupProfile extends StatefulWidget {
   final String primaryButtonRoute;
+  List followingGroupsLocal;
   
   CreateGroupProfile(
       {
       @required this.primaryButtonRoute,
+      this.followingGroupsLocal,
 });
   @override
   _CreateGroupProfileState createState() => _CreateGroupProfileState();
@@ -428,9 +430,9 @@ File _image;
        String groupTitle = _groupTitle.text.toLowerCase().replaceAll(new RegExp(r"\s+"), "");
             SharedPreferences prefs = await SharedPreferences.getInstance();
 
-               var q1 = await Firestore.instance.collection('IAM').document(userId).get();
+              //  var q1 = await Firestore.instance.collection('IAM').document(userId).get();
 
-   var followingGroups0 = q1.data['followingGroups0'] ?? [];
+  //  var followingGroups0 = q1.data['followingGroups0'] ?? [];
 
       String userToken = prefs.get('FCMToken');
                         //TODO: Implement sign out
@@ -452,7 +454,7 @@ File _image;
                                           "AlldevicesTokens": [],
                                           "FdeviceToken": [],
                                         };
-              if(followingGroups0.length <9){
+              if(widget.followingGroupsLocal.length <9){
 
 
 
@@ -462,9 +464,11 @@ File _image;
               await   Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion(['${check1.documentID}'])});
                print('added group value is ${check1.documentID}');
                   print('i was at following created groups 0 ${userId}');
+                  widget.followingGroupsLocal.add(check1.documentID);
+                        StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,check1.documentID, 'add' );
                        await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
         builder: (BuildContext context)
-        => MainScreen(),
+        => MainScreen(userId: userId,followingGroupsLocal: widget.followingGroupsLocal),
         ),(Route<dynamic> route) => false);
                 //   await  Navigator.of(context).pop();
                 // await    Navigator.of(context)

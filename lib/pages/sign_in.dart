@@ -6,6 +6,7 @@ import 'package:notification/Animation/FadeAnimation.dart';
 import 'package:notification/pages/forget_password.dart';
 import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/auth.dart';
+import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:notification/util/validators.dart';
 import 'package:notification/widgets/loading.dart';
@@ -26,6 +27,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
   bool _autoValidate = false;
 
   bool _loadingVisible = false;
+    StateModel appState; 
 
   @override
   Widget build(BuildContext context) {
@@ -255,16 +257,19 @@ Widget buildPasswordBox(){
         //need await so it has chance to go through error if found.
         await StateWidget.of(context).logInUser(email, password);
         print('successfully validated');
-     
+                 appState = StateWidget.of(context).state;
+    final userId = appState?.firebaseUserAuth?.uid ?? '';
+    final followingGroups = await appState.followingGroups;
         await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
         builder: (BuildContext context)
-        => MainScreen(),
+        => MainScreen(userId: userId,followingGroupsLocal: followingGroups),
         ),(Route<dynamic> route) => false);
         
       } catch (e) {
         _changeLoadingVisible();
         print("Sign In Error: $e");
         String exception = Auth.getExceptionText(e);
+        // Auth.showBasicsFlash(messageText: "Sign In Error ${exception}", duration:Duration(seconds: 4));
         //    Fluttertoast.showToast(
         // msg: "Sign In Error ${exception}",
         //    );

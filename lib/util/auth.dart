@@ -146,7 +146,35 @@ class Auth {
     //  this is used in notifications
     String storeUserId = user.userId;
     await prefs.setString('FireUserId', storeUserId);
+    await prefs.setString('firstName', user.firstName);
+
+List<String> followingGroupsLocal =[];
+await user.followingGroups.forEach((data){
+  print('i was here with data, $data');
+  // followingGroupsLocal = data.cast<String>();
+  followingGroupsLocal.add( data);
+});
+
+
+    await prefs.setStringList('followingGroups', followingGroupsLocal);
+    var check = await prefs.getStringList('followingGroups');
+    print('check,group, ${check}');
     return user.userId;
+  }
+    
+  static  getFollowingGroups() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+     List followingGroups = await prefs.getStringList('followingGroups');
+    return followingGroups;
+  }
+  static Future<List> setFollowingGroups(oldData,value, action) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(action == 'remove'){
+      // await prefs.setStringList('followingGroups', oldData.remove(value));
+    }else {
+      //  await prefs.setStringList('followingGroups', oldData.add(value));
+    }
+   // return followingGroups;
   }
   static Future<String> storeUserLocationLocal(String user, locationId,soId,soName,hoId,hoName) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

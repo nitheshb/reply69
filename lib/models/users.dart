@@ -24,6 +24,7 @@ class User {
   String referralCode;
   var walletMoney;
   String location;
+  List<dynamic> followingGroups;
 
   User({
     this.userId,
@@ -34,7 +35,10 @@ class User {
     this.referralCode, 
     this.walletMoney,
     this.location,
+    this.followingGroups
   });
+
+
 
   factory User.fromJson(Map<String, dynamic> json) => new User(
         userId: json["userId"],
@@ -42,7 +46,8 @@ class User {
         lastName: json["lastName"],
         phoneNumber: json["phoneNumber"],
         email: json["email"],
-        walletMoney: json["walletMoney"]
+        walletMoney: json["walletMoney"],
+        followingGroups: json['followingGroups0']
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,6 +57,7 @@ class User {
         "phoneNumber": phoneNumber,
         "email": email,
         "walletMoney": walletMoney,
+        "followingGroups": followingGroups
       };
 
   factory User.fromDocument(DocumentSnapshot doc) {

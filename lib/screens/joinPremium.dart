@@ -5,6 +5,7 @@ import 'package:flash/flash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/editGroup.dart';
+import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/util/screen_size.dart';
 import 'package:notification/util/state.dart';
@@ -34,11 +35,13 @@ class JoinPremiumGroup extends StatefulWidget {
     this.lock, this.title, 
     this.feeArray, this.paymentScreenshotNo, 
     this.seasonRating,this.thisWeekRating, this.lastWeekRating,
+    this.followingGroupsLocal,
     this.avatarUrl}) : super(key: key);
    final String chatId, userId,title,  
                 paymentScreenshotNo, avatarUrl,
                 accessingBy,
                 groupOwnerName, seasonRating,thisWeekRating, lastWeekRating;
+                List followingGroupsLocal;
    final feeArray;
    final List categories, followers;
 
@@ -247,8 +250,18 @@ return lockModify ? FlatButton(
                       setState(() {
                         lockModify = !lockModify;
                         followCountModify.remove(widget.userId);
+                        widget.followingGroupsLocal.remove(widget.chatId);
+                        print('value of premium unfollow ${followCountModify}');
+                        StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,widget.chatId, 'remove' );
                       
                       });
+    appState = StateWidget.of(context).state;
+    final userId = appState?.firebaseUserAuth?.uid ?? '';
+    final followingGroups = await appState.followingGroups;
+        await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+        builder: (BuildContext context)
+        => MainScreen(userId: widget.userId,followingGroupsLocal: widget.followingGroupsLocal),
+        ),(Route<dynamic> route) => false);
                       return;
                       },
                     ):

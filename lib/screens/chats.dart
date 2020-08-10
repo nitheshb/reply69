@@ -11,6 +11,7 @@ import 'package:notification/pages/chatWindow.dart';
 import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/conversation.dart';
 import 'package:notification/screens/createGroup.dart';
+import 'package:notification/util/auth.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
@@ -23,8 +24,10 @@ class Chats extends StatefulWidget {
     Key key,
     this.uId,
     this.uEmailId,
+    this.followingGroupsLocal,
   }) : super(key: key);
   final String uId, uEmailId;
+   List followingGroupsLocal;
   @override
   _ChatsState createState() => _ChatsState();
 }
@@ -37,31 +40,125 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
   List chatIdGroups = ['nQ4T04slkEdANneRb4k6','nQ4T04slkEdANneRb4k61','nQ4T04slkEdANneRb4k62','nQ4T04slkEdANneRb4k63','nQ4T04slkEdANneRb4k64','nQ4T04slkEdANneRb4k65','nQ4T04slkEdANneRb4k66','nQ4T04slkEdANneRb4k67','nQ4T04slkEdANneRb4k68','btl5r2JUwn5imaTToPKq'];
   String _searchTerm;
   bool allowGroupCreation = true;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 2);
     print('iwas called');
-     getUserData(widget.uId);
-    
+
   }
 
     // void dispose() {
   //   super.dispose();
   // }
 
-getUserData(userId)async {
-  var response = await  Firestore.instance.collection('IAM').document(userId).get();
-  print(('respnse is ${response.data}'));
-  setState(() {
-   waitingGroups = response.data['WaitingGroups'] ?? [];
-   approvedGroups = response.data['approvedGroups'] ?? [];
-   followingGroups = response.data['followingGroups'] ?? [];
 
-  });
-  return response.data;
+  // var response = await  Firestore.instance.collection('IAM').document(userId).get();
+  // print(('respnse is ${response.data}'));
+  // setState(() {
+  //  waitingGroups = response.data['WaitingGroups'] ?? [];
+  //  approvedGroups = response.data['approvedGroups'] ?? [];
+  //  followingGroups = response.data['followingGroups'] ?? [];
+
+  // });
+  // return response.data;
+  // }
+
+
+Widget chatViewList(context, userId, email, followingGroupss, data, followGroupState){
+        print('following widget groups --> ${widget.followingGroupsLocal}' );
+        print('following widget values --> ${data}' );
+         print('following widget followGroupState values --> ${followGroupState}' );
+          final followGroupState1 = appState.followingGroups;
+      print('--> values are ${followGroupState1}');
+         var value;
+        //  if(widget.followingGroupsLocal.length == 0 &&  followGroupState != []){
+        //     value = followGroupState;
+        //     print('value is ddd, ${followGroupState}');
+        //  }else{
+        //     print('value is true check, ${widget.followingGroupsLocal == []}  ${ followGroupState != []}');
+        //     print('wow ${widget.followingGroupsLocal}');
+        //    value = widget.followingGroupsLocal;
+        //  }
+ if(widget.followingGroupsLocal.length >8){
+    allowGroupCreation = false;
   }
+        return StreamBuilder(
+        stream: Firestore.instance.collection('groups').where('chatId', whereIn:  widget.followingGroupsLocal).snapshots(),
+        // stream:  Firestore.instance.collection('groups').document(widget.chatId).snapshots(),
+        builder: (context,snapshot){
+                     if (snapshot.hasError) {
+          return Text('Error ${snapshot.error}');
+        }
+          if(snapshot.hasData && snapshot.data.documents.length >0 ){
+              print('data is query1 ${snapshot.data.documents.length}');
+            // return Text('value is ');
+        return  ListView.separated(
+            padding: EdgeInsets.all(10),
+            separatorBuilder: (BuildContext context, int index) {
+              return Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  height: 0.5,
+                  width: MediaQuery.of(context).size.width / 1.3,
+                  child: Divider(),
+                ),
+              );
+            },
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (BuildContext context, int index)  {
+             DocumentSnapshot ds = snapshot.data.documents[index];   
+             var dataSnapshot =   snapshot.data.documents[index].data ;      
+              var lastMessagesIs = dataSnapshot['lastMessageDetails'] ?? {"lastMsg":"No msg", "lastMsgTime": ""};
+             int x;
+            //  saveLocal(index,ds['messages'] ?? [], ds.documentID).then((data) {
+            //       x = data;
+            //  });
 
+              Map chat = chats[index];
+              return InkWell(
+                   onTap: (){
+            Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Conversation(followingGroupsLocal: widget.followingGroupsLocal,groupFullDetails: ds.data,chatId: ds.documentID, groupSportCategory: ds.data['category'],chatOwnerId: ds.data['createdBy'],groupTitle: ds.data['title']?? "", groupLogo: ds.data['logo']?? null, followers: ds.data['followers']?? [],approvedGroupsJson: ds.data['approvedGroupsJson'], userId: userId, senderMailId: email,chatType: "", waitingGroups: waitingGroups, approvedGroups: approvedGroups),
+                        ),
+                      );
+                   },
+                child: ChatMenuIcon(
+                  dp: ds['logo'],
+                  groupName: ds['title'],
+                  isOnline: ds.data['createdBy'] == userId,
+                  counter: 0,
+                  msg:  lastMessagesIs['lastMsg'],
+                  time: lastMessagesIs['lastMsgTime'] =="" ? "" :Jiffy(lastMessagesIs['lastMsgTime'].toDate()).fromNow().toString(),
+                ),
+              );
+            },
+          
+          );
+          }
+                return 
+                     Align(
+                       alignment: Alignment.center,
+                     child: Column(
+                       children: <Widget>[
+                         SizedBox(height: MediaQuery.of(context).size.height/4.5),
+                         
+                         new Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: Image(image: AssetImage('assets/emptyMsgs.png'),),
+            
+            ),
+
+            new Text('Loading or No added Groups', style: TextStyle(color: Colors.black, fontSize: 20),),
+                         
+                       ],
+                     )
+                     );
+        });
+}
 Widget popularSearchTextContainer(searchText){
   return     Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -159,8 +256,8 @@ Widget popularSearchTextContainer(searchText){
 
   searchGroupsQuery(query){
     if(query != null){
-var check = Firestore.instance.collection('groups').where("caseSearch", arrayContains: query).snapshots();
-return check;
+var followGroupState = Firestore.instance.collection('groups').where("caseSearch", arrayContains: query).snapshots();
+return followGroupState;
     }else{
       return;
     }
@@ -218,6 +315,11 @@ print("--->check12 ${followingGroups0}");
         appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
+    final followGroupState = appState.followingGroups;
+   var data = Auth.getFollowingGroups;
+   print('own it has getFollowingGroups data ${data}');
+   print('own it has widget value data ${widget.followingGroupsLocal}');
+    print('own it has widget followGroupState data ${followGroupState}');
    // getUserData(userId);
     print('check ${followingGroups}');
     return Scaffold(
@@ -243,78 +345,81 @@ print("--->check12 ${followingGroups0}");
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          Container(child: FutureBuilder<List<DocumentSnapshot>>(
-        // stream:  Firestore.instance.collection('groups').where('chatId', whereIn: ['nQ4T04slkEdANneRb4k6','nQ4T04slkEdANneRb4k61','nQ4T04slkEdANneRb4k62','nQ4T04slkEdANneRb4k63','nQ4T04slkEdANneRb4k64','nQ4T04slkEdANneRb4k65','nQ4T04slkEdANneRb4k66','nQ4T04slkEdANneRb4k67','nQ4T04slkEdANneRb4k68']).where('chatId', whereIn: ['btl5r2JUwn5imaTToPKq']).snapshots(),
-        future: getFollowedGroups(userId),
-        builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshotList){
-                     if (snapshotList.hasError) {
-          return Text('Error ${snapshotList.error}');
-        }
-          if(snapshotList.hasData && snapshotList.data.length > 0 ){
-            // return Text('value is ');
-        return  ListView.separated(
-            padding: EdgeInsets.all(10),
-            separatorBuilder: (BuildContext context, int index) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  height: 0.5,
-                  width: MediaQuery.of(context).size.width / 1.3,
-                  child: Divider(),
-                ),
-              );
-            },
-            itemCount: snapshotList.data.length,
-            itemBuilder: (BuildContext context, int index)  {
-              DocumentSnapshot ds = snapshotList.data[index];              
-              var lastMessagesIs = ds['lastMessageDetails'] ?? {"lastMsg":"No msg", "lastMsgTime": ""};
-             int x;
-            //  saveLocal(index,ds['messages'] ?? [], ds.documentID).then((data) {
-            //       x = data;
-            //  });
+          Container(
+            child: chatViewList(context, userId, email, followingGroups, data, followGroupState)
+          ),
+        //   Container(child: FutureBuilder<List<DocumentSnapshot>>(
+        // //  stream:  Firestore.instance.collection('groups').where('chatId', whereIn: ['nQ4T04slkEdANneRb4k6','nQ4T04slkEdANneRb4k61','nQ4T04slkEdANneRb4k62','nQ4T04slkEdANneRb4k63','nQ4T04slkEdANneRb4k64','nQ4T04slkEdANneRb4k65','nQ4T04slkEdANneRb4k66','nQ4T04slkEdANneRb4k67','nQ4T04slkEdANneRb4k68']).where('chatId', whereIn: ['btl5r2JUwn5imaTToPKq']).snapshots(),
+        //  future: getFollowedGroups(userId),
+        // builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshotList){
+        //              if (snapshotList.hasError) {
+        //   return Text('Error ${snapshotList.error}');
+        // }
+        //   if(snapshotList.hasData && snapshotList.data.length > 0 ){
+        //     // return Text('value is ');
+        // return  ListView.separated(
+        //     padding: EdgeInsets.all(10),
+        //     separatorBuilder: (BuildContext context, int index) {
+        //       return Align(
+        //         alignment: Alignment.centerRight,
+        //         child: Container(
+        //           height: 0.5,
+        //           width: MediaQuery.of(context).size.width / 1.3,
+        //           child: Divider(),
+        //         ),
+        //       );
+        //     },
+        //     itemCount: snapshotList.data.length,
+        //     itemBuilder: (BuildContext context, int index)  {
+        //       DocumentSnapshot ds = snapshotList.data[index];              
+        //       var lastMessagesIs = ds['lastMessageDetails'] ?? {"lastMsg":"No msg", "lastMsgTime": ""};
+        //      int x;
+        //     //  saveLocal(index,ds['messages'] ?? [], ds.documentID).then((data) {
+        //     //       x = data;
+        //     //  });
 
-              Map chat = chats[index];
-              return InkWell(
-                   onTap: (){
-            Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Conversation(groupFullDetails: ds.data,chatId: ds.documentID, groupSportCategory: ds.data['category'],chatOwnerId: ds.data['createdBy'],groupTitle: ds.data['title']?? "", groupLogo: ds.data['logo']?? null, followers: ds.data['followers']?? [],approvedGroupsJson: ds.data['approvedGroupsJson'], userId: userId, senderMailId: email,chatType: "", waitingGroups: waitingGroups, approvedGroups: approvedGroups),
-                        ),
-                      );
-                   },
-                child: ChatMenuIcon(
-                  dp: ds['logo'],
-                  groupName: ds['title'],
-                  isOnline: chat['isOnline'],
-                  counter: 0,
-                  msg:  lastMessagesIs['lastMsg'],
-                  time: lastMessagesIs['lastMsgTime'] =="" ? "" :Jiffy(lastMessagesIs['lastMsgTime'].toDate()).fromNow().toString(),
-                ),
-              );
-            },
+        //       Map chat = chats[index];
+        //       return InkWell(
+        //            onTap: (){
+        //     Navigator.push(
+        //                 context,
+        //                 MaterialPageRoute(
+        //                   builder: (context) => Conversation(groupFullDetails: ds.data,chatId: ds.documentID, groupSportCategory: ds.data['category'],chatOwnerId: ds.data['createdBy'],groupTitle: ds.data['title']?? "", groupLogo: ds.data['logo']?? null, followers: ds.data['followers']?? [],approvedGroupsJson: ds.data['approvedGroupsJson'], userId: userId, senderMailId: email,chatType: "", waitingGroups: waitingGroups, approvedGroups: approvedGroups),
+        //                 ),
+        //               );
+        //            },
+        //         child: ChatMenuIcon(
+        //           dp: ds['logo'],
+        //           groupName: ds['title'],
+        //           isOnline: chat['isOnline'],
+        //           counter: 0,
+        //           msg:  lastMessagesIs['lastMsg'],
+        //           time: lastMessagesIs['lastMsgTime'] =="" ? "" :Jiffy(lastMessagesIs['lastMsgTime'].toDate()).fromNow().toString(),
+        //         ),
+        //       );
+        //     },
           
-          );
-          }
-         return 
-                     Align(
-                       alignment: Alignment.center,
-                     child: Column(
-                       children: <Widget>[
-                         SizedBox(height: MediaQuery.of(context).size.height/4.5),
+        //   );
+        //   }
+        //  return 
+        //              Align(
+        //                alignment: Alignment.center,
+        //              child: Column(
+        //                children: <Widget>[
+        //                  SizedBox(height: MediaQuery.of(context).size.height/4.5),
                          
-                         new Container(
-              height: MediaQuery.of(context).size.height / 3,
-              child: Image(image: AssetImage('assets/emptyMsgs.png'),),
+        //                  new Container(
+        //       height: MediaQuery.of(context).size.height / 3,
+        //       child: Image(image: AssetImage('assets/emptyMsgs.png'),),
             
-            ),
+        //     ),
 
-            new Text('Loading or No added Groups', style: TextStyle(color: Colors.black, fontSize: 20),),
+        //     new Text('Loading or No added Groups', style: TextStyle(color: Colors.black, fontSize: 20),),
                          
-                       ],
-                     )
-                     );
-        })),
+        //                ],
+        //              )
+        //              );
+        // })),
           
           // second tab
 SingleChildScrollView(
@@ -457,6 +562,17 @@ SingleChildScrollView(
       String userToken = prefs.get('FCMToken');
                         Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayRemove([userId]),'AlldeviceTokens': FieldValue.arrayRemove([userToken])});
                         Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayRemove([ds['chatId']])});
+
+                        // Auth.setFollowingGroups(followingGroup_real,ds['chatId'], 'remove' );
+                        // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
+                        setState(() {
+                          // followingGroup_real.remove(ds['chatId']);
+                          widget.followingGroupsLocal.remove(ds['chatId']);
+                          StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
+                        });
+
+                
+                        
                         // Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups1' : FieldValue.arrayRemove([ds['chatId']])});
                         // Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups2' : FieldValue.arrayRemove([ds['chatId']])});
                         // Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups3' : FieldValue.arrayRemove([ds['chatId']])});
@@ -479,9 +595,9 @@ SingleChildScrollView(
       String userToken = prefs.get('FCMToken');
                         // Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayUnion([userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
   
-   var q1 = await Firestore.instance.collection('IAM').document(userId).get();
+  // var q1 = await Firestore.instance.collection('IAM').document(userId).get();
 
-   var followingGroups0 = q1.data['followingGroups0'] ?? [];
+  // var followingGroups0 = q1.data['followingGroups0'] ?? [];
   //  var followingGroups1 = q1.data['followingGroups1'] ?? [];
   //  var followingGroups2 = q1.data['followingGroups2'] ?? [];
   //  var followingGroup3 = q1.data['followingGroups3'] ?? [];
@@ -490,11 +606,22 @@ SingleChildScrollView(
 
 
 
-  if(followingGroups0.length <9){
-    print('i was at following groups 0 ${ds['chatId']}');
+  if(widget.followingGroupsLocal.length <9){
+    print('i was at following groups 0 with length  ${widget.followingGroupsLocal.length}, ${ds['chatId']}');
       Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion([ds['chatId']])});
       Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayUnion([userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
   
+  
+                        // Auth.setFollowingGroups(widget.followingGroupsLocal,ds['chatId'], 'add' );
+                        // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
+                        setState(() {
+                          print('i was hit ones');
+                          // followingGroup_real.add(ds['chatId']);
+                          widget.followingGroupsLocal.add(ds['chatId']);
+                          StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
+                        });
+
+
     
   }else{
 
@@ -514,6 +641,7 @@ SingleChildScrollView(
 //       return;
 //   }
                        } catch (e) {
+                          _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'error at following ${e}');
                          print('error at joining a group ${e}');
                        }
           
@@ -536,9 +664,8 @@ SingleChildScrollView(
                 feeDetails: ds['FeeDetails'] ?? [],
                 seasonRating: ds['seasonRating'] ?? 'NA',
                 thisWeekRating: ds['thisWeekRating'] ?? 'NA',
-                lastWeekRating: ds['lastWeekRating'] ?? 'NA'
-
-
+                lastWeekRating: ds['lastWeekRating'] ?? 'NA',
+                followingGroupsLocal: widget.followingGroupsLocal
               )),
             );
                       },          
@@ -598,7 +725,7 @@ SingleChildScrollView(
             Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreateGroupProfile(primaryButtonRoute: "/home"),
+                          builder: (context) => CreateGroupProfile(primaryButtonRoute: "/home", followingGroupsLocal: widget.followingGroupsLocal),
                         ),
                       );
         }else{

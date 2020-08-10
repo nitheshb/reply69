@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:notification/screens/Matches.dart';
+import 'package:notification/screens/home.dart';
+import 'package:notification/screens/notifications.dart';
 import 'package:notification/screens/profile.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import 'chats.dart';
 import 'groups.dart';
 
 class MainScreen extends StatefulWidget {
+    MainScreen({
+    Key key,
+    this.userId,
+    this.followingGroupsLocal,
+    this.launchKey
+  }) : super(key: key);
+  final String userId;
+  List followingGroupsLocal;
+  int launchKey;
   @override
   _MainScreenState createState() => _MainScreenState();
 }
@@ -18,12 +30,40 @@ class _MainScreenState extends State<MainScreen> {
   PageController _pageController;
   StateModel appState;  
   int _page = 1;
+  List localDataFollowingGroups =[];
+  
+
+
+// loadingData()async{
+//   print(' iwas here');
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//    var check = await prefs.getStringList('followingGroups');
+//     print('checking groups 2 check ${check}');
+//    setState(() {
+//      localDataFollowingGroups = check;
+//    });
+// }
+getUserData(userId)async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+     var followingGroups = await prefs.getStringList('followingGroups');
+    // return followingGroups;
+
+print('wowow check this  ${followingGroups}');
+   localDataFollowingGroups = followingGroups ?? [];
+
+}
 
   @override
   Widget build(BuildContext context) {
             appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
+    // final localFollowingGroups = appState.user;
+    print('checking groups 2 ${localDataFollowingGroups}');
+    // loadingData();
+
+  
+    
 
     return Scaffold(
       body: PageView(
@@ -33,9 +73,10 @@ class _MainScreenState extends State<MainScreen> {
         children: <Widget>[
           // ChatsOld(),
           // Home(),
-           DisplayMatches(uId: userId, uEmailId: email,),
-          Chats(uId: userId, uEmailId: email,),
+           DisplayMatches(uId: userId, uEmailId: email),
+          Chats(uId: userId, uEmailId: email, followingGroupsLocal: widget.followingGroupsLocal ),
           // Notifications(),
+          // Home(),
           Profile(),
         ],
       ),
@@ -114,12 +155,15 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 1);
+     getUserData(widget.userId);
+   // loadingData();
   }
 
   @override
   void dispose() {
     super.dispose();
     _pageController.dispose();
+    // getUserData(widget.userId).dispose();
   }
 
   void onPageChanged(int page) {

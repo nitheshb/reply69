@@ -17,6 +17,7 @@ import 'package:notification/pages/imageFullView.dart';
 import 'package:notification/pages/reports.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/widgets/chat_bubble.dart';
+import 'package:notification/widgets/post_item.dart';
 import 'dart:math';
 
 
@@ -25,9 +26,12 @@ import 'joinPremium.dart';
 import 'joinRequestApproval.dart';
 
 class Conversation extends StatefulWidget {
-  Conversation({Key key,this.groupFullDetails,this.chatId,this.groupSportCategory,this.userId,this.groupLogo,this.groupTitle,this.senderMailId, this.chatType, this.waitingGroups, this.approvedGroups,this.followers, this.chatOwnerId, this.approvedGroupsJson, this.AllDeviceTokens, this.FDeviceTokens});
+  Conversation({Key key,this.groupFullDetails,
+  this.followingGroupsLocal,
+  this.chatId,this.groupSportCategory,this.userId,this.groupLogo,this.groupTitle,this.senderMailId, this.chatType, this.waitingGroups, this.approvedGroups,this.followers, this.chatOwnerId, this.approvedGroupsJson, this.AllDeviceTokens, this.FDeviceTokens});
   final String chatId, userId,chatType, chatOwnerId, senderMailId, groupTitle, groupLogo ;
   List waitingGroups, approvedGroups, AllDeviceTokens,FDeviceTokens, groupSportCategory, followers;
+  List followingGroupsLocal;
   List approvedGroupsJson;
   final groupFullDetails;
 
@@ -105,6 +109,7 @@ profileRoute(context, origin){
                                       seasonRating: widget.groupFullDetails['seasonRating'] ?? 'NA',
                                        thisWeekRating: widget.groupFullDetails['thisWeekRating'] ?? 'NA',
                                       lastWeekRating: widget.groupFullDetails['lastWeekRating'] ?? 'NA',
+                                      followingGroupsLocal: widget.followingGroupsLocal,
                                       accessingBy: origin
                                       ),
                                       ),
@@ -313,8 +318,46 @@ if (snapShot == null || !snapShot.exists) {
                       scrollToBottomFun();
                         // var datestamp = new DateFormat("dd-MM'T'HH:mm");
                         var datestamp = new DateFormat("HH:mm");
+  // return PostItem(
+  //           message: snapshot.data['messages'][indexVal]['type'] == "text"
+  //                       ?snapshot.data['messages'][indexVal]['messageBody']
+  //                       :snapshot.data['messages'][indexVal]['imageUrl'],
+  //           premium:  snapshot.data['messages'][indexVal]['premium'] ,          
+  //           type : snapshot.data['messages'][indexVal]['type'],
+  //           img: snapshot.data['messages'][indexVal]['imageUrl'],
+  //           name: snapshot.data['messages'][indexVal]['type'],
+  //           dp: snapshot.data['messages'][indexVal]['imageUrl'],
+  //           time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
+  //         );
 
-          
+       if   (widget.approvedGroups.contains(widget.chatId) && snapshot.data['messages'][indexVal]['premium']){
+          return PostItem(
+            message: snapshot.data['messages'][indexVal]['type'] == "text"
+                        ?snapshot.data['messages'][indexVal]['messageBody']
+                        :snapshot.data['messages'][indexVal]['imageUrl'],
+            premium:  snapshot.data['messages'][indexVal]['premium'] ,          
+            type : snapshot.data['messages'][indexVal]['type'],
+            img: snapshot.data['messages'][indexVal]['imageUrl'],
+            name: snapshot.data['messages'][indexVal]['type'],
+            dp: snapshot.data['messages'][indexVal]['imageUrl'],
+            time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
+          );
+                } else if(!widget.approvedGroups.contains(widget.chatId) && snapshot.data['messages'][indexVal]['premium']){
+                  return Container();
+                }else{
+              
+                  return PostItem(
+            message: snapshot.data['messages'][indexVal]['type'] == "text"
+                        ?snapshot.data['messages'][indexVal]['messageBody']
+                        :snapshot.data['messages'][indexVal]['imageUrl'],
+            premium:  snapshot.data['messages'][indexVal]['premium'] ,          
+            type : snapshot.data['messages'][indexVal]['type'],
+            img: snapshot.data['messages'][indexVal]['imageUrl'],
+            name: snapshot.data['messages'][indexVal]['type'],
+            dp: snapshot.data['messages'][indexVal]['imageUrl'],
+            time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
+                  );
+                }
 
                      return  ChatBubble(
                     message: snapshot.data['messages'][indexVal]['type'] == "text"
@@ -460,7 +503,8 @@ if (snapShot == null || !snapShot.exists) {
         bottomBarColor: Colors.blue,
         groupLogo: widget.groupLogo,
         chatId: widget.chatId,
-        userId: widget.userId
+        userId: widget.userId,
+        premiumMode: msgDeliveryMode
       );
     })).then((geteditimage) {
       if (geteditimage != null) {

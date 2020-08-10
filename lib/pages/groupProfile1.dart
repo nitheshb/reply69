@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:notification/controllers/notificationController.dart';
 import 'package:notification/pages/AlgoliaFullTextSearch.dart';
+import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/screen_size.dart';
+import 'package:notification/util/state_widget.dart';
 import 'package:notification/widgets/linearPercentIndicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,11 +28,13 @@ class Profile3 extends StatefulWidget {
     this.feeDetails,
     this.seasonRating,
     this.lastWeekRating,
-    this.thisWeekRating
+    this.thisWeekRating,
+    this.followingGroupsLocal,
   }) : super(key: key);
    final String chatId,title,avatarUrl, paymentScreenshotNo, rating, seasonRating, lastWeekRating, thisWeekRating;
    final feeArray, categories, followers, userId, feeDetails, groupOwnerName;
    final bool following;
+   List followingGroupsLocal;
   @override
   _Profile3State createState() => _Profile3State();
 }
@@ -138,8 +142,13 @@ return lockModify ? FlatButton(
                       setState(() {
                         lockModify = !lockModify;
                         followCountModify.remove(widget.userId);
-                      
+                        widget.followingGroupsLocal.remove(widget.chatId);
+                        StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,widget.chatId, 'remove' );
                       });
+                      await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+        builder: (BuildContext context)
+        => MainScreen(userId: widget.userId,followingGroupsLocal: widget.followingGroupsLocal),
+        ),(Route<dynamic> route) => false);
                       return;
                       },
                     ):
@@ -155,30 +164,37 @@ return lockModify ? FlatButton(
                         print("check for doc id of group ${widget.chatId}  id is ${widget.userId}");
                         // make an entry in db as joinedGroups
                        try {
-                           setState(() {
-                        lockModify = !lockModify;
-                        followCountModify.add(widget.userId);
-                      });
+              
                          //  this is for token 
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
                         // Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayUnion([widget.userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
   
-   var q1 = await Firestore.instance.collection('IAM').document(widget.userId).get();
 
-   var followingGroups0 = q1.data['followingGroups0'] ?? [];
   //  var followingGroups1 = q1.data['followingGroups1'] ?? [];
   //  var followingGroups2 = q1.data['followingGroups2'] ?? [];
   //  var followingGroup3 = q1.data['followingGroups3'] ?? [];
 
 
-
+       
 
  
-  if(followingGroups0.length <9){
+  if(widget.followingGroupsLocal.length <9){
     print('i was at following groups 0 ${widget.chatId}');
       Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayUnion([widget.userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
       Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion([widget.chatId])});
+           setState(() {
+                        lockModify = !lockModify;
+                        followCountModify.add(widget.userId);
+                       widget.followingGroupsLocal.add(widget.chatId);
+                        StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,widget.chatId, 'add' );
+                      });
+                      await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+        builder: (BuildContext context)
+        => MainScreen(userId: widget.userId,followingGroupsLocal: widget.followingGroupsLocal),
+        ),(Route<dynamic> route) => false);
+     
+     
       return;
   }else{
    
@@ -199,6 +215,7 @@ return lockModify ? FlatButton(
 //       return;
 //   }
                        } catch (e) {
+                         _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'errow at following a group ${e}');
                          print('error at joining a group ${e}');
                        }
           

@@ -9,6 +9,7 @@ class StateModel {
   Settings settings;
   String locationId, soId, hoId;
   String locationName, soName, hoName;
+  List followingGroups;
 
 
 
@@ -18,6 +19,7 @@ class StateModel {
     this.user,
     this.settings,
     this.locationId = "0",
-    this.locationName=""
+    this.locationName="",
+    this.followingGroups,
   });
 }

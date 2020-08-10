@@ -57,6 +57,7 @@ class _StateWidgetState extends State<StateWidget> {
     String soId = await Auth.getsoIdLocal();
     String soName = await Auth.getsoNameLocal();
     String hoName = await Auth.gethoNameLocal();
+    List followingGroups = await Auth.getFollowingGroups();
 
     setState(() {
       state.isLoading = false;
@@ -69,10 +70,38 @@ class _StateWidgetState extends State<StateWidget> {
       state.soName = soName;
       state.hoId = hoId;
       state.hoName = hoName;
+      state.followingGroups = followingGroups;
     });
   }
 
-  
+    Future<void> setFollowingGroupState(oldData,value, action) async {
+    print('chec for this');
+    //  await initUserLocation(location, locationId);
+    state.followingGroups= oldData;
+    print('state value recevied data  @ ${oldData}');
+     print('values after set data @  ${state.followingGroups}');
+    var x;
+    // setState(()  {
+    //   if(action =="remove"){
+
+    //     oldData.remove(value);
+    //     x= oldData;
+    //     // print('var x is ${oldData}$x');
+    //     state.followingGroups= oldData;
+    //     print('vaues are, oldData remove ${state.followingGroups}');
+    //   }
+    //   else if(action =="add"){
+    //      oldData.add(value);
+    //     state.followingGroups = oldData;
+    //     print('vaues are, oldData remove ${state.followingGroups}');
+    //     //  x= oldData.add(value);
+    //     // state.followingGroups = x;
+    //   }
+     
+ 
+    // }); 
+   await initUser();
+  }
   
   Future<void> userLocation(location, locationId,soId,soName,hoId,hoName) async {
     print('chec for this');
