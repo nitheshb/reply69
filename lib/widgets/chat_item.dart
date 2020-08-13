@@ -41,35 +41,35 @@ class _ChatItemState extends State<ChatItem> {
           children: <Widget>[
             CircleAvatar(
               backgroundImage: AssetImage(
-                "${widget.dp}",
+                "",
               ),
               radius: 25,
             ),
 
-            Positioned(
-              bottom: 0.0,
-              left: 6.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                height: 11,
-                width: 11,
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: widget.isOnline
-                          ?Colors.greenAccent
-                          :Colors.grey,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    height: 7,
-                    width: 7,
-                  ),
-                ),
-              ),
-            ),
+            // Positioned(
+            //   bottom: 0.0,
+            //   left: 6.0,
+            //   child: Container(
+            //     decoration: BoxDecoration(
+            //       color: Colors.white,
+            //       borderRadius: BorderRadius.circular(6),
+            //     ),
+            //     height: 11,
+            //     width: 11,
+            //     child: Center(
+            //       child: Container(
+            //         decoration: BoxDecoration(
+            //           color: widget.isOnline
+            //               ?Colors.greenAccent
+            //               :Colors.grey,
+            //           borderRadius: BorderRadius.circular(6),
+            //         ),
+            //         height: 7,
+            //         width: 7,
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
           ],
         ),

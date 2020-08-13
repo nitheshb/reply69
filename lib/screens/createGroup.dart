@@ -419,7 +419,8 @@ File _image;
                      _formKey.currentState.save();  
 
     String fileName =  basename(_image.path);
-       StorageReference firebaseStorageRef =   FirebaseStorage.instance.ref().child("$userId.jpg");
+    DateTime now = new DateTime.now();
+       StorageReference firebaseStorageRef =   FirebaseStorage.instance.ref().child("${userId}${now.millisecondsSinceEpoch}.jpg");
        StorageUploadTask uploadTask =  firebaseStorageRef.putFile(_image);
            var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
     String ImageUrl = dowurl.toString();

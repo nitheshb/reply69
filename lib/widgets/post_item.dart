@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:notification/pages/imageFullView.dart';
 
 class PostItem extends StatefulWidget {
@@ -9,6 +10,8 @@ class PostItem extends StatefulWidget {
   final String img;
   final String message;
   final String type;
+  final String messageMode;
+  final String selMessageMode;
   final  premium;
 
   PostItem({
@@ -18,6 +21,8 @@ class PostItem extends StatefulWidget {
     @required this.time,
     @required this.img,
     @required this.message,
+    @required this.messageMode,
+    @required this.selMessageMode,
     this.premium,
     this.type
   }) : super(key: key);
@@ -39,6 +44,15 @@ class _PostItemState extends State<PostItem> {
   @override
   Widget build(BuildContext context) {
     print('check for urls ${widget.img}');
+    var colorBg;
+    if(widget.selMessageMode == 'All'){
+                colorBg= Color(0xff1AC470);
+              } else if(widget.selMessageMode == 'Prime') {
+                colorBg = Color(0xffFFCB2D);
+              }else{
+                colorBg = Color(0xff3AD4C5);
+                
+              }
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       
@@ -62,7 +76,7 @@ class _PostItemState extends State<PostItem> {
             widget.type =='text' ? Container(
             
               width: MediaQuery.of(context).size.width,
-              color: widget.premium ? Color(0xffFFCB2D):Colors.blueAccent,
+              color: colorBg,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -99,13 +113,49 @@ class _PostItemState extends State<PostItem> {
                   padding: const EdgeInsets.all(8.0),
                   child: Align(
                     alignment: Alignment.topRight,
-                    child:Text(
-                    "${widget.time}",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 11,
-                    ),
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                        
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Visibility(
+                              visible: widget.messageMode == 'Prime',
+                              child:
+                            Padding(
+                              padding: const EdgeInsets.only(right:8.0,bottom:2),
+                              child: Icon(
+                                  FontAwesomeIcons.crown,
+                                  color: Colors.blue,
+                                  size: 8,
+                                ),
+                            ),
+                            ),
+                            Visibility(
+                              visible: widget.messageMode == 'All',
+                              child:
+                            Padding(
+                              padding: const EdgeInsets.only(right:8.0,bottom:2),
+                              child: Icon(
+                                  FontAwesomeIcons.users,
+                                  color: Colors.blue,
+                                  size: 8,
+                                ),
+                            ),
+                            ),
+                            Text(
+                            "${widget.time}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 11,
+                            ),
                   ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -39,9 +39,12 @@ SignatureController _controller =
 class MyImageEditorPro extends StatefulWidget {
   final Color appBarColor;
   final Color bottomBarColor;
-  final String groupLogo, userId, chatId;
+  final String groupLogo, userId, chatId, deliveryMode;
   final bool premiumMode;
-  MyImageEditorPro({this.appBarColor, this.premiumMode,this.bottomBarColor, this.groupLogo, this.userId, this.chatId});
+  MyImageEditorPro({this.appBarColor, 
+  this.premiumMode,this.bottomBarColor, 
+  this.groupLogo, this.userId, this.chatId, 
+  this.deliveryMode});
 
   @override
   _MyImageEditorProState createState() => _MyImageEditorProState();
@@ -187,7 +190,7 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
     String url = dowurl.toString();
     print('uploaded url is $url');
         try {
-                        var body ={ "imageUrl":url, "date": now,"author": widget.userId, "type": "Image", "premium": widget.premiumMode };
+                        var body ={ "imageUrl":url, "date": now,"author": widget.userId, "type": "Image", "premium": widget.premiumMode, "messageMode": widget.deliveryMode };
                       await  Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'messages' : FieldValue.arrayUnion([body])});
                      image = null;
                       } catch (e) {
@@ -286,7 +289,8 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                                   },
                                   // value: f.value.toString(),
                                   // value : "assets/background.png",
-                                  value: widget.groupLogo,
+                                  // value: "assets/background.png",
+                                 value: widget.groupLogo,
                                   fontsize: fontsize[f.key].toDouble(),
                                   align: TextAlign.center,
                                 )
@@ -437,31 +441,56 @@ type.add(1);
                     ),
                     BottomBarContainer(
                       icons: FontAwesomeIcons.smile,
-                      ontap: () {
-type.add(1);
-                            fontsize.add(20);
-                            offsets.add(Offset.zero);
-                            multiwidget.add("😂");
-                            howmuchwidgetis++;
-
-                        // Future getemojis = showModalBottomSheet(
-                        //     context: context,
-                        //     builder: (BuildContext context) {
-                        //       return Emojies();
-                        //     });
-                        // getemojis.then((value) {
-                        //   print('value is check  ${value}');
-                        //   if (value != null) {
-                        //     type.add(1);
-                        //     fontsize.add(20);
-                        //     offsets.add(Offset.zero);
-                        //     multiwidget.add("😂");
-                        //     howmuchwidgetis++;
-                        //   }
-                        // });
+                      ontap: () async {
+                        type.add(1);
+                          fontsize.add(20);
+                          offsets.add(Offset.zero);
+                          multiwidget.add("wowddx");
+                          howmuchwidgetis++;
+                        // final value = await Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => TextEditor()));
+                        // if (value.toString().isEmpty) {
+                        //   print("true");
+                        // } else {
+                        //   type.add(2);
+                        //   fontsize.add(20);
+                        //   offsets.add(Offset.zero);
+                        //   multiwidget.add("wow");
+                        //   howmuchwidgetis++;
+                        // }
                       },
                       title: 'Logo',
                     ),
+//                     BottomBarContainer(
+//                       icons: FontAwesomeIcons.smile,
+//                       ontap: () {
+//                         print('i was touched');
+// // type.add(1);
+// //                             fontsize.add(20);
+// //                             offsets.add(Offset.zero);
+// //                             multiwidget.add("😂");
+// //                             howmuchwidgetis++;
+
+//                         Future getemojis = showModalBottomSheet(
+//                             context: context,
+//                             builder: (BuildContext context) {
+//                               return Emojies();
+//                             });
+//                         getemojis.then((value) {
+//                           print('value is check  ${value}');
+//                           if (value != null) {
+//                             type.add(1);
+//                             fontsize.add(20);
+//                             offsets.add(Offset.zero);
+//                             multiwidget.add("😂");
+//                             howmuchwidgetis++;
+//                           }
+//                         });
+//                       },
+//                       title: 'Logo',
+//                     ),
                   ],
                 ),
               ));

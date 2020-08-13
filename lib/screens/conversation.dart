@@ -45,20 +45,43 @@ class _ConversationState extends State<Conversation> {
 
    File _image;
    int selectedRadio;
-   bool msgDeliveryMode = true;
+   String msgDeliveryMode = "All";
    List votingBalletHeapData;
    List groupCategoriesArray = [];
+   int selectedRadioTile;
+
+
 
 
    // Changes the selected value on 'onChanged' click on each radio button
 setSelectedRadio(int val) {
   setState(() {
     selectedRadio = val;
+    if(val== 2){
+      msgDeliveryMode = "Prime";
+    }else if(val ==1){
+      msgDeliveryMode = "All";
+    }
+    else if(val ==3){
+      msgDeliveryMode = "Non-Prime";
+    }
   });
 }
 setDeliveryModeCheckBox(bool val) {
   setState(() {
-    msgDeliveryMode = val;
+    // msgDeliveryMode = val;
+    if(val){
+      selectedRadio = 2;
+    }else if(!val){
+      selectedRadio = 1;
+    }
+  });
+}
+
+ 
+setSelectedRadioTile(int val) {
+  setState(() {
+    selectedRadioTile = val;
   });
 }
 
@@ -86,6 +109,23 @@ scrollToBottomFun(){
 void initState() {
     // TODO: implement initState
     super.initState();
+  print('check ${widget.approvedGroups}');
+  print('check idd ${widget.userId}');
+  if((widget.approvedGroups.contains(widget.userId))) {
+    //  prime group
+        selectedRadio = 2;
+  selectedRadioTile = 2;
+  setSelectedRadio(2);
+    } else if((widget.chatOwnerId == widget.userId)){
+      selectedRadio = 1;
+      selectedRadioTile = 1;
+      setSelectedRadio(1);
+    }
+    else{
+     selectedRadio = 3;
+      selectedRadioTile = 3;
+      setSelectedRadio(3);
+    }
     print('what was here ${widget.groupSportCategory}');
   widget.groupSportCategory.forEach((data){
     print('values are ${data}');
@@ -118,6 +158,8 @@ profileRoute(context, origin){
                                 //       ),
                                );
  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +247,6 @@ if (snapShot == null || !snapShot.exists) {
                                );
             },
           ),
-
           // display for group members
           Visibility(
             visible: widget.chatOwnerId != widget.userId,
@@ -330,7 +371,118 @@ if (snapShot == null || !snapShot.exists) {
   //           time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
   //         );
 
-       if   (widget.approvedGroups.contains(widget.chatId) && snapshot.data['messages'][indexVal]['premium']){
+
+
+  // fresh start check
+
+   if(((widget.approvedGroups.contains(widget.userId)) || (widget.chatOwnerId == widget.userId)) && (snapshot.data['messages'][indexVal]['messageMode'] ==  'Prime' || snapshot.data['messages'][indexVal]['messageMode'] ==  'All') && (msgDeliveryMode =="Prime")){
+        //  owner display for Prime
+           print(' i was at prime');
+            return PostItem(
+            message: snapshot.data['messages'][indexVal]['type'] == "text"
+                        ?snapshot.data['messages'][indexVal]['messageBody']
+                        :snapshot.data['messages'][indexVal]['imageUrl'],
+            premium:  snapshot.data['messages'][indexVal]['premium'] ,          
+            type : snapshot.data['messages'][indexVal]['type'],
+            img: snapshot.data['messages'][indexVal]['imageUrl'],
+            name: snapshot.data['messages'][indexVal]['type'],
+            dp: snapshot.data['messages'][indexVal]['imageUrl'],
+            messageMode: snapshot.data['messages'][indexVal]['messageMode'],
+            time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
+            selMessageMode: msgDeliveryMode
+                  );
+       }else if(((widget.approvedGroups.contains(widget.userId)) || (widget.chatOwnerId == widget.userId)) && (snapshot.data['messages'][indexVal]['messageMode'] ==  'Non-Prime' || snapshot.data['messages'][indexVal]['messageMode'] ==  'All') && (msgDeliveryMode =="Non-Prime")){
+        //  owner display for Prime
+           print(' i was at non- prime');
+            return PostItem(
+            message: snapshot.data['messages'][indexVal]['type'] == "text"
+                        ?snapshot.data['messages'][indexVal]['messageBody']
+                        :snapshot.data['messages'][indexVal]['imageUrl'],
+            premium:  snapshot.data['messages'][indexVal]['premium'] ,          
+            type : snapshot.data['messages'][indexVal]['type'],
+            img: snapshot.data['messages'][indexVal]['imageUrl'],
+            name: snapshot.data['messages'][indexVal]['type'],
+            dp: snapshot.data['messages'][indexVal]['imageUrl'],
+            messageMode: snapshot.data['messages'][indexVal]['messageMode'],
+            time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
+            selMessageMode: msgDeliveryMode
+                  );
+       }
+       else if(((widget.approvedGroups.contains(widget.userId)) || (widget.chatOwnerId == widget.userId)) && ( snapshot.data['messages'][indexVal]['messageMode'] ==  'All') && (msgDeliveryMode =="All")){
+        //  owner display for Prime
+           print(' i was at All');
+            return PostItem(
+            message: snapshot.data['messages'][indexVal]['type'] == "text"
+                        ?snapshot.data['messages'][indexVal]['messageBody']
+                        :snapshot.data['messages'][indexVal]['imageUrl'],
+            premium:  snapshot.data['messages'][indexVal]['premium'] ,          
+            type : snapshot.data['messages'][indexVal]['type'],
+            img: snapshot.data['messages'][indexVal]['imageUrl'],
+            name: snapshot.data['messages'][indexVal]['type'],
+            dp: snapshot.data['messages'][indexVal]['imageUrl'],
+            messageMode: snapshot.data['messages'][indexVal]['messageMode'],
+            time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
+            selMessageMode: msgDeliveryMode
+                  );
+       }
+       else if((!(widget.approvedGroups.contains(widget.chatId)) || !(widget.chatOwnerId == widget.userId)) && (( snapshot.data['messages'][indexVal]['messageMode'] ==  'Non-Prime') || ( snapshot.data['messages'][indexVal]['messageMode'] ==  'All')) && (msgDeliveryMode =="Non-Prime")){
+        //  non prime users display
+           print(' i was at All');
+            return PostItem(
+            message: snapshot.data['messages'][indexVal]['type'] == "text"
+                        ?snapshot.data['messages'][indexVal]['messageBody']
+                        :snapshot.data['messages'][indexVal]['imageUrl'],
+            premium:  snapshot.data['messages'][indexVal]['premium'] ,          
+            type : snapshot.data['messages'][indexVal]['type'],
+            img: snapshot.data['messages'][indexVal]['imageUrl'],
+            name: snapshot.data['messages'][indexVal]['type'],
+            dp: snapshot.data['messages'][indexVal]['imageUrl'],
+            messageMode: snapshot.data['messages'][indexVal]['messageMode'],
+            time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
+            selMessageMode: msgDeliveryMode
+                  );
+       }else{
+        return Container();
+       }
+
+
+  // fresh end check
+
+       if(((widget.approvedGroups.contains(widget.chatId)) || (widget.chatOwnerId == widget.userId)) && (snapshot.data['messages'][indexVal]['messageMode'] ==  'Prime') && (msgDeliveryMode =="Prime")){
+        //  owner display for Prime
+           print(' i was at prime');
+            return PostItem(
+            message: snapshot.data['messages'][indexVal]['type'] == "text"
+                        ?snapshot.data['messages'][indexVal]['messageBody']
+                        :snapshot.data['messages'][indexVal]['imageUrl'],
+            premium:  snapshot.data['messages'][indexVal]['premium'] ,          
+            type : snapshot.data['messages'][indexVal]['type'],
+            img: snapshot.data['messages'][indexVal]['imageUrl'],
+            name: snapshot.data['messages'][indexVal]['type'],
+            dp: snapshot.data['messages'][indexVal]['imageUrl'],
+            messageMode: snapshot.data['messages'][indexVal]['messageMode'],
+            time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
+                  );
+       }
+       else if(((widget.approvedGroups.contains(widget.chatId) && !snapshot.data['messages'][indexVal]['premium'])) && (snapshot.data['messages'][indexVal]['messageMode'] ==  'Non-Prime')){
+       print(' i was at non-prime');
+        //  owner display for non-prime
+            return PostItem(
+            message: snapshot.data['messages'][indexVal]['type'] == "text"
+                        ?snapshot.data['messages'][indexVal]['messageBody']
+                        :snapshot.data['messages'][indexVal]['imageUrl'],
+            premium:  snapshot.data['messages'][indexVal]['premium'] ,          
+            type : snapshot.data['messages'][indexVal]['type'],
+            img: snapshot.data['messages'][indexVal]['imageUrl'],
+            name: snapshot.data['messages'][indexVal]['type'],
+            dp: snapshot.data['messages'][indexVal]['imageUrl'],
+            messageMode: snapshot.data['messages'][indexVal]['messageMode'],
+            time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
+                  );
+       }
+       else if   (((widget.approvedGroups.contains(widget.chatId) && snapshot.data['messages'][indexVal]['premium']))){
+        print(' i was at one one one');
+        //  prime user display for all and 
           return PostItem(
             message: snapshot.data['messages'][indexVal]['type'] == "text"
                         ?snapshot.data['messages'][indexVal]['messageBody']
@@ -340,12 +492,13 @@ if (snapShot == null || !snapShot.exists) {
             img: snapshot.data['messages'][indexVal]['imageUrl'],
             name: snapshot.data['messages'][indexVal]['type'],
             dp: snapshot.data['messages'][indexVal]['imageUrl'],
+            messageMode: snapshot.data['messages'][indexVal]['messageMode'],
             time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
           );
                 } else if(!widget.approvedGroups.contains(widget.chatId) && snapshot.data['messages'][indexVal]['premium']){
                   return Container();
-                }else{
-              
+                }else if(!(msgDeliveryMode == 'Prime')  ||  (snapshot.data['messages'][indexVal]['messageMode'] ==  'All')){
+              print(' i was at yo yo yo');
                   return PostItem(
             message: snapshot.data['messages'][indexVal]['type'] == "text"
                         ?snapshot.data['messages'][indexVal]['messageBody']
@@ -355,8 +508,12 @@ if (snapShot == null || !snapShot.exists) {
             img: snapshot.data['messages'][indexVal]['imageUrl'],
             name: snapshot.data['messages'][indexVal]['type'],
             dp: snapshot.data['messages'][indexVal]['imageUrl'],
+            messageMode: snapshot.data['messages'][indexVal]['messageMode'],
             time: datestamp.format(snapshot.data['messages'][indexVal]['date'].toDate()).toString(),
                   );
+                }
+                else{
+                  return Container();
                 }
 
                      return  ChatBubble(
@@ -399,10 +556,75 @@ if (snapShot == null || !snapShot.exists) {
           }
               )
             ),
+
+   
+
+        Visibility(
+         visible: (widget.chatOwnerId == widget.userId),
+          child:
+          Padding(
+            padding: const EdgeInsets.only(left:8.0, right: 8.0),
+            child: ButtonBar(
+              alignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text("Send To"),
+                Row(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Radio(
+                          value: 1,
+                          groupValue: selectedRadio,
+                          activeColor: Colors.green,
+                          onChanged: (val) {
+                            print("Radio $val");
+                            setSelectedRadio(val);
+                          },
+                        ),
+                        Text("Common")
+                      ],
+                    ),
+                  
+                Row(
+                  children: <Widget>[
+                    Radio(
+                      value: 2,
+                      groupValue: selectedRadio,
+                      activeColor: Colors.blue,
+                      onChanged: (val) {
+                        print("Radio $val");
+                        setSelectedRadio(val);
+                      },
+                    ),
+                    Text("Prime")
+                  ],
+                ),
+                Row(
+                      children: <Widget>[
+                        Radio(
+                          value: 3,
+                          groupValue: selectedRadio,
+                          activeColor: Colors.green,
+                          onChanged: (val) {
+                            print("Radio $val");
+                            setSelectedRadio(val);
+                          },
+                        ),
+                        Text("Non-Prime")
+                      ],
+                    ),
+                ],
+                ),
+              ],
+            ),
+          )     ,
+        ),
+          
+
             Visibility(
               visible: (widget.chatOwnerId != widget.userId),
               child: Visibility(
-                visible:(!widget.waitingGroups.contains(widget.chatId) && !widget.approvedGroups.contains(widget.chatId)),
+                visible:((!widget.approvedGroups.contains(widget.userId)) || !(widget.chatOwnerId == widget.userId)),
                 child:
  Align(
                 alignment: Alignment.topCenter,
@@ -487,14 +709,14 @@ if (snapShot == null || !snapShot.exists) {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                         Checkbox(
-      value: msgDeliveryMode,
-      onChanged: setDeliveryModeCheckBox
-    ),
+    //                      Checkbox(
+    //   value: msgDeliveryMode =="Prime",
+    //   onChanged: setDeliveryModeCheckBox
+    // ),
                         IconButton(
                           icon: Icon(
-                            Icons.add,
-                            color: Theme.of(context).accentColor,
+                            Icons.image,
+                            color: Color(0xff3E8Df3),
                           ),
                           onPressed: (){
                             Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -504,7 +726,8 @@ if (snapShot == null || !snapShot.exists) {
         groupLogo: widget.groupLogo,
         chatId: widget.chatId,
         userId: widget.userId,
-        premiumMode: msgDeliveryMode
+        premiumMode: msgDeliveryMode == 'Prime',
+        deliveryMode: msgDeliveryMode
       );
     })).then((geteditimage) {
       if (geteditimage != null) {
@@ -550,26 +773,26 @@ if (snapShot == null || !snapShot.exists) {
                             maxLines: null,
                           ),
                         ),
-                        Visibility(
-                          visible: msgDeliveryMode,
-                          child:
- IconButton(
-                          icon: Icon(
-                            FontAwesomeIcons.crown,
-                            color: Theme.of(context).accentColor,
-                          ),
- ),
-                        ),
-                         Visibility(
-                          visible: !msgDeliveryMode,
-                          child:
-  IconButton(
-                          icon: Icon(
-                            FontAwesomeIcons.users,
-                            color: Theme.of(context).accentColor,
-                          ),
- ),
-                         ),
+//                         Visibility(
+//                           visible: msgDeliveryMode == "Prime",
+//                           child:
+//  IconButton(
+//                           icon: Icon(
+//                             FontAwesomeIcons.crown,
+//                             color: Theme.of(context).accentColor,
+//                           ),
+//  ),
+//                         ),
+//                          Visibility(
+//                           visible: !(msgDeliveryMode =="Prime"),
+//                           child:
+//   IconButton(
+//                           icon: Icon(
+//                             FontAwesomeIcons.users,
+//                             color: Theme.of(context).accentColor,
+//                           ),
+//  ),
+//                          ),
                         IconButton(
                           icon: Icon(
                             Icons.send,
@@ -582,7 +805,7 @@ if (snapShot == null || !snapShot.exists) {
                         print('time was ${alt}');
                         try {
                           var now = new DateTime.now();
-                          var body ={ "messageBody":_chatMessageText.text, "date": now,"author": widget.userId, "type": "text" , "premium": msgDeliveryMode  };
+                          var body ={ "messageBody":_chatMessageText.text, "date": now,"author": widget.userId, "type": "text" , "premium": (msgDeliveryMode  == "Prime"), "messageMode": msgDeliveryMode };
                          var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now};
                           Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : FieldValue.arrayUnion([body])});
                           _chatMessageText.text ="";

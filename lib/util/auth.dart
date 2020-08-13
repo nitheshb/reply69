@@ -149,11 +149,13 @@ class Auth {
     await prefs.setString('firstName', user.firstName);
 
 List<String> followingGroupsLocal =[];
+if(user.followingGroups != null){
 await user.followingGroups.forEach((data){
   print('i was here with data, $data');
   // followingGroupsLocal = data.cast<String>();
   followingGroupsLocal.add( data);
 });
+}
 
 
     await prefs.setStringList('followingGroups', followingGroupsLocal);

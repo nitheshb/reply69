@@ -45,7 +45,7 @@ class _EmojiViewState extends State<EmojiView> {
                    child: Image.asset(widget.value),
                 ),
               ),
-              Visibility(
+              Visibility(           
                 visible: widget.value != null,
                 child:
               Container(

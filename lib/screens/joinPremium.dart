@@ -220,7 +220,8 @@ Widget editGroupButton(context){
                         context,
                         MaterialPageRoute(
                           builder: (context) => EditGroupProfile(primaryButtonRoute: "/home",
-                          groupName: widget.title,groupCategory:  widget.categories,fee: widget.feeArray, expiryDays:widget.feeArray,phNumber:widget.paymentScreenshotNo,
+                          groupName: widget.title,groupCategory:  widget.categories,fee: widget.feeArray,chatId: widget.chatId, expiryDays:widget.feeArray,phNumber:widget.paymentScreenshotNo,
+                         dp: widget.avatarUrl
                           ),
                         ),
                       );
@@ -884,7 +885,7 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
           var datestamp = new DateFormat("yyyyMMdd'T'HHmmss");
           String currentdate = datestamp.format(now);
         // myimage1
-    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('${currentdate}.jpg');
+    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('${userId}${now.millisecondsSinceEpoch}.jpg');
     final StorageUploadTask uploadTask = await firebaseStorageRef.putFile(_image);
        var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
     String url = dowurl.toString();

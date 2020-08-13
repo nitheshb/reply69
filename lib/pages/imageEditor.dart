@@ -70,7 +70,7 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
           var datestamp = new DateFormat("yyyyMMdd'T'HHmmss");
           String currentdate = datestamp.format(now);
       // myimage1
-    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('${currentdate}.jpg');
+    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child("${widget.chatId}${currentdate}.jpg");
     final StorageUploadTask uploadTask = await firebaseStorageRef.putFile(_image);
      var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
     String url = dowurl.toString();

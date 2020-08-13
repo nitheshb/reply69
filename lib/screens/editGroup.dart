@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
+import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:notification/widgets/loading.dart';
@@ -19,7 +20,8 @@ class EditGroupProfile extends StatefulWidget {
   ;
   final List groupCategory;
   final fee, selState,
-  expiryDays;
+  expiryDays, chatId;
+  String dp;
   
   EditGroupProfile(
       {
@@ -29,7 +31,9 @@ class EditGroupProfile extends StatefulWidget {
       this.fee,
       this.expiryDays,
       this.phNumber,
-      this.selState
+      this.selState,
+      this.dp,
+      this.chatId,
 });
   @override
   _EditGroupProfileState createState() => _EditGroupProfileState();
@@ -238,6 +242,18 @@ File _image;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Edit Profile"),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.filter_list,
+            ),
+            onPressed: (){},
+          ),
+        ],
+      ),
       body: 
        LoadingScreen(
          inAsyncCall: _loadingVisible,
@@ -265,7 +281,7 @@ File _image;
                             _image,
                             fit: BoxFit.fill,
                           ):Image.network(
-                            "https://i.picsum.photos/id/314/200/200.jpg?hmac=bCAc2iO5ovLPrvwDQV31aBPS13QTyv33ut2H2wY4QXU",
+                            "${widget.dp}",
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -282,7 +298,7 @@ File _image;
               ),
               SizedBox(height: 10),
               Text(
-                '${email}',
+                '${widget.groupName.toUpperCase()}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 22,
@@ -290,7 +306,7 @@ File _image;
               ),
               SizedBox(height: 3),
               Text(
-                "Create Your Group Profile",
+                "Editing Group Profile",
                 style: TextStyle(
                 ),
               ),
@@ -314,7 +330,6 @@ File _image;
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: <Widget>[
-                        FadeAnimation(1.2, makeUserNameField(label: "Group Name", obscureText: false),),
                         groupCategoryFieldCustomField(),
                         premiumGroupToggle(context),
                         // FadeAnimation(1.3, makeCagegoryField(label: "Group Category", obscureText: false)),
@@ -393,7 +408,7 @@ File _image;
               });
     }
 
-    if(_image == null){
+    if(_image == null && widget.dp == null){
       _showBasicsFlash(context:  context, duration: Duration(seconds: 2), messageText : 'Please upload group DP ...!');
       // _showBottomFlash(context:  context);
       //  Flushbar(
@@ -413,45 +428,36 @@ File _image;
                       // data name split
               
                    await    _changeLoadingVisible();
-                     _formKey.currentState.save();  
-
+                     _formKey.currentState.save(); 
+                     String ImageUrl; 
+if(_image !=null){
     String fileName =  basename(_image.path);
-       StorageReference firebaseStorageRef =   FirebaseStorage.instance.ref().child("$userId.jpg");
+     DateTime now = new DateTime.now();
+       StorageReference firebaseStorageRef =   FirebaseStorage.instance.ref().child("${userId}${now.millisecondsSinceEpoch}.jpg");
        StorageUploadTask uploadTask =  firebaseStorageRef.putFile(_image);
            var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-    String ImageUrl = dowurl.toString();
+     ImageUrl = dowurl.toString();
        setState(() {
           print("Profile Picture uploaded $fileName");
          // Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
        });
+}
                         //TODO: Implement sign out
                               var body ={
-                                          "title": _groupTitle.text,
-                                          "createdBy":userId,
-                                          "createdOn": new DateTime.now().millisecondsSinceEpoch,
+                                          "editedOn": new DateTime.now().millisecondsSinceEpoch,
                                           "category": selCategoryValue,
-                                          "groupType": configImageCompression,
-                                          "members": [],
-                                          "messages":[],
-                                          "color": '',
-                                          "logo": ImageUrl,
+                                          "logo": _image ==null ? "${widget.dp}" :ImageUrl,
                                           "paymentNo": _paymentScreenshotPhoneNo.text,
-                                          "state": _selected,
                                           "FeeDetails": [{"fee": _premiumPrice1.text, "days": _premiumDays1.text }],
-                                          "caseSearch": setSearchParam(_groupTitle.text), 
-                                          "AlldevicesTokens": [],
-                                          "FdeviceToken": [],
-
-
-
                                         };
-               var check1 =     await Firestore.instance.collection("groups").add(body);
-               var documentId = { "chatId": "${check1.documentID}"} ;
-               await Firestore.instance.collection("groups").document("${check1.documentID}").updateData(documentId);
-               print('added group value is ${check1.documentID}');
-                  await  Navigator.of(context).pop();
-                await    Navigator.of(context)
-                        .pushReplacementNamed(widget.primaryButtonRoute);
+
+               await Firestore.instance.collection("groups").document("${widget.chatId}").updateData(body);
+            
+                 await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+        builder: (BuildContext context)
+        => MainScreen(userId: userId,),
+        ),(Route<dynamic> route) => false);
+                  
                      }catch (e) {
         _changeLoadingVisible();
         print("Create Group Creation Error: $e");

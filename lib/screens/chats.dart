@@ -81,6 +81,7 @@ Widget chatViewList(context, userId, email, followingGroupss, data, followGroupS
         //     print('wow ${widget.followingGroupsLocal}');
         //    value = widget.followingGroupsLocal;
         //  }
+  
  if(widget.followingGroupsLocal.length >8){
     allowGroupCreation = false;
   }
@@ -117,8 +118,18 @@ Widget chatViewList(context, userId, email, followingGroupss, data, followGroupS
             //  });
 
               Map chat = chats[index];
+             
               return InkWell(
                    onTap: (){
+                   //  print('i was at approved list click ${ds.data['approvedGroupsJson'].length}');
+                
+              if(ds.data['approvedGroupsJson'] != null){
+              for(final data in ds.data['approvedGroupsJson']){
+  //
+      print('i was at approved list');
+                  approvedGroups.add(data['userId']);
+}
+                   }
             Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -322,6 +333,11 @@ print("--->check12 ${followingGroups0}");
     print('own it has widget followGroupState data ${followGroupState}');
    // getUserData(userId);
     print('check ${followingGroups}');
+     if(widget.followingGroupsLocal == null){
+
+    widget.followingGroupsLocal = followGroupState;
+  }
+
     return Scaffold(
       appBar: AppBar(
         
