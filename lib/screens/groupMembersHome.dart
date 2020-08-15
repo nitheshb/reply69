@@ -66,7 +66,7 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
                       color: Colors.white,
                     ),
                   ),
-                  color: Colors.green,
+                  color: Colors.blueAccent,
                   onPressed: (){
                        Navigator.push(
                                       context,
