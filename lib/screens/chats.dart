@@ -120,22 +120,31 @@ Widget chatViewList(context, userId, email, followingGroupss, data, followGroupS
               Map chat = chats[index];
              
               return InkWell(
-                   onTap: (){
+                   onTap: () async {
+                     print('==> i was clicked');
                    //  print('i was at approved list click ${ds.data['approvedGroupsJson'].length}');
                 
               if(ds.data['approvedGroupsJson'] != null){
               for(final data in ds.data['approvedGroupsJson']){
   //
-      print('i was at approved list');
+      print('i was at approved list of ${ds.documentID}');
                   approvedGroups.add(data['userId']);
 }
-                   }
-            Navigator.push(
+ await   Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => Conversation(followingGroupsLocal: widget.followingGroupsLocal,groupFullDetails: ds.data,chatId: ds.documentID, groupSportCategory: ds.data['category'],chatOwnerId: ds.data['createdBy'],groupTitle: ds.data['title']?? "", groupLogo: ds.data['logo']?? null, followers: ds.data['followers']?? [],approvedGroupsJson: ds.data['approvedGroupsJson'], userId: userId, senderMailId: email,chatType: "", waitingGroups: waitingGroups, approvedGroups: approvedGroups),
                         ),
                       );
+                   }else{
+                      await   Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Conversation(followingGroupsLocal: widget.followingGroupsLocal,groupFullDetails: ds.data,chatId: ds.documentID, groupSportCategory: ds.data['category'],chatOwnerId: ds.data['createdBy'],groupTitle: ds.data['title']?? "", groupLogo: ds.data['logo']?? null, followers: ds.data['followers']?? [],approvedGroupsJson: ds.data['approvedGroupsJson'], userId: userId, senderMailId: email,chatType: "", waitingGroups: waitingGroups, approvedGroups: []),
+                        ),
+                      );
+                   }
+        
                    },
                 child: ChatMenuIcon(
                   dp: ds['logo'],

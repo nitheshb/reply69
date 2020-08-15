@@ -112,16 +112,27 @@ void initState() {
   print('check ${widget.approvedGroups}');
   print('check idd ${widget.userId}');
   if((widget.approvedGroups.contains(widget.userId))) {
+    print('@@@@@@@@ iwas at prime group init state2');
+    print('@approveGroups ${widget.approvedGroups}');
+    print('@usEr Id ${widget.userId}');
+
     //  prime group
         selectedRadio = 2;
   selectedRadioTile = 2;
   setSelectedRadio(2);
     } else if((widget.chatOwnerId == widget.userId)){
+      print(' @@@@@@@@iwas at all group init state');
+    print('@achatOwnerId ${widget.chatOwnerId}');
+    print('@usEr Id ${widget.userId}');
       selectedRadio = 1;
       selectedRadioTile = 1;
       setSelectedRadio(1);
     }
     else{
+        print('@@@@@@@@ iwas at non-prime  group init state');
+    print('@achatOwnerId ${widget.chatOwnerId}');
+    print('@usEr Id ${widget.userId}');
+    print('@chat Id ${widget.chatId}');
      selectedRadio = 3;
       selectedRadioTile = 3;
       setSelectedRadio(3);
@@ -302,7 +313,7 @@ if (snapShot == null || !snapShot.exists) {
                                     context,
                                    new  MaterialPageRoute(
                                         builder: (BuildContext context) => 
-                                        GroupMembersHome(groupMembersJson : widget.approvedGroupsJson ?? [], chatId: widget.chatId),
+                                        GroupMembersHome(groupMembersJson : widget.approvedGroupsJson ?? [], chatId: widget.chatId, ownerMailId: widget.senderMailId),
                                         ),
                                  );
               }else if (value == "Edit Details"){
@@ -409,7 +420,7 @@ if (snapShot == null || !snapShot.exists) {
                   );
        }
        else if(((widget.approvedGroups.contains(widget.userId)) || (widget.chatOwnerId == widget.userId)) && ( snapshot.data['messages'][indexVal]['messageMode'] ==  'All') && (msgDeliveryMode =="All")){
-        //  owner display for Prime
+        //  owner display for All
            print(' i was at All');
             return PostItem(
             message: snapshot.data['messages'][indexVal]['type'] == "text"
@@ -425,7 +436,7 @@ if (snapShot == null || !snapShot.exists) {
             selMessageMode: msgDeliveryMode
                   );
        }
-       else if((!(widget.approvedGroups.contains(widget.chatId)) || !(widget.chatOwnerId == widget.userId)) && (( snapshot.data['messages'][indexVal]['messageMode'] ==  'Non-Prime') || ( snapshot.data['messages'][indexVal]['messageMode'] ==  'All')) && (msgDeliveryMode =="Non-Prime")){
+       else if((!(widget.approvedGroups.contains(widget.userId)) || !(widget.chatOwnerId == widget.userId)) && (( snapshot.data['messages'][indexVal]['messageMode'] ==  'Non-Prime') || ( snapshot.data['messages'][indexVal]['messageMode'] ==  'All')) && (msgDeliveryMode =="Non-Prime")){
         //  non prime users display
            print(' i was at All');
             return PostItem(
@@ -619,8 +630,6 @@ if (snapShot == null || !snapShot.exists) {
             ),
           )     ,
         ),
-          
-
             Visibility(
               visible: (widget.chatOwnerId != widget.userId),
               child: Visibility(
@@ -676,7 +685,9 @@ if (snapShot == null || !snapShot.exists) {
                         children: <Widget>[
                           SizedBox(height: 13),
                           Text(
-                            !widget.waitingGroups.contains(widget.chatId) ? "Join Premium Rs ${widget.groupFullDetails['FeeDetails'][0]['fee']}/-" : "Under Review",
+                            (!widget.waitingGroups.contains(widget.chatId)) 
+                              
+                             ? "Join Premium Rs ${widget.groupFullDetails['FeeDetails'][0]['fee']}/-" : "Under Review",
                             style: TextStyle(
                               color:
                                   Colors.white,

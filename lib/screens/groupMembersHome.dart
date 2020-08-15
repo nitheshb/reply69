@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:notification/pages/csvGroupDownload.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/widgets/chat_item.dart';
 
 class GroupMembersHome extends StatefulWidget {
   // GroupMembersJson
-    GroupMembersHome({Key key, this.groupMembersJson, this.chatId});
+    GroupMembersHome({Key key, this.groupMembersJson, this.chatId, this.ownerMailId});
     final List  groupMembersJson;
-    final String chatId;
+    final String chatId, ownerMailId;
   @override
   _GroupMembersHomeState createState() => _GroupMembersHomeState();
 }
@@ -50,6 +51,8 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
 ;
 // searchResults(widget.groupMembersJson);
 
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Members"),
@@ -58,7 +61,15 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
             icon: Icon(
               Icons.filter_list,
             ),
-            onPressed: (){},
+            onPressed: (){
+                                  Navigator.push(
+                                    context,
+                                   new  MaterialPageRoute(
+                                        builder: (BuildContext context) => 
+                                        AdminGroupCsvDownload(chatId: widget.chatId,approvedGroupDetails: widget.groupMembersJson, ownerEmail: widget.ownerMailId,),
+                                        ),
+                                 );
+            },
           ),
         ],
         bottom: TabBar(
