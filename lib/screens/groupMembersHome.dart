@@ -57,19 +57,26 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
       appBar: AppBar(
         title: Text("Members"),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.filter_list,
-            ),
-            onPressed: (){
-                                  Navigator.push(
-                                    context,
-                                   new  MaterialPageRoute(
-                                        builder: (BuildContext context) => 
-                                        AdminGroupCsvDownload(chatId: widget.chatId,approvedGroupDetails: widget.groupMembersJson, ownerEmail: widget.ownerMailId,),
-                                        ),
-                                 );
-            },
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: FlatButton(
+                  child: Text(
+                    "Download Prime List",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  color: Colors.green,
+                  onPressed: (){
+                       Navigator.push(
+                                      context,
+                                     new  MaterialPageRoute(
+                                          builder: (BuildContext context) => 
+                                          AdminGroupCsvDownload(chatId: widget.chatId,approvedGroupDetails: widget.groupMembersJson, ownerEmail: widget.ownerMailId,),
+                                          ),
+                                   );
+                  },
+                ),
           ),
         ],
         bottom: TabBar(
