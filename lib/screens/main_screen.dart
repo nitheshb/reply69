@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:notification/screens/Matches.dart';
-import 'package:notification/screens/home.dart';
-import 'package:notification/screens/notifications.dart';
 import 'package:notification/screens/profile.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';

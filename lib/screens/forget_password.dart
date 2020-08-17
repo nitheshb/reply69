@@ -1,4 +1,5 @@
-import 'package:notification/pages/sign_in.dart';
+
+import 'package:notification/screens/sign_in.dart';
 import 'package:notification/util/auth.dart';
 import 'package:notification/util/validators.dart';
 import 'package:notification/widgets/loading.dart';

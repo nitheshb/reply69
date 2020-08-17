@@ -1,6 +1,5 @@
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:notification/pages/sign_in.dart';
 import 'package:notification/util/auth.dart';
 import 'package:notification/util/validators.dart';
 import 'package:notification/widgets/loading.dart';

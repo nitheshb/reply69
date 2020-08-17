@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:notification/pages/forget_password.dart';
-import 'package:notification/pages/sign_in.dart';
-import 'package:notification/pages/sign_up.dart';
+import 'package:notification/screens/forget_password.dart';
+
 import 'package:notification/screens/main_screen.dart';
+import 'package:notification/screens/sign_in.dart';
+import 'package:notification/screens/sign_up.dart';
 import 'package:notification/util/const.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';

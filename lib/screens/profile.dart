@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:notification/pages/sign_in.dart';
 import 'package:notification/screens/phoneLoginScreen.dart';
+import 'package:notification/screens/sign_in.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 
