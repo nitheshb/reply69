@@ -18,6 +18,7 @@ class MySignInScreenHome extends StatefulWidget {
 }
 
 class _MySignInScreenHomeState extends State<MySignInScreenHome> {
+    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _email = new TextEditingController();
@@ -34,6 +35,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
+      key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0,
         brightness: Brightness.light,
@@ -269,6 +271,10 @@ Widget buildPasswordBox(){
         _changeLoadingVisible();
         print("Sign In Error: $e");
         String exception = Auth.getExceptionText(e);
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text(
+                                      "Sign In Error ${exception}"),
+                                ));
         // Auth.showBasicsFlash(messageText: "Sign In Error ${exception}", duration:Duration(seconds: 4));
         //    Fluttertoast.showToast(
         // msg: "Sign In Error ${exception}",

@@ -137,6 +137,8 @@ class _StateWidgetState extends State<StateWidget> {
   Future<void> logInUser(email, password) async {
     String userId = await Auth.signIn(email, password);
     User user = await Auth.getUserFirestore(userId);
+    print('user data on login is @@@# ${user}');
+    await Auth.getAndUpdateFcmToken(user, userId);
     await Auth.storeUserLocal(user);
     Settings settings = await Auth.getSettingsFirestore(userId);
     await Auth.storeSettingsLocal(settings);

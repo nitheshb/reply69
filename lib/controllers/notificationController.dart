@@ -52,7 +52,7 @@ class NotificationController {
          var x =  Auth.getUserLocal();
          print('values of details fetchf or uId ${userID}');
           if(userID != null) {
-            FirebaseController.instanace.updateUserToken(userID, val);
+            FirebaseController.instanace.updateUserToken(userID, val, 'oldToken');
           }
         });
       }

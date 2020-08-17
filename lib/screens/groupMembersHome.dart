@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:notification/pages/csvGroupDownload.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/widgets/chat_item.dart';
+import 'package:path_provider/path_provider.dart';
 
 class GroupMembersHome extends StatefulWidget {
   // GroupMembersJson
@@ -17,7 +22,22 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
     AutomaticKeepAliveClientMixin{
   TabController _tabController;
   List filteredData;
+  String filePath;
+  String currentProcess;
+  bool isProcessing = false;
 
+Future<String> get _localPath async {
+    final directory = await getApplicationSupportDirectory();
+
+
+    return directory.absolute.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    filePath = '$path/Chatogram.csv';
+    return File('$path/Chatogram.csv').create();
+  }
   @override
   void initState() {
     super.initState();
@@ -43,6 +63,66 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
 //         filteredData.add(u);
 //     });
 // }
+ getCsv() async {
+    setState(() {
+      currentProcess = "Getting data from the cloud";
+      isProcessing = true;
+    });
+    var datestamp = new DateFormat("dd-MM'T'HH:mm");
+    List<List<dynamic>> rows = List<List<dynamic>>();
+    var cloud = await widget.groupMembersJson;
+    // var cloud = await Firestore.instance
+    //     .collection("datum")
+    //     .document("data")
+    //     .get()
+    //     .whenComplete(() {
+    //   setState(() {
+    //     currentProcess = "Decoding data";
+    //   });
+    // });
+    rows.add([
+      "Name",
+      "Days",
+      "Joined Date",
+      "Expiry Date",
+      "KycId",
+    ]);
+    if (cloud != null) {
+      for (int i = 0; i < widget.groupMembersJson.length; i++) {
+        List<dynamic> row = List<dynamic>();
+        row.add(cloud[i]["userId"]);
+        row.add(cloud[i]["membershipDuration"]);    
+        row.add(datestamp.format(cloud[i]["joinedId"].toDate()).toString());
+        row.add(datestamp.format(cloud[i]["expiresOn"].toDate()).toString());
+        row.add(cloud[i]["kycDocId"]);
+        rows.add(row);
+      }
+
+      File f = await _localFile.whenComplete(() {
+        setState(() {
+          currentProcess = "Writing to CSV";
+        });
+      });
+      String csv = const ListToCsvConverter().convert(rows);
+      f.writeAsString(csv);
+      filePath = f.uri.path;
+      print('file path is ${filePath}, ${csv}');
+    }
+  }
+    sendMailAndAttachment() async {
+    final Email email = Email(
+      body:
+          'Data Collected and Compiled by the CHATOGRAM. <br> A CSV file is attached to this <b></b> <hr><br> Compiled at ${DateTime.now()}',
+      subject: 'CHATOGRAM backup on ${DateTime.now().toString()}',
+      recipients: ['test@gmail.com'],
+      isHTML: true,
+      attachmentPath: filePath,
+    );
+
+    await FlutterEmailSender.send(email);
+  }
+final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -53,9 +133,11 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
 
 
 
-    return Scaffold(
+    return Form(
+            key: _formkey,
+            child: Scaffold(
       appBar: AppBar(
-        title: Text("Members"),
+        title: Text("Prime Members"),
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.all(10.0),
@@ -67,15 +149,41 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
                     ),
                   ),
                   color: Colors.blueAccent,
-                  onPressed: (){
-                       Navigator.push(
-                                      context,
-                                     new  MaterialPageRoute(
-                                          builder: (BuildContext context) => 
-                                          AdminGroupCsvDownload(chatId: widget.chatId,approvedGroupDetails: widget.groupMembersJson, ownerEmail: widget.ownerMailId,),
-                                          ),
-                                   );
-                  },
+                  onPressed: (isProcessing)    ? null
+                        : () async {
+                            if (_formkey.currentState.validate()) {
+                              try {
+                                final result =
+                                    await InternetAddress.lookup('google.com');
+                                if (result.isNotEmpty &&
+                                    result[0].rawAddress.isNotEmpty) {
+                                  await getCsv().then((v) {
+                                    //print('check for email csv ${v}');
+                                    setState(() {
+                                      currentProcess =
+                                          "Compiling and sending mail";
+                         
+                                    });
+                                    
+                                    sendMailAndAttachment().whenComplete(() {
+                                      setState(() {
+                                        isProcessing = false;
+                                      });
+                                      _scaffoldKey.currentState
+                                          .showSnackBar(SnackBar(
+                                        content: Text("Data Sent"),
+                                      ));
+                                    });
+                                  });
+                                }
+                              } on SocketException catch (_) {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text(
+                                      "Connect your device to the internet, and try again"),
+                                ));
+                              }
+                            }
+                          },
                 ),
           ),
         ],
@@ -87,10 +195,10 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
           isScrollable: false,
           tabs: <Widget>[
             Tab(
-              text: "Members",
+              text: "All Members",
             ),
             Tab(
-              text: "Expiring",
+              text: "Expired Members",
             ),
           ],
         ),
@@ -166,6 +274,7 @@ class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerPr
         ),
         onPressed: (){},
       ),
+    )
     );
   }
 

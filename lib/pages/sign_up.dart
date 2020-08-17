@@ -17,7 +17,8 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _firstName = new TextEditingController();
   final TextEditingController _phoneNumber = new TextEditingController();
   final TextEditingController _email = new TextEditingController();
@@ -45,6 +46,7 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
+      key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0,
         brightness: Brightness.light,
@@ -86,8 +88,9 @@ class _SignupPageState extends State<SignupPage> {
               Column(
                 children: <Widget>[
                   FadeAnimation(1.2, makeEmailInput(label: "Email")),
-                  FadeAnimation(1.3, makePasswordInput(label: "Choose Password", obscureText: true)),
                   FadeAnimation(1.2, makeUserNameInput(label: "Pick User Name")),
+                  FadeAnimation(1.2, makePasswordInput(label: "Choose Password", obscureText: true)),
+                  FadeAnimation(1.2, makePhoneNumberInput(label: "Phone Number")),
                   // FadeAnimation(1.4, makeReferralCodeInput(label: "Confirm Password", obscureText: true)),
                 ],
               ),
@@ -125,10 +128,14 @@ class _SignupPageState extends State<SignupPage> {
                                  firstName: _userName.text, phoneNumber: _phoneNumber.text,email: _email.text, password: _password.text, referralCode: _referralCode.text, region:"searchTextField.textField.controller.text", context: context);
                    }catch (e) {
         _changeLoadingVisible();
-        print("Sign In Error: $e");
+        print("Sign Up Error: $e");
+         _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text(
+                                      "Sign Up Error ${e}"),
+                                ));
                    }
-                  };
-                  };
+                  }
+                  }
                   },
                   color: Colors.greenAccent,
                   elevation: 0,
@@ -261,7 +268,7 @@ class _SignupPageState extends State<SignupPage> {
       ],
     );
   }
-    Widget makeReferralCodeInput({label, obscureText = false}) {
+    Widget makePhoneNumberInput({label, obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -274,7 +281,8 @@ class _SignupPageState extends State<SignupPage> {
         TextFormField(
                                     autofocus: false,
                                     obscureText: false,
-                                    controller: _referralCode,
+                                    controller: _phoneNumber,
+                                    validator: Validator.validateNumber,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(

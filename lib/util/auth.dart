@@ -1,7 +1,9 @@
 import 'dart:async';
 //import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/models/settings.dart';
 import 'package:notification/models/users.dart';
 
@@ -13,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum authProblems { UserNotFound, PasswordNotValid, NetworkError, UnknownError }
 
 class Auth {
+  
   static Future<String> signUp(String email, String password) async {
     AuthResult user = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
@@ -162,6 +165,23 @@ await user.followingGroups.forEach((data){
     var check = await prefs.getStringList('followingGroups');
     print('check,group, ${check}');
     return user.userId;
+  }
+
+  static Future<String> getAndUpdateFcmToken(User user, userId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+     var oldFcm = user.FCMToken;
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+     String currentFcm = await _firebaseMessaging.getToken();
+     //String currentFcm = 'xyz3';
+    if(oldFcm != currentFcm){
+      print('userid is ${userId}');
+      print('oldFcm is ${oldFcm}');
+      print('NewFcm is ${currentFcm}');
+      // now set in user iam
+      FirebaseController.instanace.updateUserToken(userId, currentFcm,oldFcm );
+      // fetch the following groups and update and remove the data 
+    }
+  return '';  
   }
     
   static  getFollowingGroups() async {

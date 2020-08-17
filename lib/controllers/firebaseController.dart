@@ -78,7 +78,7 @@ class FirebaseController {
     }
   }
 
-  Future<void> updateUserToken(userID, token) async {
+  Future<void> updateUserToken(userID, token, oldToken) async {
     await Firestore.instance.collection('IAM').document(userID).updateData({
       'FCMToken':token,
     });
@@ -96,25 +96,25 @@ class FirebaseController {
         for(final e in joinedGroups){
   //
   var currentElement = e;
-   Firestore.instance.collection('groups').document(e).updateData({ 'FdeviceTokens' : FieldValue.arrayUnion([token])});
+   Firestore.instance.collection('groups').document(e).updateData({ 'FdeviceTokens' : FieldValue.arrayUnion([token]), 'FdeviceTokens' : FieldValue.arrayRemove([oldToken])});
 }
 
    for(final e in followingGroups0){
   //
   var currentElement = e;
-   Firestore.instance.collection('groups').document(e).updateData({ 'AlldeviceTokens' : FieldValue.arrayUnion([token])});
+   Firestore.instance.collection('groups').document(e).updateData({ 'AlldeviceTokens' : FieldValue.arrayUnion([token]), 'AlldeviceTokens' : FieldValue.arrayRemove([oldToken])});
 }
 
    for(final e in followingGroups1){
   //
   var currentElement = e;
-   Firestore.instance.collection('groups').document(e).updateData({ 'AlldeviceTokens' : FieldValue.arrayUnion([token])});
+   Firestore.instance.collection('groups').document(e).updateData({ 'AlldeviceTokens' : FieldValue.arrayUnion([token]), 'AlldeviceTokens' : FieldValue.arrayRemove([oldToken])});
 }
 
    for(final e in followingGroups2){
   //
   var currentElement = e;
-   Firestore.instance.collection('groups').document(e).updateData({ 'AlldeviceTokens' : FieldValue.arrayUnion([token])});
+   Firestore.instance.collection('groups').document(e).updateData({ 'AlldeviceTokens' : FieldValue.arrayUnion([token]), 'AlldeviceTokens' : FieldValue.arrayRemove([oldToken])});
 }
 
 

@@ -14,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'controllers/notificationController.dart';
@@ -100,6 +101,9 @@ class _MyAppState extends State<MyApp> {
 
   getTokenz() async {
     String token = await _firebaseMessaging.getToken();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+     prefs.setString('FCMToken', token);
+
     print('token is : ${token}');
   }
 

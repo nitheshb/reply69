@@ -15,6 +15,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _email = new TextEditingController();
+    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _autoValidate = false;
   bool _loadingVisible = false;
@@ -92,6 +93,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      key: _scaffoldKey,
       body: LoadingScreen(
           child: Form(
             key: _formKey,
@@ -133,6 +135,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         await _changeLoadingVisible();
         await Auth.forgotPasswordEmail(email);
         await _changeLoadingVisible();
+        _scaffoldKey.currentState
+                                          .showSnackBar(SnackBar(
+                                        content: Text("Check your email and follow the instructions to reset your password."),
+                                      ));
         //   Fluttertoast.showToast(
         // msg: 'Check your email and follow the instructions to reset your password.'
         //   );
@@ -146,6 +152,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         _changeLoadingVisible();
         print("Forgot Password Error: $e");
         String exception = Auth.getExceptionText(e);
+              _scaffoldKey.currentState
+                                          .showSnackBar(SnackBar(
+                                        content: Text("Error ${exception}"),
+                                      ));
         //   Fluttertoast.showToast(
         // msg: "Forgot Password Error ${exception}");
         // Flushbar(
