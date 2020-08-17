@@ -1,13 +1,14 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/models/users.dart';
 import 'package:notification/util/auth.dart';
 import 'package:notification/util/validators.dart';
-import 'package:notification/widgets/dataSearch.dart';
 import 'package:notification/widgets/loading.dart';
 
 
@@ -27,8 +28,6 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _userName = new TextEditingController();
 
     AutoCompleteTextField searchTextField;
-  GlobalKey<AutoCompleteTextFieldState<User1>> key = new GlobalKey();
-  static List<User1> users = new List<User1>();
   bool loading = true;
 
   bool _autoValidate = false;
@@ -116,9 +115,9 @@ class _SignupPageState extends State<SignupPage> {
                 this.groupNameAlreadyExists = 'Please enter a name.';
               }); 
     else{
-                        var UserNameData =  await Firestore.instance.collection('IAM').where("firstName", isEqualTo: _userName.text).getDocuments(); 
+                        QuerySnapshot userNameData =  await FirebaseController.instanace.lookForExistingUserName(_userName.text); 
                         setState(() {      
-                this.groupNameAlreadyExists = UserNameData.documents.length> 0 ?'User Name Already Taken' : null; 
+                this.groupNameAlreadyExists = userNameData.documents.length> 0 ?'User Name Already Taken' : null; 
               });
                    if (_formKey.currentState.validate()) { 
                      print('inside successful validation');
@@ -128,6 +127,7 @@ class _SignupPageState extends State<SignupPage> {
                                  firstName: _userName.text, phoneNumber: _phoneNumber.text,email: _email.text, password: _password.text, referralCode: _referralCode.text, region:"searchTextField.textField.controller.text", context: context);
                    }catch (e) {
         _changeLoadingVisible();
+ 
         print("Sign Up Error: $e");
          _scaffoldKey.currentState.showSnackBar(SnackBar(
                                   content: Text(
@@ -335,16 +335,15 @@ class _SignupPageState extends State<SignupPage> {
         _changeLoadingVisible();
         print("Sign Up Error: $e");
         String exception = Auth.getExceptionText(e);
-        //   Fluttertoast.showToast(
-        // msg: "Sign Up Error: ${exception} " );
-        // Flushbar(
-        //   title: "Sign Up Error",
-        //   message: exception,
-        //   duration: Duration(seconds: 5),
-        // )..show(context);
+            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text(
+                                      "${exception}"),
+                                ));
+
       }
     } else {
       setState(() => _autoValidate = true);
     }
   }
+  
 }

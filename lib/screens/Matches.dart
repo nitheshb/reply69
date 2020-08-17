@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/controllers/notificationController.dart';
-import 'package:notification/pages/chatWindow.dart';
 import 'package:notification/screens/conversation.dart';
 import 'package:notification/screens/createGroup.dart';
 import 'package:notification/util/data.dart';
@@ -118,7 +118,7 @@ class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProvid
 
   Widget MatchListBuilder(categoryName){
     return      Container(child:StreamBuilder(
-        stream:  Firestore.instance.collection('Matches').where('category', isEqualTo: categoryName).snapshots(),
+        stream:  FirebaseController.instanace.getMatchesList(categoryName),
         builder: (context,snapshot){
                      if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');

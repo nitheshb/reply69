@@ -71,15 +71,6 @@ Future<String> get _localPath async {
     var datestamp = new DateFormat("dd-MM'T'HH:mm");
     List<List<dynamic>> rows = List<List<dynamic>>();
     var cloud = await widget.groupMembersJson;
-    // var cloud = await Firestore.instance
-    //     .collection("datum")
-    //     .document("data")
-    //     .get()
-    //     .whenComplete(() {
-    //   setState(() {
-    //     currentProcess = "Decoding data";
-    //   });
-    // });
     rows.add([
       "Name",
       "Days",

@@ -1,3 +1,4 @@
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
@@ -274,15 +275,7 @@ Widget buildPasswordBox(){
                                   content: Text(
                                       "Sign In Error ${exception}"),
                                 ));
-        // Auth.showBasicsFlash(messageText: "Sign In Error ${exception}", duration:Duration(seconds: 4));
-        //    Fluttertoast.showToast(
-        // msg: "Sign In Error ${exception}",
-        //    );
-        // Flushbar(
-        //   title: "Sign In Error",
-        //   message: exception,
-        //   duration: Duration(seconds: 5),
-        // )..show(context);
+
       }
     } else {
       setState(() => _autoValidate = true);

@@ -10,9 +10,9 @@ import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/ImageEditorPack/image_editorHome.dart';
 import 'package:notification/bid365_app_theme.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/controllers/notificationController.dart';
 import 'package:notification/pages/feedBacker.dart';
-import 'package:notification/pages/imageEditor.dart';
 import 'package:notification/pages/imageFullView.dart';
 import 'package:notification/pages/reports.dart';
 import 'package:notification/util/data.dart';
@@ -230,10 +230,7 @@ profileRoute(context, origin){
               Icons.notifications,
             ),
             onPressed: () async{
-             var  snapShot = await Firestore.instance
-  .collection('votingBalletHeap')
-  .document(widget.chatId)
-  .get();
+             var  snapShot = await FirebaseController.instanace.getCurrentVotes(widget.chatId);
 
 // this creates feedback entry for newGroup or a group which does not have entry yet in DB
 if (snapShot == null || !snapShot.exists) {
@@ -351,7 +348,7 @@ if (snapShot == null || !snapShot.exists) {
 
             Flexible(
               child: StreamBuilder(
-        stream:  Firestore.instance.collection('groups').document(widget.chatId).snapshots(),
+        stream: FirebaseController.instanace.getChatContent(widget.chatId) ,
         builder: (context,snapshot){
                      if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');
@@ -817,15 +814,11 @@ if (snapShot == null || !snapShot.exists) {
                         try {
                           var now = new DateTime.now();
                           var body ={ "messageBody":_chatMessageText.text, "date": now,"author": widget.userId, "type": "text" , "premium": (msgDeliveryMode  == "Prime"), "messageMode": msgDeliveryMode };
-                         var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now};
-                          Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : FieldValue.arrayUnion([body])});
+                          var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now};
+                         
+                         FirebaseController.instanace.sendChatMessage(widget.chatId, body, lastMessageBody);
                           _chatMessageText.text ="";
-                          for(final e in widget.AllDeviceTokens){
-  //
-  var currentDeviceToken = e;
-
-                          NotificationController.instance.sendNotificationMessageToPeerUser(10, "text", _chatMessageText.text, "Admin", widget.chatId, currentDeviceToken);
-                          }
+  
                             Timer(Duration(milliseconds: 500),
             () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
                         } catch (e) {
@@ -854,10 +847,7 @@ if (snapShot == null || !snapShot.exists) {
             padding: const EdgeInsets.only(bottom: 50.0),
         child: FloatingActionButton.extended(
   onPressed: () async {
-             var  snapShot = await Firestore.instance
-  .collection('votingBalletHeap')
-  .document(widget.chatId)
-  .get();
+             var  snapShot = await FirebaseController.instanace.getCurrentVotes(widget.chatId);
 
 // this creates feedback entry for newGroup or a group which does not have entry yet in DB
 if (snapShot == null || !snapShot.exists) {

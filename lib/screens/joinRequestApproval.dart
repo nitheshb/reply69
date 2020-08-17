@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/widgets/post_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,25 +33,17 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
   //     // chatgroupid, userId, status, duration, time, 
   //     print('i was at pancard, ${kycDocId}');
       if(status=="Rejected"){
-        //  
-        Firestore.instance.collection('KYC').document(kycDocId).updateData({'payment_approve_status': "Rejected",'rejectedOn': DateTime.now()});
-         Firestore.instance.collection('IAM').document(userId).updateData({'rejectedGroups': FieldValue.arrayUnion([chatId]), 'rejectedGroupsJson': FieldValue.arrayUnion([chatId]),'WaitingGroups':FieldValue.arrayRemove([chatId])});
-      
-         Firestore.instance.collection('groups').document(chatId).updateData({'rejectedId': FieldValue.arrayUnion([userId]), 'rejectedIdJson': FieldValue.arrayUnion([userId]),'WaitingCount': 100});
+            var now = new DateTime.now();
+                        var modifiedDate =  now.add(Duration(days: 30));
+        FirebaseController.instanace.rejectKycDoc(kycDocId,modifiedDate, period, userId, chatId);
         
-      //  Firestore.instance.collection('Kyc').document(docId).updateData({'approve_status': "Rejected",'pancard_approve_status': value, 'pancard_review_by': userId});
       }
    else if(status == 'Approved'){
       var now = new DateTime.now();
                         var modifiedDate =  now.add(Duration(days: 30));
-    // Firestore.instance.collection('Kyc').document(docId).updateData({'approve_status': "Approved",'pancard_approve_status': value, 'pancard_review_by': userId});
-            Firestore.instance.collection('KYC').document(kycDocId).updateData({'payment_approve_status': "Approved",'ApprovedOn': DateTime.now(),'expiresOn':  modifiedDate,'membershipDuration': period, 'reviewBy': userId});
-          Firestore.instance.collection('IAM').document(userId).updateData({'approvedGroups': FieldValue.arrayUnion([chatId]), 'approvedGroupsJson': FieldValue.arrayUnion([{'chatId':chatId,'kycDocId': kycDocId }]),'WaitingGroups':FieldValue.arrayRemove([chatId])});
-              var groupUserBody = {'userId':userId, 'joinedId': DateTime.now(), 'expiresOn':  modifiedDate,'membershipDuration': period, 'kycDocId': kycDocId };
-         Firestore.instance.collection('groups').document(chatId).updateData({'premiumMembers': FieldValue.arrayUnion([userId]),'approvedGroupsJson': FieldValue.arrayUnion([groupUserBody]),'FdeviceTokens': FieldValue.arrayUnion([userToken]),'AlldeviceTokens': FieldValue.arrayRemove([userToken]),'rejectedId': FieldValue.arrayRemove([userId])});
-    }else{
-       print('i was at inside disapproval pancard');
-      // Firestore.instance.collection('Kyc').document(docId).updateData({'pancard_approve_status': value, 'pancard_review_by': userId});
+                         FirebaseController.instanace.approveKycDoc(kycDocId,modifiedDate, period, userId, chatId,userToken);
+
+
     }
   }
   @override
@@ -84,7 +77,7 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
         children: <Widget>[
                 Expanded(
                   child:StreamBuilder(
-        stream:  Firestore.instance.collection('KYC').where("chatId", isEqualTo: widget.chatId).where("payment_approve_status", isEqualTo: 'Review_Waiting').snapshots(),
+        stream:  FirebaseController.instanace.getKycDocsList(widget.chatId),
         builder: (context,snapshot){
                      if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');

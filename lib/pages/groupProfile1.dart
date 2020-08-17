@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/controllers/notificationController.dart';
 import 'package:notification/pages/AlgoliaFullTextSearch.dart';
 import 'package:notification/screens/main_screen.dart';
@@ -133,11 +134,8 @@ return lockModify ? FlatButton(
                         //  this is for token 
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
-                        Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayRemove([widget.userId]),'AlldeviceTokens': FieldValue.arrayRemove([userToken])});
-                        Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups0' : FieldValue.arrayRemove([widget.chatId])});
-                        // Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups1' : FieldValue.arrayRemove([widget.chatId])});
-                        // Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups2' : FieldValue.arrayRemove([widget.chatId])});
-                        // Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups3' : FieldValue.arrayRemove([widget.chatId])});
+
+                      FirebaseController.instanace.unfollowGroup(widget.chatId, widget.userId, userToken);
                       
                       setState(() {
                         lockModify = !lockModify;
@@ -168,7 +166,6 @@ return lockModify ? FlatButton(
                          //  this is for token 
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
-                        // Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayUnion([widget.userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
   
 
   //  var followingGroups1 = q1.data['followingGroups1'] ?? [];
@@ -181,8 +178,7 @@ return lockModify ? FlatButton(
  
   if(widget.followingGroupsLocal.length <9){
     print('i was at following groups 0 ${widget.chatId}');
-      Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayUnion([widget.userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
-      Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion([widget.chatId])});
+     FirebaseController.instanace.followGroup(widget.chatId, widget.userId, userToken);
            setState(() {
                         lockModify = !lockModify;
                         followCountModify.add(widget.userId);
@@ -200,20 +196,6 @@ return lockModify ? FlatButton(
    
  _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Overall max 9 group can be followed...!');
   }
-//   else if (followingGroups1.length <9){
-//       Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups1' : FieldValue.arrayUnion([widget.chatId]) });
-//       return;
-//   }else if (followingGroups2.length <9){
-//       Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups2' : FieldValue.arrayUnion([widget.chatId]) });
-//       return;
-//   }else if(followingGroup3.length <9){
-//       Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups3' : FieldValue.arrayUnion([widget.chatId])});
-//   // ds.documentID
-
-//  NotificationController.instance.subScribeChannelNotification("${widget.chatId}");
-  
-//       return;
-//   }
                        } catch (e) {
                          _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'errow at following a group ${e}');
                          print('error at joining a group ${e}');

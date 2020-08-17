@@ -5,12 +5,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/controllers/notificationController.dart';
 import 'package:notification/pages/AlgoliaFullTextSearch.dart';
-import 'package:notification/pages/chatWindow.dart';
 import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/conversation.dart';
 import 'package:notification/screens/createGroup.dart';
+import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/auth.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/util/state.dart';
@@ -49,21 +50,6 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
 
   }
 
-    // void dispose() {
-  //   super.dispose();
-  // }
-
-
-  // var response = await  Firestore.instance.collection('IAM').document(userId).get();
-  // print(('respnse is ${response.data}'));
-  // setState(() {
-  //  waitingGroups = response.data['WaitingGroups'] ?? [];
-  //  approvedGroups = response.data['approvedGroups'] ?? [];
-  //  followingGroups = response.data['followingGroups'] ?? [];
-
-  // });
-  // return response.data;
-  // }
 
 
 Widget chatViewList(context, userId, email, followingGroupss, data, followGroupState){
@@ -73,21 +59,13 @@ Widget chatViewList(context, userId, email, followingGroupss, data, followGroupS
           final followGroupState1 = appState.followingGroups;
       print('--> values are ${followGroupState1}');
          var value;
-        //  if(widget.followingGroupsLocal.length == 0 &&  followGroupState != []){
-        //     value = followGroupState;
-        //     print('value is ddd, ${followGroupState}');
-        //  }else{
-        //     print('value is true check, ${widget.followingGroupsLocal == []}  ${ followGroupState != []}');
-        //     print('wow ${widget.followingGroupsLocal}');
-        //    value = widget.followingGroupsLocal;
-        //  }
+    
   
  if(widget.followingGroupsLocal.length >8){
     allowGroupCreation = false;
   }
         return StreamBuilder(
-        stream: Firestore.instance.collection('groups').where('chatId', whereIn:  widget.followingGroupsLocal).snapshots(),
-        // stream:  Firestore.instance.collection('groups').document(widget.chatId).snapshots(),
+        stream: FirebaseController.instanace.fetchChatGroupsList(widget.followingGroupsLocal),
         builder: (context,snapshot){
                      if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');
@@ -276,54 +254,11 @@ Widget popularSearchTextContainer(searchText){
 
   searchGroupsQuery(query){
     if(query != null){
-var followGroupState = Firestore.instance.collection('groups').where("caseSearch", arrayContains: query).snapshots();
+var followGroupState = FirebaseController.instanace.searchResultsByName(query);
 return followGroupState;
     }else{
       return;
     }
-  }
-
- Future<List<DocumentSnapshot>> getFollowedGroups(userId) async {
-
-  //  var query = await Firestore.instance.collection('groups').where("caseSearch", arrayContains: 'dre').getDocuments();
-  //  print('aread details are1 ${query.documents}');
-  // Stream stream1 = manager.contactListNow;
-  // getLengthMatches(areaId);
-  var response = await  Firestore.instance.collection('IAM').document(userId).get();
-  var followingGroups0 = response.data['followingGroups0'] ?? ['check'];
-  // var followingGroups1 = response.data['followingGroups1'] ?? ['check'];
-  // var followingGroups2 = response.data['followingGroups2'] ?? ['check'];
-  // var followingGroups3 = response.data['followingGroups3'] ?? ['check'];
-  if(followingGroups0.length >8){
-    allowGroupCreation = false;
-  }
-    List<DocumentSnapshot> listSnaps = List();
-     QuerySnapshot q1 = await Firestore.instance.collection('groups').where(
-        'chatId', whereIn: followingGroups0.length >0 ? followingGroups0 : ['check'] )
-        .getDocuments();
-    // QuerySnapshot q2 = await Firestore.instance.collection('groups').where(
-    //     'chatId', whereIn: followingGroups1.length >0 ? followingGroups1 : ['check'] )
-    //     .getDocuments();
-    // QuerySnapshot q3 = await Firestore.instance.collection('groups').where(
-    //     'chatId', whereIn: followingGroups2.length >0 ? followingGroups2 : ['check'] )
-    //     .getDocuments();
-    //  QuerySnapshot q4 = await Firestore.instance.collection('groups').where(
-    //     'chatId', whereIn: followingGroups3.length >0 ? followingGroups3 : ['check'] )
-    //     .getDocuments();
-    listSnaps.addAll(q1.documents);
-    // listSnaps.addAll(q2.documents);
-    // listSnaps.addAll(q3.documents);
-    // listSnaps.addAll(q4.documents);
-print("--->check12 ${followingGroups0}");
-    return listSnaps;
-//    return stream1;
-//     return StreamZip([stream1,stream2]);
-//    Stream stream = StreamGroup.merge([stream1, stream2]).asBroadcastStream();
-//    stream.listen((event) {
-//      print(event);
-//    });
-//    return stream;
-    // return Firestore.instance.collection(collectionName).where("mother_match_Id", isEqualTo: widget.matchId ).where("areaId",isEqualTo: areaId).where("status",isEqualTo: 'Start').snapshots();
   }
 
    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -370,81 +305,10 @@ print("--->check12 ${followingGroups0}");
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
+          // first tab
           Container(
             child: chatViewList(context, userId, email, followingGroups, data, followGroupState)
           ),
-        //   Container(child: FutureBuilder<List<DocumentSnapshot>>(
-        // //  stream:  Firestore.instance.collection('groups').where('chatId', whereIn: ['nQ4T04slkEdANneRb4k6','nQ4T04slkEdANneRb4k61','nQ4T04slkEdANneRb4k62','nQ4T04slkEdANneRb4k63','nQ4T04slkEdANneRb4k64','nQ4T04slkEdANneRb4k65','nQ4T04slkEdANneRb4k66','nQ4T04slkEdANneRb4k67','nQ4T04slkEdANneRb4k68']).where('chatId', whereIn: ['btl5r2JUwn5imaTToPKq']).snapshots(),
-        //  future: getFollowedGroups(userId),
-        // builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshotList){
-        //              if (snapshotList.hasError) {
-        //   return Text('Error ${snapshotList.error}');
-        // }
-        //   if(snapshotList.hasData && snapshotList.data.length > 0 ){
-        //     // return Text('value is ');
-        // return  ListView.separated(
-        //     padding: EdgeInsets.all(10),
-        //     separatorBuilder: (BuildContext context, int index) {
-        //       return Align(
-        //         alignment: Alignment.centerRight,
-        //         child: Container(
-        //           height: 0.5,
-        //           width: MediaQuery.of(context).size.width / 1.3,
-        //           child: Divider(),
-        //         ),
-        //       );
-        //     },
-        //     itemCount: snapshotList.data.length,
-        //     itemBuilder: (BuildContext context, int index)  {
-        //       DocumentSnapshot ds = snapshotList.data[index];              
-        //       var lastMessagesIs = ds['lastMessageDetails'] ?? {"lastMsg":"No msg", "lastMsgTime": ""};
-        //      int x;
-        //     //  saveLocal(index,ds['messages'] ?? [], ds.documentID).then((data) {
-        //     //       x = data;
-        //     //  });
-
-        //       Map chat = chats[index];
-        //       return InkWell(
-        //            onTap: (){
-        //     Navigator.push(
-        //                 context,
-        //                 MaterialPageRoute(
-        //                   builder: (context) => Conversation(groupFullDetails: ds.data,chatId: ds.documentID, groupSportCategory: ds.data['category'],chatOwnerId: ds.data['createdBy'],groupTitle: ds.data['title']?? "", groupLogo: ds.data['logo']?? null, followers: ds.data['followers']?? [],approvedGroupsJson: ds.data['approvedGroupsJson'], userId: userId, senderMailId: email,chatType: "", waitingGroups: waitingGroups, approvedGroups: approvedGroups),
-        //                 ),
-        //               );
-        //            },
-        //         child: ChatMenuIcon(
-        //           dp: ds['logo'],
-        //           groupName: ds['title'],
-        //           isOnline: chat['isOnline'],
-        //           counter: 0,
-        //           msg:  lastMessagesIs['lastMsg'],
-        //           time: lastMessagesIs['lastMsgTime'] =="" ? "" :Jiffy(lastMessagesIs['lastMsgTime'].toDate()).fromNow().toString(),
-        //         ),
-        //       );
-        //     },
-          
-        //   );
-        //   }
-        //  return 
-        //              Align(
-        //                alignment: Alignment.center,
-        //              child: Column(
-        //                children: <Widget>[
-        //                  SizedBox(height: MediaQuery.of(context).size.height/4.5),
-                         
-        //                  new Container(
-        //       height: MediaQuery.of(context).size.height / 3,
-        //       child: Image(image: AssetImage('assets/emptyMsgs.png'),),
-            
-        //     ),
-
-        //     new Text('Loading or No added Groups', style: TextStyle(color: Colors.black, fontSize: 20),),
-                         
-        //                ],
-        //              )
-        //              );
-        // })),
           
           // second tab
 SingleChildScrollView(
@@ -482,7 +346,6 @@ SingleChildScrollView(
               ),
               StreamBuilder(
                   stream : searchGroupsQuery(_searchTerm),
-                  // stream: Firestore.instance.collection('groups').where("caseSearch", arrayContains: _searchTerm).snapshots(),
                   builder: (context, snapshot) {
                     if(!snapshot.hasData) 
                      return 
@@ -585,8 +448,7 @@ SingleChildScrollView(
                         //  this is for token 
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
-                        Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayRemove([userId]),'AlldeviceTokens': FieldValue.arrayRemove([userToken])});
-                        Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayRemove([ds['chatId']])});
+     await  FirebaseController.instanace.unfollowGroup(ds['chatId'], userId, userToken);
 
                         // Auth.setFollowingGroups(followingGroup_real,ds['chatId'], 'remove' );
                         // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
@@ -596,11 +458,10 @@ SingleChildScrollView(
                           StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
                         });
 
-                
-                        
-                        // Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups1' : FieldValue.arrayRemove([ds['chatId']])});
-                        // Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups2' : FieldValue.arrayRemove([ds['chatId']])});
-                        // Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups3' : FieldValue.arrayRemove([ds['chatId']])});
+                          await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+        builder: (BuildContext context)
+        => MainScreen(userId: userId,followingGroupsLocal: widget.followingGroupsLocal),
+        ),(Route<dynamic> route) => false);
                       },
                     ):
                                  FlatButton(
@@ -618,14 +479,6 @@ SingleChildScrollView(
                          //  this is for token 
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
-                        // Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayUnion([userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
-  
-  // var q1 = await Firestore.instance.collection('IAM').document(userId).get();
-
-  // var followingGroups0 = q1.data['followingGroups0'] ?? [];
-  //  var followingGroups1 = q1.data['followingGroups1'] ?? [];
-  //  var followingGroups2 = q1.data['followingGroups2'] ?? [];
-  //  var followingGroup3 = q1.data['followingGroups3'] ?? [];
 
 
 
@@ -633,8 +486,8 @@ SingleChildScrollView(
 
   if(widget.followingGroupsLocal.length <9){
     print('i was at following groups 0 with length  ${widget.followingGroupsLocal.length}, ${ds['chatId']}');
-      Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion([ds['chatId']])});
-      Firestore.instance.collection('groups').document(ds['chatId']).updateData({ 'followers' : FieldValue.arrayUnion([userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
+    FirebaseController.instanace.followGroup(ds['chatId'], userId, userToken);
+
   
   
                         // Auth.setFollowingGroups(widget.followingGroupsLocal,ds['chatId'], 'add' );
@@ -645,26 +498,15 @@ SingleChildScrollView(
                           widget.followingGroupsLocal.add(ds['chatId']);
                           StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
                         });
-
-
-    
+                          await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+        builder: (BuildContext context)
+        => MainScreen(userId: userId,followingGroupsLocal: widget.followingGroupsLocal),
+        ),(Route<dynamic> route) => false);
   }else{
 
  _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Overall max 9 group can be followed...!');
   }
   
-//   else if (followingGroups1.length <9){
-//       Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups1' : FieldValue.arrayUnion([ds['chatId']]) });
-//       return;
-//   }else if (followingGroups2.length <9){
-//       Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups2' : FieldValue.arrayUnion([ds['chatId']]) });
-//       return;
-//   }else if(followingGroup3.length <9){
-//       Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups3' : FieldValue.arrayUnion([ds['chatId']])});
-//   // ds.documentID
-// //  NotificationController.instance.subScribeChannelNotification("${ds['chatId']}");
-//       return;
-//   }
                        } catch (e) {
                           _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'error at following ${e}');
                          print('error at joining a group ${e}');

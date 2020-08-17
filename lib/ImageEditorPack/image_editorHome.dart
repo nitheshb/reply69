@@ -18,6 +18,7 @@ import 'package:image_editor_pro/modules/colors_picker.dart';
 import 'package:image_editor_pro/modules/text.dart';
 import 'package:image_editor_pro/modules/textview.dart';
 import 'package:notification/ImageEditorPack/GroupIconEmoji.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/widgets/loading.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -191,7 +192,7 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
     print('uploaded url is $url');
         try {
                         var body ={ "imageUrl":url, "date": now,"author": widget.userId, "type": "Image", "premium": widget.premiumMode, "messageMode": widget.deliveryMode };
-                      await  Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'messages' : FieldValue.arrayUnion([body])});
+                      await  FirebaseController.instanace.sendChatImage(widget.chatId, body);
                      image = null;
                       } catch (e) {
                         print('error was catched ${e}');
