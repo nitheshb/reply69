@@ -89,11 +89,7 @@ class FirebaseController {
 
         var joinedGroups = doc.data['joinedGroups'];
         var followingGroups0 = doc.data['followingGroups0'];
-        var followingGroups1 = doc.data['followingGroups1'];
-        var followingGroups2 = doc.data['followingGroups2'];
 
-
-        
         for(final e in joinedGroups){
   //
   var currentElement = e;
@@ -106,17 +102,6 @@ class FirebaseController {
    Firestore.instance.collection('groups').document(e).updateData({ 'AlldeviceTokens' : FieldValue.arrayUnion([token]), 'AlldeviceTokens' : FieldValue.arrayRemove([oldToken])});
 }
 
-   for(final e in followingGroups1){
-  //
-  var currentElement = e;
-   Firestore.instance.collection('groups').document(e).updateData({ 'AlldeviceTokens' : FieldValue.arrayUnion([token]), 'AlldeviceTokens' : FieldValue.arrayRemove([oldToken])});
-}
-
-   for(final e in followingGroups2){
-  //
-  var currentElement = e;
-   Firestore.instance.collection('groups').document(e).updateData({ 'AlldeviceTokens' : FieldValue.arrayUnion([token]), 'AlldeviceTokens' : FieldValue.arrayRemove([oldToken])});
-}
 
 
      });

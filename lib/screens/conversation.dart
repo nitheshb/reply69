@@ -11,7 +11,6 @@ import 'package:jiffy/jiffy.dart';
 import 'package:notification/ImageEditorPack/image_editorHome.dart';
 import 'package:notification/bid365_app_theme.dart';
 import 'package:notification/controllers/firebaseController.dart';
-import 'package:notification/controllers/notificationController.dart';
 import 'package:notification/pages/feedBacker.dart';
 import 'package:notification/pages/imageFullView.dart';
 import 'package:notification/pages/reports.dart';

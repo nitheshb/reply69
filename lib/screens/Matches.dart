@@ -7,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/controllers/firebaseController.dart';
-import 'package:notification/controllers/notificationController.dart';
 import 'package:notification/screens/conversation.dart';
 import 'package:notification/screens/createGroup.dart';
 import 'package:notification/util/data.dart';

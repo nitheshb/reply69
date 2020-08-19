@@ -3,8 +3,6 @@ import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:notification/controllers/firebaseController.dart';
-import 'package:notification/controllers/notificationController.dart';
-import 'package:notification/pages/AlgoliaFullTextSearch.dart';
 import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/screen_size.dart';
 import 'package:notification/util/state_widget.dart';

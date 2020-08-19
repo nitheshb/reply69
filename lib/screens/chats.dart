@@ -6,8 +6,6 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/controllers/firebaseController.dart';
-import 'package:notification/controllers/notificationController.dart';
-import 'package:notification/pages/AlgoliaFullTextSearch.dart';
 import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/conversation.dart';
 import 'package:notification/screens/createGroup.dart';

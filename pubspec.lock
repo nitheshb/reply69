@@ -597,6 +597,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  r_upgrade:
+    dependency: "direct main"
+    description:
+      name: r_upgrade
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   rxdart:
     dependency: transitive
     description:

@@ -19,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'controllers/notificationController.dart';
-// import 'package:r_upgrade/r_upgrade.dart';
+import 'package:r_upgrade/r_upgrade.dart';
 
 
 // import 'package:test_app_1/pages/homeNavScreen1.dart';
@@ -154,10 +154,6 @@ var initializationSettings = InitializationSettings(
 
       try {
     versionCheck(context);
-       // NotificationController.instance.takeFCMTokenWhenAppLaunch();
-   // NotificationController.instance.initLocalNotification();
-     String token =  _firebaseMessaging.getToken() as String;
-    print('token is : ${token}');
       } catch (e) {
         print(e);
       }
@@ -187,7 +183,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
             future: FirebaseAuth.instance.currentUser(),
             builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot){
                        if (snapshot.hasData){
-                           FirebaseUser user = snapshot.data; // this is your user instance
+                           // this is your user instance
                            /// is because there is user already logged
                            return MainScreen();
                         }
@@ -239,23 +235,23 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
       }
       void upgrade() async {
         print('inside version upgrader');
-        //  bool isSuccess =await RUpgrade.upgradeFromUrl(
-        //             PLAY_STORE_URL,
-        //           );
-        // print('check for upgrade ${isSuccess}');
+         bool isSuccess =await RUpgrade.upgradeFromUrl(
+                    PLAY_STORE_URL,
+                  );
+        print('check for upgrade ${isSuccess}');
        
-      // int id = await RUpgrade.upgrade(
-      //            PLAY_STORE_URL,
-      //            apkName: 'app-release.apk',
-      //            isAutoRequestInstall: true,
-      //             useDownloadManager: false
-      //            );
+      int id = await RUpgrade.upgrade(
+                 PLAY_STORE_URL,
+                 fileName: 'app-release.apk',
+                 isAutoRequestInstall: true,
+                  useDownloadManager: false
+                 );
 
 
-      //           //  Navigator.pop(context);
-      //   //  await _showFreezer(context);
+                //  Navigator.pop(context);
+         await _showFreezer(context);
 
-          // print('app upgrade id is $id');
+          print('app upgrade id is $id');
     }
 
         _showVersionDialog(context) async {
