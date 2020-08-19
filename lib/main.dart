@@ -17,8 +17,6 @@ import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'controllers/notificationController.dart';
 import 'package:r_upgrade/r_upgrade.dart';
 
 
