@@ -71,15 +71,6 @@ Future<String> get _localPath async {
     var datestamp = new DateFormat("dd-MM'T'HH:mm");
     List<List<dynamic>> rows = List<List<dynamic>>();
     var cloud = await widget.groupMembersJson;
-    // var cloud = await Firestore.instance
-    //     .collection("datum")
-    //     .document("data")
-    //     .get()
-    //     .whenComplete(() {
-    //   setState(() {
-    //     currentProcess = "Decoding data";
-    //   });
-    // });
     rows.add([
       "Name",
       "Days",
@@ -222,6 +213,7 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
             itemCount: widget.groupMembersJson.length,
             itemBuilder: (BuildContext context, int index) {
               var member = widget.groupMembersJson[index];
+              print('memeber details ${index}== ${member}');
               Map chat = chats[4];
               return ChatItem(
                 dp: chat['dp'],

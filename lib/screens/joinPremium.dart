@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flash/flash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/editGroup.dart';
 import 'package:notification/screens/main_screen.dart';
@@ -242,11 +243,7 @@ return lockModify ? FlatButton(
                         //  this is for token 
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
-                        Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayRemove([widget.userId]),'AlldeviceTokens': FieldValue.arrayRemove([userToken])});
-                        Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups0' : FieldValue.arrayRemove([widget.chatId])});
-                       // Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups1' : FieldValue.arrayRemove([widget.chatId])});
-                       // Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups2' : FieldValue.arrayRemove([widget.chatId])});
-                       // Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups3' : FieldValue.arrayRemove([widget.chatId])});
+await FirebaseController.instanace.unfollowGroup(widget.chatId, widget.userId, userToken);
                       
                       setState(() {
                         lockModify = !lockModify;
@@ -285,48 +282,22 @@ return lockModify ? FlatButton(
                          //  this is for token 
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
-                      //  Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayUnion([widget.userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
   
-   var q1 = await Firestore.instance.collection('IAM').document(widget.userId).get();
-
-   var followingGroups0 = q1.data['followingGroups0'] ?? [];
-  // var followingGroups1 = q1.data['followingGroups1'] ?? [];
- //  var followingGroups2 = q1.data['followingGroups2'] ?? [];
- //  var followingGroup3 = q1.data['followingGroups3'] ?? [];
-
-
-
-
- 
-if(followingGroups0.length <9){
+   
+if(widget.followingGroupsLocal.length <9){
     print('i was at following groups 0 ${widget.chatId}');
-      Firestore.instance.collection('groups').document(widget.chatId).updateData({ 'followers' : FieldValue.arrayUnion([widget.userId]), 'AlldeviceTokens': FieldValue.arrayUnion([userToken]) });
-      Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion([widget.chatId])});
+      FirebaseController.instanace.followGroup(widget.chatId, widget.userId, userToken);
       return;
   }else{
    
  _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Overall max 9 group can be followed...!');
   
-  }
-  // else if (followingGroups1.length <9){
-  //     Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups1' : FieldValue.arrayUnion([widget.chatId]) });
-  //     return;
-  // }else if (followingGroups2.length <9){
-  //     Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups2' : FieldValue.arrayUnion([widget.chatId]) });
-  //     return;
-  // }else if(followingGroup3.length <9){
-  //     Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups3' : FieldValue.arrayUnion([widget.chatId])});
-  // // ds.documentID
-
-
-  
+  }  
   //     return;
   // }
                        } catch (e) {
                          print('error at joining a group ${e}');
                        }
-          
- 
                       },
                     );
 }
@@ -391,6 +362,9 @@ if(followingGroups0.length <9){
        appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
+    final phoneNumber = appState.user.phoneNumber;
+    final firstName = appState.user.firstName;
+
 var followersA = widget.followers ?? [];
     Size size = MediaQuery.of(context).size;
     final _media = MediaQuery.of(context).size;
@@ -665,7 +639,7 @@ var followersA = widget.followers ?? [];
               ],
             ),
             child:             StreamBuilder(
-          stream: Firestore.instance.collection('KYC').where("chatId", isEqualTo: widget.chatId).where("uid", isEqualTo: widget.userId).where("approve_status", isEqualTo: 'Review_Waiting').snapshots(),
+          stream: FirebaseController.instanace.getUserKycStatus(widget.chatId, widget.userId),
           builder: (context,snapshot){
                     if(snapshot.hasError) {
                                   return Center(child: Text('Error: '));
@@ -716,7 +690,7 @@ var followersA = widget.followers ?? [];
         
         }
         // return Container(child: Text('check'));
-        return uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image);
+        return uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image, phoneNumber, firstName);
           }
         ),
             // child: uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image)
@@ -821,7 +795,7 @@ var followersA = widget.followers ?? [];
      );
      
   }
-Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, lock, _image ){
+Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, lock, _image, phoneNumber, firstName ){
                       return Container(
         decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
@@ -900,19 +874,15 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
         var body ={
           "uid": userId,
           "chatId": widget.chatId,
+          "uxId": phoneNumber,
+          "firstName": firstName,
           "pancardDocUrl": url,
           "uploadedTime": currentdate,
           "payment_approve_status": "Review_Waiting",
           "approve_status": "Review_Waiting",
         };
 
-        print("submitted details are ${body} ");
-        final collRef = await Firestore.instance.collection('KYC');
-                                                       DocumentReference docReferance = collRef.document();
-                                                       docReferance.setData(body); 
-        final userTable = await Firestore.instance.collection('IAM');
-                                                       DocumentReference userTableDocRef = userTable.document(userId);
-                                                       userTableDocRef.updateData({ 'WaitingGroups' : FieldValue.arrayUnion([widget.chatId]),  'WaitingGroupsJson' : FieldValue.arrayUnion([body])}); 
+        await  FirebaseController.instanace.submitKycDoc(body, userId, widget.chatId);
         // 
         await _changeLoadingVisible();
         setState(() {

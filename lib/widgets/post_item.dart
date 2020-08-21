@@ -12,6 +12,7 @@ class PostItem extends StatefulWidget {
   final String type;
   final String messageMode;
   final String selMessageMode;
+  final String uxId;
   final  premium;
 
   PostItem({
@@ -23,6 +24,7 @@ class PostItem extends StatefulWidget {
     @required this.message,
     @required this.messageMode,
     @required this.selMessageMode,
+    this.uxId,
     this.premium,
     this.type
   }) : super(key: key);
@@ -117,6 +119,18 @@ class _PostItemState extends State<PostItem> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
+                          // this is for only the user screenshot approval view
+                          child:Visibility(
+                              visible: widget.messageMode == 'paymentAccept',
+                              child:Text(
+                            "${widget.uxId}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                            ),
+                  )
+
+                          ),
                         
                         ),
                         Row(

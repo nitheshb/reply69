@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
@@ -402,20 +403,13 @@ File _image;
                 this.groupNameAlreadyExists = 'Please enter a name.';
               }); 
     else{
-                        var UserNameData =  await Firestore.instance.collection('groups').where("title", isEqualTo: _groupTitle.text).getDocuments(); 
-                        setState(() {      
-                this.groupNameAlreadyExists = UserNameData.documents.length> 0 ?'Group Name Already Taken' : null; 
-              });
+
+              
     }
 
     if(_image == null && widget.dp == null){
       _showBasicsFlash(context:  context, duration: Duration(seconds: 2), messageText : 'Please upload group DP ...!');
-      // _showBottomFlash(context:  context);
-      //  Flushbar(
-      //             title:  "Hey Ninja",
-      //             message:  "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-      //             duration:  Duration(seconds: 3),              
-      //           )..show(context);
+
                 return;
     }
 
@@ -451,7 +445,7 @@ if(_image !=null){
                                           "FeeDetails": [{"fee": _premiumPrice1.text, "days": _premiumDays1.text }],
                                         };
 
-               await Firestore.instance.collection("groups").document("${widget.chatId}").updateData(body);
+               await FirebaseController.instanace.editGroupProfile(widget.chatId, body);
             
                  await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
         builder: (BuildContext context)
@@ -461,14 +455,6 @@ if(_image !=null){
                      }catch (e) {
         _changeLoadingVisible();
         print("Create Group Creation Error: $e");
-        //    Fluttertoast.showToast(
-        // msg: "Sign In Error ${e}",
-        //    );
-        // Flushbar(
-        //   title: "Sign In Error",
-        //   message: exception,
-        //   duration: Duration(seconds: 5),
-        // )..show(context);
       }
                         }
                         else {

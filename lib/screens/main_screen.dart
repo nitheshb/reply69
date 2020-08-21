@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 import 'chats.dart';
-import 'groups.dart';
 
 class MainScreen extends StatefulWidget {
     MainScreen({

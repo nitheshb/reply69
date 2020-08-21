@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:notification/controllers/firebaseController.dart';
 
 
 class ChatMenuIcon extends StatefulWidget {
@@ -109,10 +110,7 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
                     var period = widget.fullUserJson['membershipDuration'];
                     var joinedTime = widget.fullUserJson['joinedId'];
                     var expiredTime = widget.fullUserJson['expiresOn'];
-              Firestore.instance.collection('IAM').document(userId).updateData({'approvedGroups': FieldValue.arrayRemove([widget.chatId]), 'approvedGroupsJson': FieldValue.arrayRemove([{'chatId':widget.chatId,'kycDocId': kycDocId }]),'expiredGroups':FieldValue.arrayUnion([{'chatId':widget.chatId,'kycDocId': kycDocId }])});
-              var groupUserBody = {'userId':userId, 'joinedId': joinedTime, 'expiresOn':  expiredTime,'membershipDuration': period, 'kycDocId': kycDocId };
-         Firestore.instance.collection('groups').document(widget.chatId).updateData({'premiumMembers': FieldValue.arrayRemove([userId]),'approvedGroupsJson': FieldValue.arrayRemove([groupUserBody]),'expiredMembers': FieldValue.arrayUnion([userId])});
-            //  Firestore.instance.collection('groups').document(widget.chatId).collection('collectionPath').updateData({'premiumMembers': FieldValue.arrayRemove([userId]),'approvedGroupsJson': FieldValue.arrayRemove([groupUserBody]),'rejectedId': FieldValue.arrayRemove([userId])});
+                  FirebaseController.instanace.removeMemberOnExpiry(userId, joinedTime, expiredTime, kycDocId, period, widget.chatId);
                   },
                   child:Container(
               padding: EdgeInsets.all(1),

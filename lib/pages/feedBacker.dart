@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/util/screen_size.dart';
 import 'package:notification/util/state.dart';
@@ -51,7 +52,7 @@ if (snapShot.length == 0) {
     body ={ 'VotingStats' : FieldValue.arrayUnion([{'Win': 0, 'Loss': 1, 'Even': 0, 'TotalVotes': 1, 'gameId':matchId, 'VotedBy' : FieldValue.arrayUnion([voterId])}])};
    }
     widget.votingBalletHeapData.add(body);
-    Firestore.instance.collection('votingBalletHeap').document(groupId).setData(body);
+    FirebaseController.instanace.firstVote(groupId, body);
 
 }else{
   print('snapshot value is ${snapShot}');
@@ -66,7 +67,7 @@ if(reqGroupA.length == 0){
      print('i was added');
      widget.votingBalletHeapData.add(defaultBody);
    });
- Firestore.instance.collection('votingBalletHeap').document(groupId).updateData({ 'VotingStats' : FieldValue.arrayUnion([defaultBody])});
+   FirebaseController.instanace.userFirstVote(groupId, defaultBody);
 }else{
     var modifiedBody;
      var reqGroup = reqGroupA[0];
@@ -88,7 +89,7 @@ if(reqGroupA.length == 0){
   
 
    print("readl value check ${widget.votingBalletHeapData}");
-  Firestore.instance.collection('votingBalletHeap').document(groupId).setData({ 'VotingStats' : homeGroup});
+  FirebaseController.instanace.userFirstVote(groupId, homeGroup);
       }          
        else if(votedFor == "Even"){
         modifiedBody = {'Win': reqGroup['Win'], 'gameId':reqGroup['gameId'], 'Loss': reqGroup['Loss'], 'Even': reqGroup['Even']+ 1, 'TotalVotes': reqGroup['TotalVotes']+ 1, 'VotedBy': VotersList};
@@ -100,7 +101,7 @@ if(reqGroupA.length == 0){
   
 
    print("readl value check ${widget.votingBalletHeapData}");
-  Firestore.instance.collection('votingBalletHeap').document(groupId).setData({ 'VotingStats' : homeGroup});
+  FirebaseController.instanace.userFirstVote(groupId, homeGroup);
       } else if(votedFor == "Loss"){
         modifiedBody = {'Win': reqGroup['Win'], 'gameId':reqGroup['gameId'], 'Loss': reqGroup['Loss'] + 1, 'Even': reqGroup['Even'], 'TotalVotes': reqGroup['TotalVotes']+ 1, 'VotedBy': VotersList};
 
@@ -111,7 +112,7 @@ if(reqGroupA.length == 0){
   
 
    print("readl value check ${widget.votingBalletHeapData}");
-  Firestore.instance.collection('votingBalletHeap').document(groupId).setData({ 'VotingStats' : homeGroup});
+  FirebaseController.instanace.userFirstVote(groupId, homeGroup);
       }
 
 }
@@ -138,7 +139,7 @@ if(reqGroupA.length == 0){
 
       body: 
          StreamBuilder(
-        stream:  Firestore.instance.collection('Matches').where("category", arrayContainsAny: widget.groupCategoriesArray).where("status", isEqualTo: "FbStart").snapshots(),
+        stream:  FirebaseController.instanace.votingAvailableMatches(widget.groupCategoriesArray),
         builder: (context,snapshot){
                      if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');
@@ -160,12 +161,6 @@ return QuestionCard(true,{'TotalVotes': 1,'Loss': 0, 'Even': 0, 'Win': 1},ds['ma
           }
            print('i was at scoring');
            return QuestionCard(!reqGroupA[0]['VotedBy'].contains(userId),reqGroupA[0],ds['matchDetails']['team_1_pic'],ds['matchDetails']['team-1'], ds['matchDetails']['team_2_pic'], ds['matchDetails']['team-2'], ds['category'][0], ds['matchDetails']['unique_id'], widget.groupId, userId, ds['matchDetails']['type'],);
-          return PostItem(
-            img: post['img'],
-            name: post['name'],
-            dp: post['dp'],
-            time: post['time'],
-          );
         },
       );
           }

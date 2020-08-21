@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
@@ -390,7 +391,7 @@ File _image;
               }); 
     else{
       String groupTitle = _groupTitle.text.toLowerCase().replaceAll(new RegExp(r"\s+"), "");
-                        var UserNameData =  await Firestore.instance.collection('groups').where("title", isEqualTo: groupTitle).getDocuments(); 
+                        var UserNameData =  await FirebaseController.instanace.searchIfGroupAlreadyExists(groupTitle);
                         setState(() {      
                 this.groupNameAlreadyExists = UserNameData.documents.length> 0 ?'Group Name Already Taken' : null; 
               });
@@ -431,9 +432,7 @@ File _image;
        String groupTitle = _groupTitle.text.toLowerCase().replaceAll(new RegExp(r"\s+"), "");
             SharedPreferences prefs = await SharedPreferences.getInstance();
 
-              //  var q1 = await Firestore.instance.collection('IAM').document(userId).get();
 
-  //  var followingGroups0 = q1.data['followingGroups0'] ?? [];
 
       String userToken = prefs.get('FCMToken');
                         //TODO: Implement sign out
@@ -459,25 +458,15 @@ File _image;
 
 
 
-               var check1 =     await Firestore.instance.collection("groups").add(body);
-               var documentId = { "chatId": "${check1.documentID}"} ;
-               await Firestore.instance.collection("groups").document("${check1.documentID}").updateData(documentId);
-              await   Firestore.instance.collection('IAM').document(userId).updateData({ 'followingGroups0' : FieldValue.arrayUnion(['${check1.documentID}'])});
-               print('added group value is ${check1.documentID}');
-                  print('i was at following created groups 0 ${userId}');
-                  widget.followingGroupsLocal.add(check1.documentID);
-                        StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,check1.documentID, 'add' );
+               var check1=  await FirebaseController.instanace.createGroup(body, userId);
+
+                 await  widget.followingGroupsLocal.add(check1.documentID);
+                  await      StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,check1.documentID, 'add' );
                        await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
         builder: (BuildContext context)
         => MainScreen(userId: userId,followingGroupsLocal: widget.followingGroupsLocal),
         ),(Route<dynamic> route) => false);
-                //   await  Navigator.of(context).pop();
-                // await    Navigator.of(context)
-                //         .pushReplacementNamed(widget.primaryButtonRoute);
 
-                      
-
-    
       return;
   }else{
    
@@ -485,15 +474,8 @@ File _image;
   }    
                      }catch (e) {
         _changeLoadingVisible();
+        _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Error $e ');
         print("Create Group Creation Error: $e");
-        //    Fluttertoast.showToast(
-        // msg: "Sign In Error ${e}",
-        //    );
-        // Flushbar(
-        //   title: "Sign In Error",
-        //   message: exception,
-        //   duration: Duration(seconds: 5),
-        // )..show(context);
       }
                         }
                         else {
