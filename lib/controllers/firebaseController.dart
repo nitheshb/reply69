@@ -266,10 +266,10 @@ submitKycDoc(body,userId, chatId)async{
 getKycDocsList(chatId){
   return  Firestore.instance.collection('KYC').where("chatId", isEqualTo: chatId).where("payment_approve_status", isEqualTo: 'Review_Waiting').snapshots();
 }
-approveKycDoc(kycDocId,modifiedDate, period, userId, chatId, userToken){
+approveKycDoc(kycDocId,modifiedDate, period, userId, chatId, userToken, phoneNumber, firstName){
         Firestore.instance.collection('KYC').document(kycDocId).updateData({'payment_approve_status': "Approved",'ApprovedOn': DateTime.now(),'expiresOn':  modifiedDate,'membershipDuration': period, 'reviewBy': userId});
         Firestore.instance.collection('IAM').document(userId).updateData({'approvedGroups': FieldValue.arrayUnion([chatId]), 'approvedGroupsJson': FieldValue.arrayUnion([{'chatId':chatId,'kycDocId': kycDocId }]),'WaitingGroups':FieldValue.arrayRemove([chatId])});
-              var groupUserBody = {'userId':userId, 'joinedId': DateTime.now(), 'expiresOn':  modifiedDate,'membershipDuration': period, 'kycDocId': kycDocId };
+              var groupUserBody = {'userId':userId, 'joinedId': DateTime.now(), 'expiresOn':  modifiedDate,'membershipDuration': period, 'kycDocId': kycDocId, 'phoneNumber': phoneNumber, 'firstName': firstName };
         Firestore.instance.collection('groups').document(chatId).updateData({'premiumMembers': FieldValue.arrayUnion([userId]),'approvedGroupsJson': FieldValue.arrayUnion([groupUserBody]),'FdeviceTokens': FieldValue.arrayUnion([userToken]),'AlldeviceTokens': FieldValue.arrayRemove([userToken]),'rejectedId': FieldValue.arrayRemove([userId])});
 }
 

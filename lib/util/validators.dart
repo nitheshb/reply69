@@ -44,7 +44,7 @@ class Validator {
      Pattern pattern = r'^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$';
      RegExp regex = new RegExp(pattern);
      if (!regex.hasMatch(value))
-       return 'Please enter a number.';
+       return 'Please enter valid phoneNumber';
      else
        return null;
    }

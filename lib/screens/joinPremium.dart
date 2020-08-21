@@ -362,6 +362,9 @@ if(widget.followingGroupsLocal.length <9){
        appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
+    final phoneNumber = appState.user.phoneNumber;
+    final firstName = appState.user.firstName;
+
 var followersA = widget.followers ?? [];
     Size size = MediaQuery.of(context).size;
     final _media = MediaQuery.of(context).size;
@@ -687,7 +690,7 @@ var followersA = widget.followers ?? [];
         
         }
         // return Container(child: Text('check'));
-        return uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image);
+        return uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image, phoneNumber, firstName);
           }
         ),
             // child: uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image)
@@ -792,7 +795,7 @@ var followersA = widget.followers ?? [];
      );
      
   }
-Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, lock, _image ){
+Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, lock, _image, phoneNumber, firstName ){
                       return Container(
         decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
@@ -871,6 +874,8 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
         var body ={
           "uid": userId,
           "chatId": widget.chatId,
+          "uxId": phoneNumber,
+          "firstName": firstName,
           "pancardDocUrl": url,
           "uploadedTime": currentdate,
           "payment_approve_status": "Review_Waiting",

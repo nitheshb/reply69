@@ -269,6 +269,7 @@ return followGroupState;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
     final followGroupState = appState.followingGroups;
+    final phoneNumber = appState.user.phoneNumber;
    var data = Auth.getFollowingGroups;
    print('own it has getFollowingGroups data ${data}');
    print('own it has widget value data ${widget.followingGroupsLocal}');
@@ -444,6 +445,7 @@ SingleChildScrollView(
                       color: Colors.grey,
                       onPressed: ()async{
                         //  this is for token 
+                        print('---> phonenumber is ${phoneNumber}');
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
      await  FirebaseController.instanace.unfollowGroup(ds['chatId'], userId, userToken);
@@ -484,6 +486,7 @@ SingleChildScrollView(
 
   if(widget.followingGroupsLocal.length <9){
     print('i was at following groups 0 with length  ${widget.followingGroupsLocal.length}, ${ds['chatId']}');
+    print('---> phonenumber is ${phoneNumber}');
     FirebaseController.instanace.followGroup(ds['chatId'], userId, userToken);
 
   

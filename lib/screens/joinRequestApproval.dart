@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/util/data.dart';
+import 'package:notification/util/state.dart';
+import 'package:notification/util/state_widget.dart';
 import 'package:notification/widgets/post_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../bid365_app_theme.dart';
@@ -17,6 +19,7 @@ class JoinRequestApproval extends StatefulWidget {
 class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTickerProviderStateMixin,
     AutomaticKeepAliveClientMixin {
    TabController _tabController;
+   StateModel appState;
   
   @override
   void initState() {
@@ -25,7 +28,7 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
   }
 
 
-    updatePaymentRequestStatus(kycDocId,userId,chatId,status, period) async{
+    updatePaymentRequestStatus(kycDocId,userId,chatId,status, period,phoneNumber, firstName) async{
       DateTime d = Jiffy().add(days: 30);
       print('pancard hellooc ${d}');
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -41,13 +44,16 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
    else if(status == 'Approved'){
       var now = new DateTime.now();
                         var modifiedDate =  now.add(Duration(days: 30));
-                         FirebaseController.instanace.approveKycDoc(kycDocId,modifiedDate, period, userId, chatId,userToken);
+                         FirebaseController.instanace.approveKycDoc(kycDocId,modifiedDate, period, userId, chatId,userToken, phoneNumber, firstName);
 
 
     }
   }
   @override
   Widget build(BuildContext context) {
+    appState = StateWidget.of(context).state;
+    final phoneNumber = appState.user.phoneNumber;
+    final firstName = appState.user.firstName;
     return Scaffold(
       appBar: AppBar(
         title: Text("MemberShip Requests"),
@@ -90,7 +96,8 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
               itemCount: snapshot.data.documents.length,
               itemBuilder: (BuildContext context, int index) {
                 var ds = snapshot.data.documents[index].data;
-                print('doc id is : ${ds['pancardDocUrl']}');
+                var docId = snapshot.data.documents[index].documentID;
+                print('doc id is : ${ds['pancardDocUrl']} ${docId}');
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Container(
@@ -102,9 +109,11 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
                       children: <Widget>[
                         PostItem(
                           img: ds['pancardDocUrl'],
-                          name: ds['uid'],
+                          name: ds['firstName']??  null,
+                          uxId: ds['phoneNumber'] ?? null,
                           dp: "assets/cm${random.nextInt(10)}.jpeg",
                           time: ds['uploadedTime'],
+                          messageMode: "paymentAccept",
                         ),
                            SizedBox(height: 15,),
                           //  duration buttons
@@ -113,8 +122,8 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              _buildCircularBtn(70.0, "assets/hate.png", 2,() =>updatePaymentRequestStatus(snapshot.data.documents[index].documentID,ds['uid'],ds['chatId'],"Rejected", "30days")),
-              _buildCircularBtn(70.0, "assets/like.png", 3,() =>updatePaymentRequestStatus(snapshot.data.documents[index].documentID,ds['uid'],ds['chatId'],"Approved", 30)),
+              _buildCircularBtn(70.0, "assets/hate.png", 2,() =>updatePaymentRequestStatus(snapshot.data.documents[index].documentID,ds['uid'],ds['chatId'],"Rejected", "30days", ds['phoneNumber']??  null, ds['firstName']??  null)),
+              _buildCircularBtn(70.0, "assets/like.png", 3,() =>updatePaymentRequestStatus(snapshot.data.documents[index].documentID,ds['uid'],ds['chatId'],"Approved", 30, ds['phoneNumber']??  null, ds['firstName']??  null)),
               
             ],
         ),
