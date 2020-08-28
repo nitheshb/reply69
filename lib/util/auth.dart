@@ -152,18 +152,28 @@ class Auth {
     await prefs.setString('firstName', user.firstName);
 
 List<String> followingGroupsLocal =[];
+List<String> followingGroupsReadCountLocal =[];
 if(user.followingGroups != null){
-await user.followingGroups.forEach((data){
+await user.followingGroups.forEach((data) async {
   print('i was here with data, $data');
+  // search for the rc count and update it 
+await followingGroupsLocal.add( data);
+  var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
+ 
+print('i was here with data %% ${NotifySnap['c']}');
   // followingGroupsLocal = data.cast<String>();
-  followingGroupsLocal.add( data);
+ await followingGroupsReadCountLocal.add(NotifySnap['c'].toString());
+  
 });
 }
 
 
     await prefs.setStringList('followingGroups', followingGroupsLocal);
+    await prefs.setStringList('followingGroupsReadCountLocal', followingGroupsReadCountLocal);
     var check = await prefs.getStringList('followingGroups');
     print('check,group, ${check}');
+     var followingGroupsReadCountLocal1 = await prefs.getStringList('followingGroupsReadCountLocal');
+    print('check,followingGroupsReadCountLocal, ${followingGroupsReadCountLocal1}');
     return user.userId;
   }
 

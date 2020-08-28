@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/widgets/chat_item.dart';
 import 'package:path_provider/path_provider.dart';
@@ -12,7 +14,7 @@ import 'package:path_provider/path_provider.dart';
 class GroupMembersHome extends StatefulWidget {
   // GroupMembersJson
     GroupMembersHome({Key key, this.groupMembersJson, this.chatId, this.ownerMailId});
-    final List  groupMembersJson;
+     List  groupMembersJson;
     final String chatId, ownerMailId;
   @override
   _GroupMembersHomeState createState() => _GroupMembersHomeState();
@@ -42,8 +44,17 @@ Future<String> get _localPath async {
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 2);
+  setInitialValue();
   }
 
+setInitialValue() async{
+  print('was i called2');
+ var docSnap = await FirebaseController.instanace.getPrimeGroupsContent(widget.chatId);
+  print('docSnap is ${docSnap}');
+  setState(() {
+    widget.groupMembersJson = docSnap;
+  });
+}
 // static  filterList(users) {
 //   var now = new DateTime.now();
 //   var tempUsers = users;
@@ -198,6 +209,19 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
+    
+        StreamBuilder(
+        stream:  FirebaseController.instanace.getPrimeGroupsContent(widget.chatId),
+        builder: (context,snapshot){
+                     if (snapshot.hasError) {
+          return Text('Error ${snapshot.error}');
+        }
+        if(snapshot.hasData && snapshot.data.documents.length == 0 ){
+          return 
+                     Text("No Members");
+        }
+          if(snapshot.hasData && snapshot.data.documents.length > 0 ){
+          return
           ListView.separated(
             padding: EdgeInsets.all(10),
             separatorBuilder: (BuildContext context, int index) {
@@ -225,14 +249,20 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
                 time: Jiffy(member['expiresOn'].toDate()).fromNow().toString(),
               );
             },
-          ),
+          );
+          }
+        }),
+      
+      
+          
+          
           ListView.separated(
             padding: EdgeInsets.all(10),
             separatorBuilder: (BuildContext context, int index) {
               return Align(
                 alignment: Alignment.centerRight,
                 child: Container(
-                  height: 0.5,
+                  height: 0.0,
                   width: MediaQuery.of(context).size.width / 1.3,
                   child: Divider(),
                 ),
@@ -253,6 +283,8 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
                 fullUserJson: member,
                 chatId: widget.chatId
               );
+              }else{
+                return Container();
               }
             },
           ),

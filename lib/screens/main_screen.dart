@@ -14,10 +14,11 @@ class MainScreen extends StatefulWidget {
     Key key,
     this.userId,
     this.followingGroupsLocal,
-    this.launchKey
+    this.launchKey,
+    this.followingGroupsReadCountLocal
   }) : super(key: key);
   final String userId;
-  List followingGroupsLocal;
+  List followingGroupsLocal, followingGroupsReadCountLocal;
   int launchKey;
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -45,6 +46,7 @@ getUserData(userId)async {
      var followingGroups = await prefs.getStringList('followingGroups');
     // return followingGroups;
 
+
 print('wowow check this  ${followingGroups}');
    localDataFollowingGroups = followingGroups ?? [];
 
@@ -58,7 +60,7 @@ print('wowow check this  ${followingGroups}');
     // final localFollowingGroups = appState.user;
     print('checking groups 2 ${localDataFollowingGroups}');
     // loadingData();
-
+print('it should show up here ${widget.followingGroupsReadCountLocal}');
   
     
 
@@ -71,7 +73,7 @@ print('wowow check this  ${followingGroups}');
           // ChatsOld(),
           // Home(),
            DisplayMatches(uId: userId, uEmailId: email),
-          Chats(uId: userId, uEmailId: email, followingGroupsLocal: widget.followingGroupsLocal ),
+          Chats(uId: userId, uEmailId: email, followingGroupsLocal: widget.followingGroupsLocal, followingGroupsReadCountLocal: widget.followingGroupsReadCountLocal ),
           // Notifications(),
           // Home(),
           Profile(),

@@ -2,6 +2,7 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/screens/forget_password.dart';
 
 import 'package:notification/screens/main_screen.dart';
@@ -10,6 +11,7 @@ import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:notification/util/validators.dart';
 import 'package:notification/widgets/loading.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class MySignInScreenHome extends StatefulWidget {
@@ -24,6 +26,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
   final TextEditingController _email = new TextEditingController();
 
   final TextEditingController _password = new TextEditingController();
+  
 
   bool _autoValidate = false;
 
@@ -255,6 +258,7 @@ Widget buildPasswordBox(){
     if (_formKey.currentState.validate()) {
       try {
         SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
         await _changeLoadingVisible();
         //need await so it has chance to go through error if found.
         await StateWidget.of(context).logInUser(email, password);
@@ -262,9 +266,25 @@ Widget buildPasswordBox(){
                  appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final followingGroups = await appState.followingGroups;
+  var followingGroupsReadCountLocal = [];
+    
+
+    await followingGroups.forEach((data) async {
+  print('i was here with data, $data');
+  // search for the rc count and update it 
+  var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
+ 
+print('i was here with data %% ${NotifySnap['c']}');
+  // followingGroupsLocal = data.cast<String>();
+ await followingGroupsReadCountLocal.add({"id":data, "count":NotifySnap['c']});
+  
+});
+
+
+    print('am i wroking  ${followingGroupsReadCountLocal}');
         await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
         builder: (BuildContext context)
-        => MainScreen(userId: userId,followingGroupsLocal: followingGroups),
+        => MainScreen(userId: userId,followingGroupsLocal: followingGroups,followingGroupsReadCountLocal: followingGroupsReadCountLocal),
         ),(Route<dynamic> route) => false);
         
       } catch (e) {

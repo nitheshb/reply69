@@ -10,6 +10,7 @@ class StateModel {
   String locationId, soId, hoId;
   String locationName, soName, hoName;
   List followingGroups;
+  List followingGroupsReadCountLocal;
 
 
 
@@ -21,5 +22,6 @@ class StateModel {
     this.locationId = "0",
     this.locationName="",
     this.followingGroups,
+    this.followingGroupsReadCountLocal
   });
 }

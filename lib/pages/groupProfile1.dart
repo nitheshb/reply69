@@ -120,7 +120,7 @@ class _Profile3State extends State<Profile3> {
           return selectedOptions;
         }
 Widget followUnfollowButtons(context){
-return lockModify ? FlatButton(
+return widget.followingGroupsLocal.contains(widget.chatId) ? FlatButton(
                       child: Text(
                         "Unfollow",
                         style: TextStyle(
@@ -177,10 +177,16 @@ return lockModify ? FlatButton(
   if(widget.followingGroupsLocal.length <9){
     print('i was at following groups 0 ${widget.chatId}');
      FirebaseController.instanace.followGroup(widget.chatId, widget.userId, userToken);
+
+     var notifySnap =FirebaseController.instanace.getMessagesCount(widget.chatId);
+
            setState(() {
                         lockModify = !lockModify;
                         followCountModify.add(widget.userId);
                        widget.followingGroupsLocal.add(widget.chatId);
+                      //  make a call and get read count 
+
+                      //  widget.followingGruppsReadCount.add(notifySnap);
                         StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,widget.chatId, 'add' );
                       });
                       await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/conversation.dart';
 import 'package:notification/screens/createGroup.dart';
 import 'package:notification/screens/main_screen.dart';
+import 'package:notification/util/NotifyJson.dart';
 import 'package:notification/util/auth.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/util/state.dart';
@@ -24,9 +26,10 @@ class Chats extends StatefulWidget {
     this.uId,
     this.uEmailId,
     this.followingGroupsLocal,
+    this.followingGroupsReadCountLocal
   }) : super(key: key);
   final String uId, uEmailId;
-   List followingGroupsLocal;
+   List followingGroupsLocal, followingGroupsReadCountLocal;
   @override
   _ChatsState createState() => _ChatsState();
 }
@@ -40,22 +43,242 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
   String _searchTerm;
   bool allowGroupCreation = true;
 
+  List NotifyData = [];
+  List searchLists = [];
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 2);
     print('iwas called');
 
+
+  //   loadData().then((_) {
+  //   getBizList();
+  // });
+
+    // DatabaseReference postsRef =FirebaseDatabase.instance.reference().child("Notify");
+    // postsRef.once().then((DataSnapshot snap){
+    //   print('wow iwas here');
+    //     var keys = snap.value.keys;
+    //     var data = snap.value;
+    //     NotifyData.clear();
+
+    // print(' wow i have snap ${snap.value}');
+    //     for(var individualKeys in keys){
+    //       NotifyList notify = new NotifyList(
+    //           data[individualKeys]['c'],
+    //           data[individualKeys]['m'],
+    //           data[individualKeys]['t'],
+    //       );
+    //       NotifyData.add(notify);
+    //     }
+    //     setState(() {
+    //       print('length ${NotifyData}');
+    //     });
+    // });
+  //  realTime ('kAUE9NsXpQyn4cseIpPt');
+  //  realTime ('om4c5QKsa5mk1pUG897z');
+    // widget.followingGroupsLocal.forEach((data){
+    //   realTime(data);
+    //   print('data@@1 ${data}');
+    // });
+ new Future.delayed(Duration.zero,() {
+       print('readl initialLoad Test ${widget.followingGroupsLocal}');
+    loopFollowingGroup(widget.followingGroupsLocal);
+    });
+   
   }
 
+ void updateInformation(String information) {
+   print('wow its working ### ${information}');
+  }
+loopFollowingGroup(dataArray){
+  print('litmus test ${widget.followingGroupsLocal}');
+  var testArray = ['kAUE9NsXpQyn4cseIpPt','om4c5QKsa5mk1pUG897z'];
+widget.followingGroupsLocal.forEach((data){
+      realTime(data);
+      print('data@@1 ${data}');
+    });
+}
+ realTime (id){
+    DatabaseReference postsRef =FirebaseDatabase.instance.reference().child("Notify").child(id);
+    postsRef.onValue.listen((event){
+        print('==>event is ,${event.snapshot.value}');
+        var snap = event.snapshot;
+          print('wow iwas here');
+        // var keys = snap.value.keys;
+        var data = snap.value;
+        // NotifyData.clear();
+if(data!= null){
+       NotifyData.removeWhere((item) => 
+       item['t'] == 
+       '${data['t']}');
 
+//  NotifyList notify = new NotifyList(
+//               data.c,
+//               data.m,
+//               data.t,
+//           );
+          data['chatId']= id;
+          NotifyData.add(data);
+}else{
+  return;
+}
+    // print(' wow i have snap ${snap.value}');
+    //     for(var individualKeys in keys){
+    //       NotifyList notify = new NotifyList(
+    //           data[individualKeys]['c'],
+    //           data[individualKeys]['m'],
+    //           data[individualKeys]['t'],
+    //       );
+    //       NotifyData.add(notify);
+    //     }
+        setState(() {
+          print('length ${NotifyData}');
+        });
+    });
+}
+Widget chatViewListRealtimeDb(context){
+  print('is it working in cahts ${widget.followingGroupsReadCountLocal}');
+return widget.followingGroupsLocal.length == 0 ? Text('No chat List'):
 
-Widget chatViewList(context, userId, email, followingGroupss, data, followGroupState){
+        ListView.separated(
+                padding: EdgeInsets.all(10),
+                separatorBuilder: (BuildContext context, int index) {
+                  return Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      height: 0.5,
+                      width: MediaQuery.of(context).size.width / 1.3,
+                      child: Divider(),
+                    ),
+                  );
+                },
+                itemCount: NotifyData.length,
+                itemBuilder: (BuildContext context, int index)  {
+          //  var searchGroupForReadCount =   widget.followingGroupsReadCountLocal.firstWhere((data)=> data['id'] == NotifyData[index]['chatId']);
+                //  print('searchGroup ${searchGroupForReadCount['count'] ?? 0}');
+                  return InkWell(
+                       onTap: () async {
+                var snap =   await FirebaseController.instanace.getChatOwnerId(NotifyData[index]['chatId']);
+                print('what is snap ${snap}');
+                
+final information = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Conversation(followingGroupsLocal: widget.followingGroupsLocal,groupFullDetails: [],chatId: NotifyData[index]['chatId'], groupSportCategory: [],chatOwnerId: snap['o'],groupTitle: NotifyData[index]['t']?? "", groupLogo:  NotifyData[index]['i'], followers:  [],approvedGroupsJson: [], userId: widget.uId, senderMailId: widget.uEmailId,chatType: "", waitingGroups: waitingGroups, approvedGroups: [], followersCount: snap['c'],msgFullCount: NotifyData[index]['c'],msgReadCount: searchGroupForReadCount['count'] ??0 ),
+                        ),
+                      );
+
+                      updateInformation(information);
+            
+                       },
+                      
+                    child: ChatMenuIcon(
+                      dp: "${NotifyData[index]['i']}",
+                      groupName: "${NotifyData[index]['t']}",
+                      isOnline: true,
+                      // counter: "${NotifyData[index]['c']- searchGroupForReadCount['count'] ?? 0}",
+                      counter: "",
+                      msg: "${NotifyData[index]['m']}",
+                      time: "${""}",
+                    ),
+                  );
+                
+              
+              
+     }
+   );
+
+  
+}
+
+Widget groupSearViewRealDB (_searchTerm){
+ return FutureBuilder(
+    future:FirebaseDatabase.instance.reference().child("NameSearch")
+                            .orderByChild("childNode")
+                            .startAt('$_searchTerm')
+                            .endAt('${_searchTerm}\uF7FF')
+                            .once(),
+    builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
+      if(!snapshot.hasData) 
+                     return 
+                      Column(
+                       children: <Widget>[
+                         SizedBox(height: 30),
+                         Align(
+                       alignment: Alignment.center,
+                     child:
+                         new Container(
+              height: 160,
+              width: 160,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/searchFind.png'),
+                  fit: BoxFit.fill
+                )
+              ),
+            ),
+                         ),
+         
+          SizedBox(height: 30),
+                        Align(
+                          alignment: Alignment.topLeft,
+                       child: new Container(
+              height: 160,
+             // width: 160,
+             child: Column(
+               children: <Widget>[
+                 Text("Popular Searches To Try", style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w400),),
+                 Row(
+                   children: <Widget>[
+                     popularSearchTextContainer('helloPredictors'),
+                     popularSearchTextContainer('allGamesPredictor'),
+                     popularSearchTextContainer('Dream11Pro'),
+                 
+                
+                   ],
+                 ),
+                
+
+               ],
+             ),
+            ),    
+                        )      
+                       ],
+                     );
+  
+        if (snapshot.hasData) {
+        searchLists.clear();
+        Map<dynamic, dynamic> values = snapshot.data.value;
+        values.forEach((key, values) {
+            searchLists.add(values);
+        });
+        return new ListView.builder(
+            shrinkWrap: true,
+            itemCount: searchLists.length,
+            itemBuilder: (BuildContext context, int index) {
+                return Card(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                    Text("Name: " + searchLists[index]["n"]),
+                    ],
+                ),
+                );
+            });
+        }
+        return CircularProgressIndicator();
+    });
+}
+  Widget chatViewList(context, userId, email, followingGroupss, data, followGroupState){
         print('following widget groups --> ${widget.followingGroupsLocal}' );
         print('following widget values --> ${data}' );
          print('following widget followGroupState values --> ${followGroupState}' );
           final followGroupState1 = appState.followingGroups;
       print('--> values are ${followGroupState1}');
+      
          var value;
     
   
@@ -251,7 +474,7 @@ Widget popularSearchTextContainer(searchText){
         }
 
   searchGroupsQuery(query){
-    if(query != null){
+    if(query != null && ((query.length ==1))){
 var followGroupState = FirebaseController.instanace.searchResultsByName(query);
 return followGroupState;
     }else{
@@ -281,6 +504,11 @@ return followGroupState;
     widget.followingGroupsLocal = followGroupState;
   }
 
+  // widget.followingGroupsLocal.forEach((data){
+  //   realTime(data);
+  //     print('data@@ ${data}');
+  //   });
+
     return Scaffold(
       appBar: AppBar(
         
@@ -306,7 +534,8 @@ return followGroupState;
         children: <Widget>[
           // first tab
           Container(
-            child: chatViewList(context, userId, email, followingGroups, data, followGroupState)
+            child: chatViewListRealtimeDb(context)
+            // child: chatViewList(context, userId, email, followingGroups, data, followGroupState)
           ),
           
           // second tab
@@ -397,10 +626,147 @@ SingleChildScrollView(
                     
                     // return Text("Start Typing for a Group", style: TextStyle(color: Colors.black ),);
 
-                    else if(snapshot.hasData && snapshot.data.documents.length > 0 ){
+                    else if(snapshot.hasData){
 
-                      
+//                     // start of new search
+//               return ListView.builder(
+//                 padding: EdgeInsets.symmetric(horizontal: 10),
+//                 itemCount: snapshot.data['payload'].length,
+//                 // reverse: true,
+//                 itemBuilder: (BuildContext context, int index) {
+//                   var ds = snapshot.data['payload'][index];
+//                     return ListTile(
+//                                    title: Text(ds['title'] ?? "", style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w800 ),),
+//                                    subtitle: Column(
+//                                      children: <Widget>[
+//                                        Padding(
+//                                          padding: const EdgeInsets.only(bottom:8.0, top: 2.0),
+//                                          child: Align(
+//                                            alignment: Alignment.centerLeft,
+//                                       child: Text("@ ${ds['groupOwnerName'] ?? ""}" ?? "", style: TextStyle(color: Colors.black ),),
+//                                          ),
+//                                        ),
+//                                        Row(
+//                                          children: <Widget>[
+//                                            Wrap(
+//                     spacing: 4.0, // gap between adjacent chips
+//                     runSpacing: 1.0, // gap between lines
+//                     children:
+//                     _buildSelectedOptions(ds['category']),
+//                   ),
+//                                          ],
+//                                        ),
+                                      
+//                                      ],
+//                                    ),
+//                                    trailing: true ? 
+//                                    FlatButton(
+//                       child: Text(
+//                         "Unfollow",
+//                         style: TextStyle(
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                       color: Colors.grey,
+//                       onPressed: ()async{
+//                         //  this is for token 
+//                         print('---> phonenumber is ${phoneNumber}');
+//      SharedPreferences prefs = await SharedPreferences.getInstance();
+//       String userToken = prefs.get('FCMToken');
+//      await  FirebaseController.instanace.unfollowGroup(ds['chatId'], userId, userToken);
+
+//                         // Auth.setFollowingGroups(followingGroup_real,ds['chatId'], 'remove' );
+//                         // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
+//                         setState(() {
+//                           // followingGroup_real.remove(ds['chatId']);
+//                           widget.followingGroupsLocal.remove(ds['chatId']);
+//                           StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
+//                         });
+
+//                           await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+//         builder: (BuildContext context)
+//         => MainScreen(userId: userId,followingGroupsLocal: widget.followingGroupsLocal),
+//         ),(Route<dynamic> route) => false);
+//                       },
+//                     ):
+//                                  FlatButton(
+//                       child: Text(
+//                         "Follow",
+//                         style: TextStyle(
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                       color: Theme.of(context).accentColor,
+//                       onPressed: ()async{
+//                         print("check for doc id of group ${ds['chatId']}  id is ${userId}");
+//                         // make an entry in db as joinedGroups
+//                        try {
+//                          //  this is for token 
+//      SharedPreferences prefs = await SharedPreferences.getInstance();
+//       String userToken = prefs.get('FCMToken');
+
+
+
+
+
+//   if(widget.followingGroupsLocal.length <9){
+//     print('i was at following groups 0 with length  ${widget.followingGroupsLocal.length}, ${ds['chatId']}');
+//     print('---> phonenumber is ${phoneNumber}');
+//     FirebaseController.instanace.followGroup(ds['chatId'], userId, userToken);
+
+  
+  
+//                         // Auth.setFollowingGroups(widget.followingGroupsLocal,ds['chatId'], 'add' );
+//                         // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
+//                         setState(() {
+//                           print('i was hit ones');
+//                           // followingGroup_real.add(ds['chatId']);
+//                           widget.followingGroupsLocal.add(ds['chatId']);
+//                           StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
+//                         });
+//                           await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+//         builder: (BuildContext context)
+//         => MainScreen(userId: userId,followingGroupsLocal: widget.followingGroupsLocal),
+//         ),(Route<dynamic> route) => false);
+//   }else{
+
+//  _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Overall max 9 group can be followed...!');
+//   }
+  
+//                        } catch (e) {
+//                           _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'error at following ${e}');
+//                          print('error at joining a group ${e}');
+//                        }
+          
+ 
+//                       },
+//                     ),
+//                       onTap: (){
+
+//                         Navigator.push(
+//               context,
+//               MaterialPageRoute(builder: (context) => Profile3(
+//                 title: ds['title'],
+//                 avatarUrl: ds['logo'],
+//                 categories: ds['category'],
+//                 following: true,
+//                 chatId: ds['chatId'],
+//                 userId: userId,
+//                 followers: ds['followers'] ?? [],
+//                 groupOwnerName : ds['groupOwnerName']?? '',
+//                 feeDetails: ds['FeeDetails'] ?? [],
+//                 seasonRating: ds['seasonRating'] ?? 'NA',
+//                 thisWeekRating: ds['thisWeekRating'] ?? 'NA',
+//                 lastWeekRating: ds['lastWeekRating'] ?? 'NA',
+//                 followingGroupsLocal: widget.followingGroupsLocal
+//               )),
+//             );
+//                       },          
+//                     );
+//                 }
+//               );
    
+//   //  end of new start
                     //  return Text('data');
                   print('data fetch ${_searchTerm}');
                   return  CustomScrollView(shrinkWrap: true,
@@ -408,17 +774,18 @@ SingleChildScrollView(
                         SliverList(
                           delegate: SliverChildBuilderDelegate(
                             ( context,  index) {
-                                 var ds = snapshot.data.documents[index].data; 
-                                 var followersA = ds['followers'] ?? [];
+                                 DocumentSnapshot ds = snapshot.data; 
+                                 print('===>value check $ds['']');
+                                 var followersA =  [];
                                 return ListTile(
-                                   title: Text(ds['title'] ?? "", style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w800 ),),
+                                   title: Text(ds['payload'][index]['title']?? "", style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w800 ),),
                                    subtitle: Column(
                                      children: <Widget>[
                                        Padding(
                                          padding: const EdgeInsets.only(bottom:8.0, top: 2.0),
                                          child: Align(
                                            alignment: Alignment.centerLeft,
-                                      child: Text("@ ${ds['groupOwnerName'] ?? ""}" ?? "", style: TextStyle(color: Colors.black ),),
+                                      child: Text("@ ${ ds['payload'][index]['groupOwnerName'] ?? ""}" ?? "", style: TextStyle(color: Colors.black ),),
                                          ),
                                        ),
                                        Row(
@@ -427,14 +794,14 @@ SingleChildScrollView(
                     spacing: 4.0, // gap between adjacent chips
                     runSpacing: 1.0, // gap between lines
                     children:
-                    _buildSelectedOptions(ds['category']),
+                    _buildSelectedOptions(ds['payload'][index]['category']),
                   ),
                                          ],
                                        ),
                                       
                                      ],
                                    ),
-                                   trailing: followersA.contains(widget.uId) ? 
+                                   trailing: widget.followingGroupsLocal.contains(ds['payload'][index]['chatId']) ? 
                                    FlatButton(
                       child: Text(
                         "Unfollow",
@@ -448,14 +815,14 @@ SingleChildScrollView(
                         print('---> phonenumber is ${phoneNumber}');
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
-     await  FirebaseController.instanace.unfollowGroup(ds['chatId'], userId, userToken);
+     await  FirebaseController.instanace.unfollowGroup(ds['payload'][index]['chatId'], userId, userToken);
 
                         // Auth.setFollowingGroups(followingGroup_real,ds['chatId'], 'remove' );
                         // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
                         setState(() {
                           // followingGroup_real.remove(ds['chatId']);
-                          widget.followingGroupsLocal.remove(ds['chatId']);
-                          StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
+                          widget.followingGroupsLocal.remove(ds['payload'][index]['chatId']);
+                          StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['payload'][index]['chatId'], 'remove' );
                         });
 
                           await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
@@ -473,7 +840,7 @@ SingleChildScrollView(
                       ),
                       color: Theme.of(context).accentColor,
                       onPressed: ()async{
-                        print("check for doc id of group ${ds['chatId']}  id is ${userId}");
+                        print("check for doc id of group ${ds['payload'][index]['chatId']}  id is ${userId}");
                         // make an entry in db as joinedGroups
                        try {
                          //  this is for token 
@@ -487,7 +854,8 @@ SingleChildScrollView(
   if(widget.followingGroupsLocal.length <9){
     print('i was at following groups 0 with length  ${widget.followingGroupsLocal.length}, ${ds['chatId']}');
     print('---> phonenumber is ${phoneNumber}');
-    FirebaseController.instanace.followGroup(ds['chatId'], userId, userToken);
+  
+    FirebaseController.instanace.followGroup(ds['payload'][index]['chatId'], userId, userToken);
 
   
   
@@ -496,7 +864,7 @@ SingleChildScrollView(
                         setState(() {
                           print('i was hit ones');
                           // followingGroup_real.add(ds['chatId']);
-                          widget.followingGroupsLocal.add(ds['chatId']);
+                          widget.followingGroupsLocal.add(ds['payload'][index]['chatId']);
                           StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
                         });
                           await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
@@ -521,18 +889,18 @@ SingleChildScrollView(
                         Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Profile3(
-                title: ds['title'],
-                avatarUrl: ds['logo'],
-                categories: ds['category'],
+                title: ds['payload'][index]['title'],
+                avatarUrl: ds['payload'][index]['logo'],
+                categories: ds['payload'][index]['category'],
                 following: followersA.contains(widget.uId),
-                chatId: ds['chatId'],
+                chatId: ds['payload'][index]['chatId'],
                 userId: userId,
-                followers: ds['followers'] ?? [],
-                groupOwnerName : ds['groupOwnerName']?? '',
-                feeDetails: ds['FeeDetails'] ?? [],
-                seasonRating: ds['seasonRating'] ?? 'NA',
-                thisWeekRating: ds['thisWeekRating'] ?? 'NA',
-                lastWeekRating: ds['lastWeekRating'] ?? 'NA',
+                followers: ds['payload'][index]['followers'] ?? [],
+                groupOwnerName : ds['payload'][index]['groupOwnerName']?? '',
+                feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
+                seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
+                thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
+                lastWeekRating: ds['payload'][index]['lastWeekRating'] ?? 'NA',
                 followingGroupsLocal: widget.followingGroupsLocal
               )),
             );
@@ -541,7 +909,7 @@ SingleChildScrollView(
                     
                               
                             },
-                            childCount: snapshot.data.documents.length ?? 0,
+                            childCount: snapshot.data['payload'].length ?? 0,
                           ),
                         ),
             

@@ -88,13 +88,13 @@ class _MyAppState extends State<MyApp> {
  
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, null);
-    await flutterLocalNotificationsPlugin.show(
-        0,
-      'new message arived',
-      'i want ${message['data']['title']} for ${message['data']['price']}',
-      platformChannelSpecifics,
-      payload: 'Default_Sound',
-    );
+    // await flutterLocalNotificationsPlugin.show(
+    //     0,
+    //   'new message arived',
+    //   'i want ${message['data']['title']} for ${message['data']['price']}',
+    //   platformChannelSpecifics,
+    //   payload: 'Default_Sound',
+    // );
   }
  
 

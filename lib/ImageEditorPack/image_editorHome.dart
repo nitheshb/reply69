@@ -42,9 +42,11 @@ class MyImageEditorPro extends StatefulWidget {
   final Color bottomBarColor;
   final String groupLogo, userId, chatId, deliveryMode;
   final bool premiumMode;
+  var msgFullCount;
   MyImageEditorPro({this.appBarColor, 
   this.premiumMode,this.bottomBarColor, 
-  this.groupLogo, this.userId, this.chatId, 
+  this.groupLogo, this.userId, this.chatId,
+  this.msgFullCount, 
   this.deliveryMode});
 
   @override
@@ -192,7 +194,7 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
     print('uploaded url is $url');
         try {
                         var body ={ "imageUrl":url, "date": now,"author": widget.userId, "type": "Image", "premium": widget.premiumMode, "messageMode": widget.deliveryMode };
-                      await  FirebaseController.instanace.sendChatImage(widget.chatId, body);
+                      await  FirebaseController.instanace.sendChatImage(widget.chatId, body, widget.msgFullCount);
                      image = null;
                       } catch (e) {
                         print('error was catched ${e}');

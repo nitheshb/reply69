@@ -205,6 +205,7 @@ File _image;
         appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
+    final firstName = appState.user?.firstName ?? '';
     return Scaffold(
           backgroundColor: Colors.white,
       appBar: AppBar(
@@ -454,11 +455,23 @@ File _image;
                                           "AlldevicesTokens": [],
                                           "FdeviceToken": [],
                                         };
+
+                                  Map searchGroupBody ={
+                                          "title": groupTitle,
+                                          "ownerName": firstName,
+                                          "createdBy":userId,
+                                          "category": selCategoryValue,
+                                          "groupType": configImageCompression,
+                                          "logo": ImageUrl,
+                                          "paymentNo": _paymentScreenshotPhoneNo.text,
+                                          "FeeDetails": [{"fee": _premiumPrice1.text, "days": _premiumDays1.text }],
+                                        };      
               if(widget.followingGroupsLocal.length <9){
 
-
-
-               var check1=  await FirebaseController.instanace.createGroup(body, userId);
+               var check1=  await FirebaseController.instanace.createGroup(
+                 body, userId, 
+               searchGroupBody,groupTitle,firstName,
+               selCategoryValue,configImageCompression, ImageUrl, _paymentScreenshotPhoneNo.text,  _premiumPrice1.text , _premiumDays1.text  );
 
                  await  widget.followingGroupsLocal.add(check1.documentID);
                   await      StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,check1.documentID, 'add' );

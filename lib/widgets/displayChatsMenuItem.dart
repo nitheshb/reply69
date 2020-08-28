@@ -110,7 +110,7 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
                     var period = widget.fullUserJson['membershipDuration'];
                     var joinedTime = widget.fullUserJson['joinedId'];
                     var expiredTime = widget.fullUserJson['expiresOn'];
-                  FirebaseController.instanace.removeMemberOnExpiry(userId, joinedTime, expiredTime, kycDocId, period, widget.chatId);
+                  FirebaseController.instanace.removeMemberOnExpiry(userId, joinedTime, expiredTime, kycDocId, period, widget.chatId, widget.fullUserJson);
                   },
                   child:Container(
               padding: EdgeInsets.all(1),
