@@ -167,7 +167,7 @@ return widget.followingGroupsLocal.length == 0 ? Text('No chat List'):
 final information = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Conversation(followingGroupsLocal: widget.followingGroupsLocal,groupFullDetails: [],chatId: NotifyData[index]['chatId'], groupSportCategory: [],chatOwnerId: snap['o'],groupTitle: NotifyData[index]['t']?? "", groupLogo:  NotifyData[index]['i'], followers:  [],approvedGroupsJson: [], userId: widget.uId, senderMailId: widget.uEmailId,chatType: "", waitingGroups: waitingGroups, approvedGroups: [], followersCount: snap['c'],msgFullCount: NotifyData[index]['c'],msgReadCount: searchGroupForReadCount['count'] ??0 ),
+                          builder: (context) => Conversation(followingGroupsLocal: widget.followingGroupsLocal,groupFullDetails: [],chatId: NotifyData[index]['chatId'], groupSportCategory: [],chatOwnerId: snap['o'],groupTitle: NotifyData[index]['t']?? "", groupLogo:  NotifyData[index]['i'], followers:  [],approvedGroupsJson: [], userId: widget.uId, senderMailId: widget.uEmailId,chatType: "", waitingGroups: waitingGroups, approvedGroups: [], followersCount: snap['c'],msgFullCount: NotifyData[index]['c'],msgReadCount: 0 ),
                         ),
                       );
 
@@ -180,7 +180,7 @@ final information = await Navigator.push(
                       groupName: "${NotifyData[index]['t']}",
                       isOnline: true,
                       // counter: "${NotifyData[index]['c']- searchGroupForReadCount['count'] ?? 0}",
-                      counter: "",
+                      counter: 0,
                       msg: "${NotifyData[index]['m']}",
                       time: "${""}",
                     ),
