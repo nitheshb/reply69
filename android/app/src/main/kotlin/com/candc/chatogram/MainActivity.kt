@@ -1,4 +1,4 @@
-package com.example.fcm_flutter_notification
+package com.candc.chatogram
 
 import android.os.Bundle
 import io.flutter.app.FlutterActivity

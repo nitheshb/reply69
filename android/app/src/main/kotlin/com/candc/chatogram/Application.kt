@@ -1,4 +1,4 @@
-package com.example.fcm_flutter_notification
+package com.candc.chatogram
 
 import io.flutter.app.FlutterApplication;
 import io.flutter.plugin.common.PluginRegistry;
