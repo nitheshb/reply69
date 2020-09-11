@@ -38,19 +38,22 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
     AutomaticKeepAliveClientMixin{
   TabController _tabController;
   StateModel appState;  
-  List waitingGroups = [], approvedGroups =[], followingGroups =[];
+  List waitingGroups = [], approvedGroups =[], followingGroups =[], primeGroups=[];
   List chatIdGroups = ['nQ4T04slkEdANneRb4k6','nQ4T04slkEdANneRb4k61','nQ4T04slkEdANneRb4k62','nQ4T04slkEdANneRb4k63','nQ4T04slkEdANneRb4k64','nQ4T04slkEdANneRb4k65','nQ4T04slkEdANneRb4k66','nQ4T04slkEdANneRb4k67','nQ4T04slkEdANneRb4k68','btl5r2JUwn5imaTToPKq'];
   String _searchTerm;
   bool allowGroupCreation = true;
 
   List NotifyData = [];
   List searchLists = [];
+  int selTabIndex;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 2);
     print('iwas called');
+    getlocalPrimeGroups();
+    selTabIndex =0;
 
 
   //   loadData().then((_) {
@@ -90,6 +93,11 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
    
   }
 
+getlocalPrimeGroups() async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  approvedGroups = await prefs.getStringList('approvedPrimeGroups');
+}
  void updateInformation(String information) {
    print('wow its working ### ${information}');
   }
@@ -140,8 +148,17 @@ if(data!= null){
     });
 }
 Widget chatViewListRealtimeDb(context){
+
+           appState = StateWidget.of(context).state;
+    // final localFollowingGroups = appState.user;
+      //  final approvedGroups = appState?.user?.approvedGroups;
+      //  print('grops fro local fetch ${approvedGroups}');
+ if(widget.followingGroupsLocal.length >8){
+    allowGroupCreation = false;
+  }
+     
   print('is it working in cahts ${widget.followingGroupsReadCountLocal}');
-return widget.followingGroupsLocal.length == 0 ? Text('No chat List'):
+return widget.followingGroupsLocal.length == 0 ? noGroupsFolllowed():
 
         ListView.separated(
                 padding: EdgeInsets.all(10),
@@ -163,11 +180,28 @@ return widget.followingGroupsLocal.length == 0 ? Text('No chat List'):
                        onTap: () async {
                 var snap =   await FirebaseController.instanace.getChatOwnerId(NotifyData[index]['chatId']);
                 print('what is snap ${snap}');
+
+              var chatId = approvedGroups.contains(NotifyData[index]['chatId']) ? "${NotifyData[index]['chatId']}PGrp" : "${NotifyData[index]['chatId']}" ;
                 
 final information = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Conversation(followingGroupsLocal: widget.followingGroupsLocal,groupFullDetails: [],chatId: NotifyData[index]['chatId'], groupSportCategory: [],chatOwnerId: snap['o'],groupTitle: NotifyData[index]['t']?? "", groupLogo:  NotifyData[index]['i'], followers:  [],approvedGroupsJson: [], userId: widget.uId, senderMailId: widget.uEmailId,chatType: "", waitingGroups: waitingGroups, approvedGroups: [], followersCount: snap['c'],msgFullCount: NotifyData[index]['c'],msgReadCount: 0 ),
+                          builder: (context) => Conversation(followingGroupsLocal: widget.followingGroupsLocal,groupFullDetails: [],chatId: chatId, 
+                                                groupSportCategory: [],
+                                                chatOwnerId: snap['o'],
+                                                groupTitle: NotifyData[index]['t']?? "", 
+                                                groupLogo:  NotifyData[index]['i'], 
+                                                followers:  [],
+                                                approvedGroupsJson: [], 
+                                                userId: widget.uId, 
+                                                senderMailId: widget.uEmailId,
+                                                chatType: "",
+                                                waitingGroups: waitingGroups,
+                                                approvedGroups: [], 
+                                                followersCount: snap['c'],
+                                                msgFullCount: NotifyData[index]['c'],
+                                                msgFullPmCount: NotifyData[index]['pc'],
+                                                msgReadCount: 0 ),
                         ),
                       );
 
@@ -181,7 +215,7 @@ final information = await Navigator.push(
                       isOnline: true,
                       // counter: "${NotifyData[index]['c']- searchGroupForReadCount['count'] ?? 0}",
                       counter: 0,
-                      msg: "${NotifyData[index]['m']}",
+                      msg: "${approvedGroups.contains(NotifyData[index]['chatId']) ? NotifyData[index]['pm'] :  NotifyData[index]['m']}",
                       time: "${""}",
                     ),
                   );
@@ -192,6 +226,25 @@ final information = await Navigator.push(
    );
 
   
+}
+Widget noGroupsFolllowed(){
+  return Align(
+                       alignment: Alignment.center,
+                     child: Column(
+                       children: <Widget>[
+                         SizedBox(height: MediaQuery.of(context).size.height/4.5),
+                         
+                         new Container(
+              height: MediaQuery.of(context).size.height / 3,
+              child: Image(image: AssetImage('assets/emptyMsgs.png'),),
+            
+            ),
+
+            new Text("No Groups Subscribed Yet", style: TextStyle(color: Colors.grey, fontSize: 20, fontWeight: FontWeight.w400),),
+                         
+                       ],
+                     )
+                     );
 }
 
 Widget groupSearViewRealDB (_searchTerm){
@@ -518,12 +571,18 @@ return followGroupState;
           labelColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).textTheme.caption.color,
           isScrollable: false,
+          onTap: (index){
+            setState(() {
+              selTabIndex= index;
+            });
+              
+          },
           tabs: <Widget>[
             Tab(
               text: "Messages",
             ),
             Tab(
-              text: "Groups",
+              text: "Follow Groups",
             ),
           ],
         ),
@@ -785,7 +844,7 @@ SingleChildScrollView(
                                          padding: const EdgeInsets.only(bottom:8.0, top: 2.0),
                                          child: Align(
                                            alignment: Alignment.centerLeft,
-                                      child: Text("@ ${ ds['payload'][index]['groupOwnerName'] ?? ""}" ?? "", style: TextStyle(color: Colors.black ),),
+                                      child: Text("@ ${ ds['payload'][index]['ownerName'] ?? ""}" ?? "", style: TextStyle(color: Colors.black ),),
                                          ),
                                        ),
                                        Row(
@@ -896,7 +955,7 @@ SingleChildScrollView(
                 chatId: ds['payload'][index]['chatId'],
                 userId: userId,
                 followers: ds['payload'][index]['followers'] ?? [],
-                groupOwnerName : ds['payload'][index]['groupOwnerName']?? '',
+                groupOwnerName : ds['payload'][index]['ownerName']?? '',
                 feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
                 seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
                 thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
@@ -945,8 +1004,12 @@ SingleChildScrollView(
         ),
         ]
       ),
-
-      floatingActionButton: FloatingActionButton(
+  
+      floatingActionButton:
+      Visibility(
+        visible: selTabIndex== 1,
+        child:
+       FloatingActionButton(
         child: Container(
           child: Icon(
             Icons.add,
@@ -969,6 +1032,7 @@ SingleChildScrollView(
         }
         },
       ),
+      )
     );
   }
 

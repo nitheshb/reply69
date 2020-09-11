@@ -28,12 +28,13 @@ class Conversation extends StatefulWidget {
   Conversation({Key key,this.groupFullDetails,
   this.followingGroupsLocal,this.msgFullCount,
   this.msgReadCount,
+  this.msgFullPmCount,
   this.chatId,this.groupSportCategory,this.userId,this.groupLogo,this.groupTitle,this.senderMailId, this.chatType, this.waitingGroups, this.approvedGroups,this.followers, this.chatOwnerId, this.approvedGroupsJson, this.AllDeviceTokens, this.FDeviceTokens, this.followersCount});
   var  chatId, userId,chatType, chatOwnerId, senderMailId, groupTitle, groupLogo ;
   List waitingGroups, approvedGroups, AllDeviceTokens,FDeviceTokens, groupSportCategory, followers;
   List followingGroupsLocal;
   List approvedGroupsJson;
-  var msgFullCount, msgReadCount;
+  var msgFullCount, msgReadCount, msgFullPmCount;
   var groupFullDetails;
   var followersCount;
 
@@ -189,6 +190,7 @@ Future<bool> _onBackPress() async {
 
   @override
   Widget build(BuildContext context) {
+    print('check for chatId ${widget.chatId}');
     return WillPopScope(
       onWillPop: _onBackPress,
       child: Scaffold(
@@ -221,13 +223,13 @@ Future<bool> _onBackPress() async {
                       Text(
                         "${widget.groupTitle}",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w800,
                           fontSize: 14,
                         ),
                       ),
                       SizedBox(height: 5),
                       Text(
-                        "${widget.followersCount ?? '0'} Followers",
+                        "${NumberFormat.compact().format(widget.followersCount) ?? '0'} Followers",
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 11,
@@ -319,7 +321,7 @@ if (snapShot == null || !snapShot.exists) {
                                       context,
                                      new  MaterialPageRoute(
                                           builder: (BuildContext context) => 
-                                          JoinRequestApproval(chatId: widget.chatId,),
+                                          JoinRequestApproval(chatId: widget.chatId,groupName: widget.groupTitle ,),
                                           ),
                                    );
                 } else if (value == "Expired Memberships"){
@@ -327,8 +329,9 @@ if (snapShot == null || !snapShot.exists) {
                                       context,
                                      new  MaterialPageRoute(
                                           builder: (BuildContext context) => 
-                                          GroupMembersHome(groupMembersJson : widget.approvedGroupsJson ?? [], chatId: widget.chatId, ownerMailId: widget.senderMailId),
+                                          GroupMembersHome(groupMembersJson : widget.approvedGroupsJson ?? [], chatId: widget.chatId, ownerMailId: widget.senderMailId, groupTitle: widget.groupTitle,
                                           ),
+                                     )
                                    );
                 }else if (value == "Edit Details"){
                      profileRoute(context, 'owner');
@@ -338,11 +341,11 @@ if (snapShot == null || !snapShot.exists) {
                       const 
                       PopupMenuItem(
                         value: "Approve Payments",
-                        child: Text("Approve Payments"),
+                        child: Text("Prime User Payments"),
                       ),
                       PopupMenuItem(
                         value: "Expired Memberships",
-                        child: Text("Expired Membersips"),
+                        child: Text("Prime Members"),
                       ),
                       PopupMenuItem(
                         value: "Edit Details",
@@ -365,7 +368,7 @@ if (snapShot == null || !snapShot.exists) {
 
               Flexible(
                 child: StreamBuilder(
-          stream: FirebaseController.instanace.getChatContent(widget.chatId) ,
+          stream: FirebaseController.instanace.getChatContent(widget.chatId, msgDeliveryMode) ,
           builder: (context,snapshot){
                        if (snapshot.hasError) {
             return Text('Error ${snapshot.error}');
@@ -411,9 +414,9 @@ if (snapShot == null || !snapShot.exists) {
   // fresh start check
   widget.groupFullDetails = snapshot.data;
 
-   if(((widget.approvedGroups.contains(widget.userId)) || (widget.chatOwnerId == widget.userId)) && (snapshot.data['messages'][indexVal]['messageMode'] ==  'Prime' || snapshot.data['messages'][indexVal]['messageMode'] ==  'All') && (msgDeliveryMode =="Prime")){
+   if(((widget.approvedGroups.contains(widget.userId)) || (widget.chatOwnerId == widget.userId) || widget.chatId.contains('PGrp') ) && (snapshot.data['messages'][indexVal]['messageMode'] ==  'Prime' || snapshot.data['messages'][indexVal]['messageMode'] ==  'All') && (msgDeliveryMode =="Prime" || widget.chatId.contains('PGrp'))){
           //  owner display for Prime
-             print(' i was at prime');
+              print(' i was at prime');
               return PostItem(
               message: snapshot.data['messages'][indexVal]['type'] == "text"
                           ?snapshot.data['messages'][indexVal]['messageBody']
@@ -766,8 +769,10 @@ if (snapShot == null || !snapShot.exists) {
           premiumMode: msgDeliveryMode == 'Prime',
           deliveryMode: msgDeliveryMode,
           msgFullCount: widget.msgFullCount,
+          msgFullPmCount: widget.msgFullPmCount,
         );
       })).then((geteditimage) {
+        print('check from callback ${geteditimage}');
         if (geteditimage != null) {
           setState(() {
             _image = geteditimage;
@@ -842,13 +847,23 @@ if (snapShot == null || !snapShot.exists) {
                           var alt =  now.add(Duration(days: 1));
                           print('time was ${alt}');
                           try {
-                            widget.msgFullCount = widget.msgFullCount + 1;
+
+                             if(msgDeliveryMode== "Prime"){
+        widget.msgFullPmCount = widget.msgFullPmCount + 1;
+     }else if(msgDeliveryMode== "Non-Prime"){
+         widget.msgFullCount = widget.msgFullCount + 1;
+     }else{
+
+        widget.msgFullCount = widget.msgFullCount + 1;
+        widget.msgFullPmCount = widget.msgFullPmCount + 1;
+     }
+                           
                             var now = new DateTime.now();
                             var body ={ "messageBody":_chatMessageText.text, "date": now,"author": widget.userId, "type": "text" , "premium": (msgDeliveryMode  == "Prime"), "messageMode": msgDeliveryMode };
                             // var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now};
-                            var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now.toString(), "title": widget.groupTitle, "msgFullCount" : widget.msgFullCount};
+                            var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now.toString(), "title": widget.groupTitle, "msgFullCount" : widget.msgFullCount, "msgFullPmCount": widget.msgFullPmCount, "lastPmMsg": _chatMessageText.text };
                            
-                           FirebaseController.instanace.sendChatMessage(widget.chatId, body, lastMessageBody);
+                           FirebaseController.instanace.sendChatMessage(widget.chatId, body, lastMessageBody,msgDeliveryMode );
                             _chatMessageText.text ="";
   
                               Timer(Duration(milliseconds: 500),

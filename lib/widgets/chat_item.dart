@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/screens/conversation.dart';
@@ -14,6 +15,7 @@ class ChatItem extends StatefulWidget {
   final counter;
   final fullUserJson;
   final chatId;
+  final groupTitle;
 
   ChatItem({
     Key key,
@@ -25,6 +27,7 @@ class ChatItem extends StatefulWidget {
     @required this.counter,
     this.chatId,
     this.fullUserJson,
+    this.groupTitle,
   }) : super(key: key);
 
   @override
@@ -32,6 +35,7 @@ class ChatItem extends StatefulWidget {
 }
 
 class _ChatItemState extends State<ChatItem> {
+  Dio dio = new Dio();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -92,9 +96,9 @@ class _ChatItemState extends State<ChatItem> {
           children: <Widget>[
             SizedBox(height: 10),
             Text(
-              "${widget.time}",
+              "Expires ${widget.time}",
               style: TextStyle(
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w900,
                 fontSize: 11,
               ),
             ),
@@ -103,15 +107,28 @@ class _ChatItemState extends State<ChatItem> {
             widget.counter == 0
                 ?SizedBox()
                 :InkWell(
-                  onTap: (){
-                    print('remove was clicked');
+                  onTap: () async {
+
+                    
+
+
+                    
                     var userId = widget.fullUserJson['userId'];
                     var modifiedDate = widget.fullUserJson['expiresOn'];
                     var kycDocId = widget.fullUserJson['kycDocId'];
                     var period = widget.fullUserJson['membershipDuration'];
                     var joinedTime = widget.fullUserJson['joinedId'];
                     var expiredTime = widget.fullUserJson['expiresOn'];
+             
                   FirebaseController.instanace.removeMemberOnExpiry(userId, joinedTime, expiredTime, kycDocId, period, widget.chatId, widget.fullUserJson);
+                   try {
+          var response = await dio.get("https://asia-south1-royalpro.cloudfunctions.net/onMemberRemove?id=${userId}&chatId=${widget.chatId}&groupName=${widget.groupTitle}");
+                  
+                  print('remove was clicked  ${response}');
+      } catch (e) {
+        print('error is ${e}');
+      }
+                
                   },
                   child:Container(
               padding: EdgeInsets.all(1),
@@ -139,13 +156,7 @@ class _ChatItemState extends State<ChatItem> {
           ],
         ),
         onTap: (){
-          Navigator.of(context, rootNavigator: true).push(
-            MaterialPageRoute(
-              builder: (BuildContext context){
-                return Conversation();
-              },
-            ),
-          );
+         
         },
       ),
     );

@@ -91,7 +91,7 @@ class FirebaseController {
         print('doc ${doc.data['followingGroups0']}');
         print('doc ${doc.data['joinedGroups']}');
 
-        var joinedGroups = doc.data['joinedGroups'];
+        var joinedGroups = doc.data['joinedGroups'] ?? [];
         var followingGroups0 = doc.data['followingGroups0'];
 
         for(final e in joinedGroups){
@@ -187,20 +187,43 @@ class FirebaseController {
   }
 
   // send chat messages from conversation screen
-  sendChatMessage(chatId,body, lastMessageBody) async {
+  sendChatMessage(chatId,body, lastMessageBody, type) async {
     print('i was here at sendChatMessage');
     //  final dbRef = FirebaseDatabase.instance.reference().child("royalPro").child(chatId);
     //  dbRef.set({ 'lastMessageDetails':lastMessageBody});
 
      final dbRef1 = FirebaseDatabase.instance.reference().child("Notify").child(chatId);
-     dbRef1.set({ 'm':"${lastMessageBody["lastMsg"] ?? ''}", 't':"${lastMessageBody["title"] ?? ''}",'c' : lastMessageBody["msgFullCount"] ?? 0, });
-    Firestore.instance.collection('groups').document(chatId).updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : FieldValue.arrayUnion([body])});
+     if(type== "Prime"){
+       print("===> try it prime");
+          dbRef1.update({ 'pm':"${lastMessageBody["lastPmMsg"] ?? ''}",'pc' : lastMessageBody["msgFullPmCount"] ?? 0, });
+          Firestore.instance.collection('Chats').document("${chatId}PGrp").updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : FieldValue.arrayUnion([body])});
+     }else if(type== "Non-Prime"){
+          dbRef1.update({ 'm':"${lastMessageBody["lastMsg"] ?? ''}", 'c' : lastMessageBody["msgFullCount"] ?? 0, });
+          Firestore.instance.collection('Chats').document(chatId).updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : FieldValue.arrayUnion([body])});
+     }else{
+         dbRef1.update({ 'm':"${lastMessageBody["lastMsg"] ?? ''}", 'c' : lastMessageBody["msgFullCount"] ?? 0, 'pm':"${lastMessageBody["lastPmMsg"] ?? ''}",'pc' : lastMessageBody["msgFullPmCount"] ?? 0, });
+         Firestore.instance.collection('Chats').document(chatId).updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : FieldValue.arrayUnion([body])});
+         Firestore.instance.collection('Chats').document("${chatId}PGrp").updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : FieldValue.arrayUnion([body])});
+
+     
+     }
+    
+    
   }
   
-  sendChatImage(chatId,body, msgFullCount){
+  sendChatImage(chatId,body, msgFullCount, msgFullPmCount, type){
     final dbRef1 = FirebaseDatabase.instance.reference().child("Notify").child(chatId);
-     dbRef1.update({ 'm':"Image :-)",'c' : msgFullCount + 1, });
-    Firestore.instance.collection('groups').document(chatId).updateData({ 'messages' : FieldValue.arrayUnion([body])});
+      if(type== "Prime"){
+          dbRef1.update({ 'pm':"Image :-)"});
+           Firestore.instance.collection('Chats').document("${chatId}PGrp").updateData({ 'messages' : FieldValue.arrayUnion([body])});
+     }else if(type== "Non-Prime"){
+          dbRef1.update({ 'm':"Image :-)" });
+          Firestore.instance.collection('Chats').document(chatId).updateData({ 'messages' : FieldValue.arrayUnion([body])});
+     }else{
+         dbRef1.update({ 'm':"Image :-)",  'pm':"Image :-)", });
+         Firestore.instance.collection('Chats').document("${chatId}PGrp").updateData({ 'messages' : FieldValue.arrayUnion([body])});
+         Firestore.instance.collection('Chats').document(chatId).updateData({ 'messages' : FieldValue.arrayUnion([body])});
+     }
   }
 
   // voting 
@@ -257,8 +280,9 @@ createGroup(body,userId, searchGroupBody,groupTitle,firstName,
         await Firestore.instance.collection("PrimeGroups").document("${check1.documentID}").setData(body);
         await Firestore.instance.collection("Devices").document("${check1.documentID}").setData(body);
         await Firestore.instance.collection("Chats").document("${check1.documentID}").setData(body);
+        await Firestore.instance.collection("Chats").document("${check1.documentID}PGrp").setData(body);
         final dbRef1 = await FirebaseDatabase.instance.reference().child("Notify").child(check1.documentID);
-     dbRef1.set({ 'm':"", 't':"${body['title']}",'c' : 0,'i':ImageUrl });
+     dbRef1.set({ 'm':"", 't':"${body['title']}",'c' : 0,'i':ImageUrl, "pc": 0, "pm": "" });
      final dbRef2 = await FirebaseDatabase.instance.reference().child("ChatOwnerId").child(check1.documentID);
      dbRef2.set({ 'o':"${body['createdBy']}" });
         
@@ -275,6 +299,8 @@ unfollowGroup(chatId,userId, userToken){
                         // Firestore.instance.collection('IAM').document(widget.userId).updateData({ 'followingGroups3' : FieldValue.arrayRemove([widget.chatId])});
 }
 followGroup(chatId,userId, userToken)async{
+
+  print('token i s ${userToken}');
       var snap =   await FirebaseController.instanace.getChatOwnerId(chatId);
                 print('what is snap ${snap}');
       await FirebaseController.instanace.addGroupsCount(chatId, snap['c']);          
@@ -304,9 +330,15 @@ fetchChatGroupsList(followingGroupsLocal){
   return Firestore.instance.collection('groups').where('chatId', whereIn: followingGroupsLocal).snapshots();
 }
 
-getChatContent(chatId){
+getChatContent(chatId, getChatContent){
   print('chat id is ${chatId}');
-  return Firestore.instance.collection('groups').document(chatId).snapshots();
+
+  if(getChatContent == "Prime"){
+  // return Firestore.instance.collection('groups').document(chatId).snapshots();
+  return Firestore.instance.collection('Chats').document("${chatId}PGrp").snapshots();
+  }else{
+     return Firestore.instance.collection('Chats').document(chatId).snapshots();
+  }
 }
 // used to check if group values already exists while creating a new group
 searchResultsByName(query){
@@ -367,9 +399,13 @@ removeMemberOnExpiry(userId,joinedTime,expiredTime, kycDocId, period, chatId, fu
 getPrimeGroupsContent(chatId) async {
   print('chat id is ${chatId}');
 
-  DocumentSnapshot value = await Firestore.instance.collection('PrimeGroups').document(chatId).get();
+  // return Firestore.instance.collection('PrimeGroups').document(chatId).snapshots();
 
-  return value.data['approvedGroupsJson'];
+   DocumentSnapshot value = await Firestore.instance.collection('PrimeGroups').document(chatId).get();
+
+
+
+  return value.data['approvedGroupsJson'] ?? [];
 }
 
 // Dispaly matches based on category

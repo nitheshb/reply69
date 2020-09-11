@@ -265,6 +265,8 @@ Widget buildPasswordBox(){
         print('successfully validated');
                  appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
+
+    final approvedGroups = appState?.user?.approvedGroups;
     final followingGroups = await appState.followingGroups;
   var followingGroupsReadCountLocal = [];
     

@@ -25,6 +25,7 @@ class User {
   var walletMoney;
   String location;
   List<dynamic> followingGroups;
+  List<dynamic> approvedGroups;
   String FCMToken;
 
   User({
@@ -37,6 +38,7 @@ class User {
     this.walletMoney,
     this.location,
     this.followingGroups,
+    this.approvedGroups,
     this.FCMToken
   });
 
@@ -50,6 +52,7 @@ class User {
         email: json["email"],
         walletMoney: json["walletMoney"],
         followingGroups: json['followingGroups0'],
+        approvedGroups: json['approvedGroups'],
         FCMToken: json['FCMToken'] ?? ""
       );
 
@@ -61,6 +64,7 @@ class User {
         "email": email,
         "walletMoney": walletMoney,
         "followingGroups": followingGroups,
+        "approvedGroups" : approvedGroups,
         "FCMToken": FCMToken,
       };
 

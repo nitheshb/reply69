@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/controllers/firebaseController.dart';
@@ -10,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../bid365_app_theme.dart';
 
 class JoinRequestApproval extends StatefulWidget {
-      JoinRequestApproval({Key key, this.chatId}) : super(key: key);
-      final String chatId;
+      JoinRequestApproval({Key key, this.chatId, this.groupName}) : super(key: key);
+      final String chatId, groupName;
   @override
   _JoinRequestApprovalState createState() => _JoinRequestApprovalState();
 }
@@ -20,7 +21,7 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
     AutomaticKeepAliveClientMixin {
    TabController _tabController;
    StateModel appState;
-  
+  Dio dio = new Dio();
   @override
   void initState() {
     super.initState();
@@ -29,6 +30,15 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
 
 
     updatePaymentRequestStatus(kycDocId,userId,chatId,status, period,phoneNumber, firstName) async{
+
+     try {
+          var response = await dio.get("https://asia-south1-royalpro.cloudfunctions.net/onMemberAdd?id=${userId}&chatId=${chatId}&groupName=${widget.groupName}");
+                  
+                  print('remove was clicked  ${response}');
+      } catch (e) {
+        print('error is ${e}');
+      }
+      return;
       DateTime d = Jiffy().add(days: 30);
       print('pancard hellooc ${d}');
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -39,13 +49,28 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
             var now = new DateTime.now();
                         var modifiedDate =  now.add(Duration(days: 30));
         FirebaseController.instanace.rejectKycDoc(kycDocId,modifiedDate, period, userId, chatId);
+        try {
+          var response = await dio.get("https://asia-south1-royalpro.cloudfunctions.net/onMembershipRejected?id=${userId}&chatId=${chatId}&groupName=${widget.groupName}");
+                  
+                  print('remove was clicked  ${response}');
+      } catch (e) {
+        print('error is ${e}');
+      }
+   
         
       }
    else if(status == 'Approved'){
       var now = new DateTime.now();
                         var modifiedDate =  now.add(Duration(days: 30));
                          FirebaseController.instanace.approveKycDoc(kycDocId,modifiedDate, period, userId, chatId,userToken, phoneNumber, firstName);
-
+try {
+          var response = await dio.get("https://asia-south1-royalpro.cloudfunctions.net/onMemberAdd?id=${userId}&chatId=${chatId}&groupName=${widget.groupName}");
+                  
+                  print('remove was clicked  ${response}');
+      } catch (e) {
+        print('error is ${e}');
+      }
+   
 
     }
   }
@@ -56,7 +81,7 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
     final firstName = appState.user.firstName;
     return Scaffold(
       appBar: AppBar(
-        title: Text("MemberShip Requests"),
+        title: Text("Membership Requests"),
         centerTitle: true,
         bottom: TabBar(
           controller: _tabController,
@@ -66,7 +91,7 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
           isScrollable: false,
           tabs: <Widget>[
             Tab(
-              text: "New Requests",
+              text: "New Payments",
             ),
             Tab(
               text: "Recent Approvals",
@@ -97,20 +122,27 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
               itemBuilder: (BuildContext context, int index) {
                 var ds = snapshot.data.documents[index].data;
                 var docId = snapshot.data.documents[index].documentID;
-                print('doc id is : ${ds['pancardDocUrl']} ${docId}');
+                print('doc id is : ${docId}');
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Container(
                      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.red, width: 0.2),
+          color: Colors.white,
+              borderRadius: BorderRadius.circular(6),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade100,
+                  blurRadius: 6,
+                  spreadRadius: 10,
+                )
+              ],
         ),
                     child: Column(
                       children: <Widget>[
                         PostItem(
                           img: ds['pancardDocUrl'],
-                          name: ds['firstName']??  null,
-                          uxId: ds['phoneNumber'] ?? null,
+                          name: ds['firstName'],
+                          uxId: ds['uxId'],
                           dp: "assets/cm${random.nextInt(10)}.jpeg",
                           time: ds['uploadedTime'],
                           messageMode: "paymentAccept",
@@ -119,11 +151,13 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
                           //  duration buttons
       // action buttions
                       Container(
+                        color: Colors.white,
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
+                _buildCircularBtn(70.0, "assets/like.png", 3,() =>updatePaymentRequestStatus(snapshot.data.documents[index].documentID,ds['uid'],ds['chatId'],"Approved", 30, ds['phoneNumber']??  null, ds['firstName']??  null)),
               _buildCircularBtn(70.0, "assets/hate.png", 2,() =>updatePaymentRequestStatus(snapshot.data.documents[index].documentID,ds['uid'],ds['chatId'],"Rejected", "30days", ds['phoneNumber']??  null, ds['firstName']??  null)),
-              _buildCircularBtn(70.0, "assets/like.png", 3,() =>updatePaymentRequestStatus(snapshot.data.documents[index].documentID,ds['uid'],ds['chatId'],"Approved", 30, ds['phoneNumber']??  null, ds['firstName']??  null)),
+            
               
             ],
         ),
@@ -146,17 +180,10 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
         ],
       ),
 
-      Container(child: Text("REcent logs")),
+      Container(child: Text("Recent logs")),
       ]),
   
-        
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: (){},
-      ),
+
     );
   }
    Widget _buildCircularBtn(double height, String img, int type, Function onTapFun) {
@@ -169,22 +196,22 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
     }
 
     return MaterialButton(
-      color: Colors.white,
-      elevation: 4.0,
+      color: type == 2 ? Colors.greenAccent : Colors.greenAccent,
+      elevation: 0.0,
       onPressed: () {
         onTapFun();
         print('i was clicked');
       },
-      height: height,
-      shape: CircleBorder(),
-      child: Container(
-        height: 40.0,
-        child: Image.asset(
-          img,
-          height: imageSize,
-          width: imageSize,
-        ),
-      ),
+      height: 40,
+
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(2)
+                        ),
+      child: Text("${type == 2 ? "Reject" : "Accept"}", style: TextStyle(
+                          fontWeight: FontWeight.w600, 
+                          
+                          fontSize: 18
+                        ),),
     );
   }
   Widget durationTag (){

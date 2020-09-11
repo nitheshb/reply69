@@ -65,8 +65,8 @@ class _PostItemState extends State<PostItem> {
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.shade100,
-                  blurRadius: 6,
-                  spreadRadius: 10,
+                  blurRadius: widget.messageMode == 'paymentAccept' ? 0 : 6,
+                  spreadRadius: widget.messageMode == 'paymentAccept' ? 0 : 10,
                 )
               ],
             ),
@@ -122,13 +122,27 @@ class _PostItemState extends State<PostItem> {
                           // this is for only the user screenshot approval view
                           child:Visibility(
                               visible: widget.messageMode == 'paymentAccept',
-                              child:Text(
-                            "${widget.uxId}",
+                              child:Column(
+                                children: <Widget>[
+                                  Text(
+                            "${widget.name}",
                             style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12,
                             ),
-                  )
+                  ),
+                       Padding(
+                         padding: const EdgeInsets.only(left:6.0, top: 4.0),
+                         child: Text(
+                              "${widget.uxId}",
+                              style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                              ),
+                  ),
+                       ),
+                                ],
+                              )
 
                           ),
                         

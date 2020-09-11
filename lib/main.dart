@@ -77,7 +77,24 @@ class _MyAppState extends State<MyApp> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 
+  
+
      Future _showNotification(Map<String, dynamic> message) async {
+
+if(message['notification']['title'] == 'Accepted Prime Group'){
+  print(' i was inside');
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+ var approvedPrimeGroups = await prefs.getStringList('approvedPrimeGroups');
+  approvedPrimeGroups.add(message['data']['chatId']);
+  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+}else if(message['notification']['action'] == 'expired membership'){
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+ var approvedPrimeGroups = await prefs.getStringList('approvedPrimeGroups');
+  approvedPrimeGroups.remove(message['data']['chatId']);
+  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+}
+
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       'channel id',
       'channel name',
@@ -99,6 +116,7 @@ class _MyAppState extends State<MyApp> {
  
 
   getTokenz() async {
+     print('i was called at getTokenz');
     String token = await _firebaseMessaging.getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
      prefs.setString('FCMToken', token);
@@ -128,12 +146,25 @@ var initializationSettings = InitializationSettings(
       onBackgroundMessage: myBackgroundHandler,
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage4: $message");
+        print('msgcheck ${message['notification']['title']}');
+        // update local storage
+        //  filter if message type is "removal"
+ SharedPreferences prefs = await SharedPreferences.getInstance();
+
+ var approvedPrimeGroups = await prefs.getStringList('approvedPrimeGroups');
+
+
+if(message['notification']['title'] == 'Accepted Prime Group'){
+  print(' i was inside');
+  approvedPrimeGroups.add(message['data']['chatId']);
+  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+
         showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text( 'new message arived'),
-                content: Text('i want ${message['data']['title']} for ${message['data']['price']}'),
+                title: Text('Congrulations..!'),
+                content: Text('Now you are Prime group member of ${message['data']['chatTitle']} :-)'),
                 actions: <Widget>[
                   FlatButton(
                     child: Text('Ok'),
@@ -144,7 +175,46 @@ var initializationSettings = InitializationSettings(
                 ],
               );
             });
-      },
+}else if(message['notification']['action'] == 'expired membership'){
+  approvedPrimeGroups.remove(message['data']['chatId']);
+  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+   showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Membership Expired..!'),
+                content: Text('Your Prime Group Membership is expired for ${message['data']['chatTitle']}'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Ok'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+}
+else if(message['notification']['action'] == 'Membership Rejected'){
+  
+   showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Membership Rejected..!'),
+                content: Text('Your membership request to group ${message['data']['chatTitle']} is rejected'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Ok'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+}
+      }
     );
 
     getTokenz();

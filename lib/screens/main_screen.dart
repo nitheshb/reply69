@@ -58,9 +58,12 @@ print('wowow check this  ${followingGroups}');
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
     // final localFollowingGroups = appState.user;
+       final approvedGroups = appState?.user?.approvedGroups;
+
+    print('approvedGroups==> ${approvedGroups}');
     print('checking groups 2 ${localDataFollowingGroups}');
     // loadingData();
-print('it should show up here ${widget.followingGroupsReadCountLocal}');
+    print('it should show up here ${widget.followingGroupsReadCountLocal}');
   
     
 

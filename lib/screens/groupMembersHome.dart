@@ -13,9 +13,9 @@ import 'package:path_provider/path_provider.dart';
 
 class GroupMembersHome extends StatefulWidget {
   // GroupMembersJson
-    GroupMembersHome({Key key, this.groupMembersJson, this.chatId, this.ownerMailId});
+    GroupMembersHome({Key key, this.groupMembersJson, this.chatId, this.ownerMailId, this.groupTitle});
      List  groupMembersJson;
-    final String chatId, ownerMailId;
+    final String chatId, ownerMailId, groupTitle;
   @override
   _GroupMembersHomeState createState() => _GroupMembersHomeState();
 }
@@ -87,16 +87,16 @@ setInitialValue() async{
       "Days",
       "Joined Date",
       "Expiry Date",
-      "KycId",
+      "uxId",
     ]);
     if (cloud != null) {
       for (int i = 0; i < widget.groupMembersJson.length; i++) {
         List<dynamic> row = List<dynamic>();
-        row.add(cloud[i]["userId"]);
+        row.add(cloud[i]["firstName"]);
         row.add(cloud[i]["membershipDuration"]);    
         row.add(datestamp.format(cloud[i]["joinedId"].toDate()).toString());
         row.add(datestamp.format(cloud[i]["expiresOn"].toDate()).toString());
-        row.add(cloud[i]["kycDocId"]);
+        row.add(cloud[i]["uxId"]);
         rows.add(row);
       }
 
@@ -197,7 +197,7 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
           isScrollable: false,
           tabs: <Widget>[
             Tab(
-              text: "All Members",
+              text: "All Prime Members",
             ),
             Tab(
               text: "Expired Members",
@@ -210,17 +210,17 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
         controller: _tabController,
         children: <Widget>[
     
-        StreamBuilder(
-        stream:  FirebaseController.instanace.getPrimeGroupsContent(widget.chatId),
+        FutureBuilder(
+        future:  FirebaseController.instanace.getPrimeGroupsContent(widget.chatId),
         builder: (context,snapshot){
                      if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');
         }
-        if(snapshot.hasData && snapshot.data.documents.length == 0 ){
+        if(snapshot.hasData && snapshot.data.length == 0 ){
           return 
                      Text("No Members");
         }
-          if(snapshot.hasData && snapshot.data.documents.length > 0 ){
+          if(snapshot.hasData && snapshot.data.length > 0 ){
           return
           ListView.separated(
             padding: EdgeInsets.all(10),
@@ -241,16 +241,18 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
               Map chat = chats[4];
               return ChatItem(
                 dp: chat['dp'],
-                name: member['userName'] ?? 'User ${index + 1}',
+                name: member['firstName'] ?? 'User ${index + 1}',
                 //name: 'User ${index + 1}',
                 isOnline: chat['isOnline'],
-                counter: "Remove",
+                counter: 0,
                 msg: "${member['membershipDuration']} days plan 🚀",
                 time: Jiffy(member['expiresOn'].toDate()).fromNow().toString(),
+                groupTitle: widget.groupTitle,
               );
             },
           );
           }
+         return Container(width: 0.0, height: 0.0);
         }),
       
       
@@ -281,7 +283,8 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
                 msg: "The last rocket🚀",
                 time: Jiffy(member['expiresOn'].toDate()).fromNow().toString(),
                 fullUserJson: member,
-                chatId: widget.chatId
+                chatId: widget.chatId,
+                groupTitle: widget.groupTitle,
               );
               }else{
                 return Container();
@@ -289,14 +292,6 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
             },
           ),
         ],
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: (){},
       ),
     )
     );

@@ -856,7 +856,7 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
         // 
         // upload to approve
         DateTime now = new DateTime.now();
-          var datestamp = new DateFormat("yyyyMMdd'T'HHmmss");
+          var datestamp = new DateFormat.yMMMMd('en_US');
           String currentdate = datestamp.format(now);
         // myimage1
     final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('${userId}${now.millisecondsSinceEpoch}.jpg');
