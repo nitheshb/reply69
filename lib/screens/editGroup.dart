@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
 import 'package:notification/controllers/firebaseController.dart';
@@ -244,7 +245,11 @@ File _image;
     final email = appState?.firebaseUserAuth?.email ?? '';
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Profile"),
+        title: Text("Edit Profile", style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w800,
+                )),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
@@ -300,15 +305,19 @@ File _image;
               SizedBox(height: 10),
               Text(
                 '${widget.groupName.toUpperCase()}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w800,
                 ),
               ),
               SizedBox(height: 3),
               Text(
                 "Editing Group Profile",
-                style: TextStyle(
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
                 ),
               ),
           
@@ -466,11 +475,11 @@ if(_image !=null){
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)
                         ),
-                        child: Text("Edit Group", style: TextStyle(
-                          fontWeight: FontWeight.w600, 
-                          fontSize: 18,
-                          color: Colors.white
-                        ),),
+                        child: Text("Save Group", style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),),
                       ),
                     ),
                   )),
@@ -548,7 +557,11 @@ Widget premiumGroupToggle(context){
                                     Text(
                                       'Premium Group',
                                       style:
-                                          Theme.of(context).textTheme.subhead,
+                                          GoogleFonts.poppins(
+                  fontSize: 15,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )
                                     ),
                                   ],
                                 ),
@@ -650,11 +663,11 @@ Widget makeCagegoryField({label, obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
         TextFormField(
           obscureText: obscureText,
@@ -679,11 +692,11 @@ Widget makeCagegoryField({label, obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
         TextFormField(
           obscureText: obscureText,
@@ -708,11 +721,11 @@ Widget makeCagegoryField({label, obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
         TextFormField(
           obscureText: obscureText,

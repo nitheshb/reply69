@@ -1,22 +1,32 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/ImageEditorPack/image_editorHome.dart';
 import 'package:notification/bid365_app_theme.dart';
 import 'package:notification/controllers/firebaseController.dart';
+import 'package:notification/controllers/gradeMaker.dart';
 import 'package:notification/pages/feedBacker.dart';
 import 'package:notification/pages/imageFullView.dart';
 import 'package:notification/pages/reports.dart';
+import 'package:notification/screens/groupEarnings.dart';
+import 'package:notification/util/admob_service.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/widgets/chat_bubble.dart';
 import 'package:notification/widgets/post_item.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 
 
@@ -38,6 +48,7 @@ class Conversation extends StatefulWidget {
   var groupFullDetails;
   var followersCount;
 
+
   
   
 
@@ -47,8 +58,9 @@ class Conversation extends StatefulWidget {
 }
 
 class _ConversationState extends State<Conversation> {
-     final TextEditingController _chatMessageText = new TextEditingController();
-    ScrollController _scrollController = new ScrollController();
+  final ams = AdMobService();
+  final TextEditingController _chatMessageText = new TextEditingController();
+  ScrollController _scrollController = new ScrollController();
 
    File _image;
    int selectedRadio;
@@ -56,7 +68,9 @@ class _ConversationState extends State<Conversation> {
    List votingBalletHeapData;
    List groupCategoriesArray = [];
    int selectedRadioTile;
-   List feeDetails;
+    List feeDetails;
+    var groupGrade;
+   
 
 
 
@@ -114,11 +128,37 @@ scrollToBottomFun(){
     }
   }
 
+upadateFeeDetails(feeDetailsv) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('thisFee', feeDetailsv[0]['fee'].toString());
+  prefs.setString('thisFeeDays', feeDetailsv[0]['days'].toString());
+  feeDetails = feeDetailsv;
+  
+
+}
+getFeeDeatils() async {
+  print('iwas hee check');
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+ var fee = prefs.getString('thisFee');
+ var details = prefs.getString('thisFeeDays');
+
+ feeDetails = [{'fee': fee}];
+ print('fee widget is  ${feeDetails}');
+
+}
+fetIt()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+ var fee = prefs.getString('thisFee');
+ return fee;
+}
 void initState() {
     // TODO: implement initState
     super.initState();
+    Admob.initialize(ams.getAdMobAppId());
+    loadGrade();
   print('check ${widget.approvedGroups}');
   print('check idd ${widget.userId}');
+  upadateFeeDetails([{'fee':0,'days': 0}]);
   if((widget.approvedGroups.contains(widget.userId))) {
     print('@@@@@@@@ iwas at prime group init state2');
     print('@approveGroups ${widget.approvedGroups}');
@@ -155,6 +195,14 @@ void initState() {
   
   }
  
+loadGrade()async{
+var grade =  await followerGrades(widget.followersCount);
+print('grade check ${loadGrade}');
+
+  setState(() {
+    groupGrade = grade;
+  });
+} 
 profileRoute(context, origin){
     Navigator.push(
                                   context,
@@ -165,12 +213,13 @@ profileRoute(context, origin){
                                       avatarUrl: widget.groupFullDetails['logo']?? "", 
                                       categories:widget.groupFullDetails['category'] ?? [],
                                       followers: widget.groupFullDetails['followers'] ?? [], 
-                                      groupOwnerName : widget.groupFullDetails['groupOwnerName']?? '',
+                                      groupOwnerName : widget.groupFullDetails['ownerName']?? '',
                                       seasonRating: widget.groupFullDetails['seasonRating'] ?? 'NA',
                                        thisWeekRating: widget.groupFullDetails['thisWeekRating'] ?? 'NA',
                                       lastWeekRating: widget.groupFullDetails['lastWeekRating'] ?? 'NA',
                                       followingGroupsLocal: widget.followingGroupsLocal,
-                                      accessingBy: origin
+                                      accessingBy: origin,
+                                      followersCount: NumberFormat.compact().format(widget.followersCount),
                                       ),
                                       ),
                                 //  new  MaterialPageRoute(
@@ -187,29 +236,80 @@ Future<bool> _onBackPress() async {
     Navigator.pop(context, 'testing');
     return false; // return true if the route to be popped
 }
+Future<void> _shareImages(textData, appLink) async {
+  print('shareImage');
+ FlutterShare.share(
+        title: 'Check out',
+        text: 'textData',
+        linkUrl: 'https://flutter.dev/',
+        chooserTitle: 'Example Chooser Title');
+  
+
+  return;
+  try {
+      final ByteData bytes1 = await rootBundle.load('assets/like.png');
+
+
+
+      await Share.files(
+          'esys images',
+          {
+            'esys.png': bytes1.buffer.asUint8List(),
+          },
+          '*/*', text: textData);
+    } catch (e) {
+      print('error: $e');
+    }
+    return;
+   try {
+      Share.text('my text title',
+          'This is my text to share with other applications.', 'text/plain');
+    } catch (e) {
+      print('error: $e');
+    }
+    return;
+    try {
+      final ByteData bytes1 = await rootBundle.load('assets/like.png');
+      final ByteData bytes2 = await rootBundle.load('assets/like.png');
+
+      await Share.files(
+          'esys images',
+          {
+            'esys.png': bytes1.buffer.asUint8List(),
+            'bluedan.png': bytes2.buffer.asUint8List(),
+          },
+          'image/png');
+    } catch (e) {
+      print('error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     print('check for chatId ${widget.chatId}');
+    getFeeDeatils();
     return WillPopScope(
       onWillPop: _onBackPress,
       child: Scaffold(
         backgroundColor: backgroundColor(),
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+          iconTheme: IconThemeData(color: Colors.blueAccent, size: 10.0),
           elevation: 3,
-          leading: IconButton(
-            icon: Icon(
-              Icons.keyboard_backspace,
-            ),
-            onPressed: ()=>Navigator.pop(context, 'testing'),
-          ),
+          // leading: IconButton(
+          //   icon: Icon(
+          //     Icons.keyboard_backspace,
+          //   ),
+          //   onPressed: ()=>Navigator.pop(context, 'testing'),
+          // ),
           titleSpacing: 0,
           title: InkWell(
             child: Row(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(left: 0.0, right: 10.0),
+                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
                   child: CircleAvatar(
+                    
                     backgroundImage: NetworkImage(
                       "${widget.groupLogo}",
                     ),
@@ -220,21 +320,51 @@ Future<bool> _onBackPress() async {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        "${widget.groupTitle}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14,
-                        ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            "${widget.groupTitle.toString().toUpperCase()}",
+                            style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w800,
+                  ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 5),
-                      Text(
-                        "${NumberFormat.compact().format(widget.followersCount) ?? '0'} Followers",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 11,
-                        ),
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left:1.0),
+                            child: Text(
+                              "${NumberFormat.compact().format(widget.followersCount) ?? '0'} Followers ",
+                              style: GoogleFonts.poppins(
+                    fontSize: 11,
+                    color: Color(0xff171822),
+                    
+                  ),
+                            ),
+                          ),
+                           Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF2ecc71),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  child: Text(
+                                    "👑 ${groupGrade}",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                ),
+                 
+                        ],
                       ),
+                     
                     ],
                   ),
                 ),
@@ -244,36 +374,55 @@ Future<bool> _onBackPress() async {
             onTap: (){},
           ),
           actions: <Widget>[
-               IconButton(
+            IconButton(
               icon: Icon(
-                Icons.notifications,
+                Icons.share,
+                color: Colors.blueAccent,
               ),
               onPressed: () async{
-               var  snapShot = await FirebaseController.instanace.getCurrentVotes(widget.chatId);
+                 FlutterShare.share(
+        title: 'check our my official Group # ${widget.groupTitle} ✌',
+        text: 'Check out my official Group ⚡ ${widget.groupTitle} 🔥🎯✌ 👑🎁 👍',
+        linkUrl: "https://play.google.com/store/apps/details?id=com.candc.chatogram",
+        chooserTitle: 'Example Chooser Title');
+                // _shareImages('check our my official Group ${widget.groupTitle}', "http://dribbble.com");
+                // Share.
+                // Share.shareFiles(['assets/like.png'], text:'check our my official Group  ${widget.groupTitle});
+                // Share.share('check our my official Group  ${widget.groupTitle}');
+              }),
+// START of feedback button
+//                IconButton(
+//               icon: Icon(
+//                 Icons.notifications,
+//               ),
+//               onPressed: () async{
+//                var  snapShot = await FirebaseController.instanace.getCurrentVotes(widget.chatId);
 
-// this creates feedback entry for newGroup or a group which does not have entry yet in DB
-if (snapShot == null || !snapShot.exists) {
+// // this creates feedback entry for newGroup or a group which does not have entry yet in DB
+// if (snapShot == null || !snapShot.exists) {
 
-}else{
-  votingBalletHeapData = await  snapShot.data['VotingStats'];
-  print('full data of heap is ${votingBalletHeapData}');
-  // List reqGroupA =  data.where((i) => i["gameId"] == matchId).toList();
-  // List homeGroup =  data.where((i) => i["gameId"] != matchId).toList();
-}
-                // powerPredictor
-               await   Navigator.push(
-                                    context,
-                                   new  MaterialPageRoute(
-                                        builder: (BuildContext context) => PowerFeedbacker(
-                                        groupCategories: widget.groupSportCategory ,
-                                        groupCategoriesArray : groupCategoriesArray,
-                                        groupId: widget.chatId,
-                                        groupTitle: widget.groupTitle, 
-                                        votingBalletHeapData: votingBalletHeapData ?? []),
-                                        ),
-                                 );
-              },
-            ),
+// }else{
+//   votingBalletHeapData = await  snapShot.data['VotingStats'];
+//   print('full data of heap is ${votingBalletHeapData}');
+//   // List reqGroupA =  data.where((i) => i["gameId"] == matchId).toList();
+//   // List homeGroup =  data.where((i) => i["gameId"] != matchId).toList();
+// }
+//                 // powerPredictor
+//                await   Navigator.push(
+//                                     context,
+//                                    new  MaterialPageRoute(
+//                                         builder: (BuildContext context) => PowerFeedbacker(
+//                                         groupCategories: widget.groupSportCategory ,
+//                                         groupCategoriesArray : groupCategoriesArray,
+//                                         groupId: widget.chatId,
+//                                         groupTitle: widget.groupTitle, 
+//                                         votingBalletHeapData: votingBalletHeapData ?? []),
+//                                         ),
+//                                  );
+//               },
+//             ),
+
+ // END of feedback button
             // display for group members
             Visibility(
               visible: widget.chatOwnerId != widget.userId,
@@ -294,14 +443,22 @@ if (snapShot == null || !snapShot.exists) {
                 }
               },
                 itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                      const 
+                       
                       PopupMenuItem(
                         value: "Profile",
-                        child: Text("Profile"),
+                        child: Text("Profile", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
                       ),
                       PopupMenuItem(
                         value: "Report",
-                        child: Text("Report"),
+                        child: Text("Report", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
                       ),
                       // PopupMenuItem(
                       //   value: "Exit Group",
@@ -333,23 +490,53 @@ if (snapShot == null || !snapShot.exists) {
                                           ),
                                      )
                                    );
-                }else if (value == "Edit Details"){
+                }else if (value == "Earnings"){
+                     Navigator.push(
+                                      context,
+                                     new  MaterialPageRoute(
+                                          builder: (BuildContext context) => 
+                                          GroupEarnings(
+                                          ),
+                                     )
+                                   );
+                }
+                else if (value == "Edit Details"){
                      profileRoute(context, 'owner');
                 }
               },
                 itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                      const 
+                       
                       PopupMenuItem(
                         value: "Approve Payments",
-                        child: Text("Prime User Payments"),
+                        child: Text("Prime User Payments", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
                       ),
                       PopupMenuItem(
                         value: "Expired Memberships",
-                        child: Text("Prime Members"),
+                        child: Text("Prime Members", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
+                      ),
+                      PopupMenuItem(
+                        value: "Earnings",
+                        child: Text("Earnings", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
                       ),
                       PopupMenuItem(
                         value: "Edit Details",
-                        child: Text("Edit Profile"),
+                        child: Text("Edit Profile", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
                       ),
                     ]),
             )
@@ -365,7 +552,8 @@ if (snapShot == null || !snapShot.exists) {
               Container(
                 height: 10,
               ),
-
+// Ad here
+          // AdmobBanner(adUnitId: ams.getBannerAdId(), adSize: AdmobBannerSize.FULL_BANNER),
               Flexible(
                 child: StreamBuilder(
           stream: FirebaseController.instanace.getChatContent(widget.chatId, msgDeliveryMode) ,
@@ -375,7 +563,8 @@ if (snapShot == null || !snapShot.exists) {
           }
           if(snapshot.hasData ){
              DocumentSnapshot ds = snapshot.data;
-                        feeDetails = ds['FeeDetails'];
+          upadateFeeDetails(ds['FeeDetails']);
+                       
                         print('fee details ${feeDetails}');
 
 
@@ -391,7 +580,7 @@ if (snapShot == null || !snapShot.exists) {
                //     Map msg = conversation[index];
                         DocumentSnapshot ds = snapshot.data;
                         var indexVal = index;
-                        feeDetails = ds['FeeDetails'];
+                        // feeDetails = ds['FeeDetails'];
                         print('fee details ${ds}');
                         print('value of messages are ${ds['messages'] ?? "empty"}');
                         scrollToBottomFun();
@@ -607,7 +796,11 @@ if (snapShot == null || !snapShot.exists) {
               child: ButtonBar(
                 alignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text("Send To"),
+                  Text("Send To", style:GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w800,
+                  )),
                   Row(
                     children: <Widget>[
                       Row(
@@ -621,7 +814,11 @@ if (snapShot == null || !snapShot.exists) {
                               setSelectedRadio(val);
                             },
                           ),
-                          Text("Common")
+                          Text("Common", style:GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ))
                         ],
                       ),
                     
@@ -636,7 +833,11 @@ if (snapShot == null || !snapShot.exists) {
                           setSelectedRadio(val);
                         },
                       ),
-                      Text("Prime")
+                      Text("Prime",style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ))
                     ],
                   ),
                   Row(
@@ -650,7 +851,11 @@ if (snapShot == null || !snapShot.exists) {
                               setSelectedRadio(val);
                             },
                           ),
-                          Text("Non-Prime")
+                          Text("Non-Prime", style:GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ))
                         ],
                       ),
                   ],
@@ -662,7 +867,7 @@ if (snapShot == null || !snapShot.exists) {
               Visibility(
                 visible: (widget.chatOwnerId != widget.userId),
                 child: Visibility(
-                  visible:((!widget.approvedGroups.contains(widget.userId)) || !(widget.chatOwnerId == widget.userId)),
+                  visible: !widget.chatId.contains('PGrp'),
                   child:
  Align(
                   alignment: Alignment.topCenter,
@@ -716,7 +921,7 @@ if (snapShot == null || !snapShot.exists) {
                             Text(
                               (!widget.waitingGroups.contains(widget.chatId)) 
                                 
-                               ? "Join Premium Rs ${feeDetails}/-" : "Under Review",
+                               ? "Join Premium Rs  ${feeDetails}/-" : "Under Review",
                               style: TextStyle(
                                 color:
                                     Colors.white,
@@ -807,10 +1012,11 @@ if (snapShot == null || !snapShot.exists) {
                                 border: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                                 hintText: "Write your message...",
-                                hintStyle: TextStyle(
-                                  fontSize: 15.0,
-                                  color: Theme.of(context).textTheme.title.color,
-                                ),
+                                hintStyle:GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w300,
+                ) ,
                               ),
                               controller: _chatMessageText,
                               maxLines: null,

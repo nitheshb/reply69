@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/screens/Matches.dart';
 import 'package:notification/screens/profile.dart';
 import 'package:notification/util/state.dart';
@@ -116,7 +117,11 @@ print('wowow check this  ${followingGroups}');
               icon: Icon(
                 FontAwesomeIcons.calendarAlt,
               ),
-              title: Text("Schedule"),
+              title: Text("Schedule", style:GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
             ),
 
            
@@ -124,7 +129,11 @@ print('wowow check this  ${followingGroups}');
               icon: Icon(
                 Icons.message,
               ),
-              title: Text("Chats"),
+              title: Text("Chats", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
             ),
             
 
@@ -139,7 +148,11 @@ print('wowow check this  ${followingGroups}');
               icon: Icon(
                 Icons.settings,
               ),
-              title: Text("Profile"),
+              title: Text("Profile", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
             ),
           ],
           onTap: navigationTapped,

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/controllers/firebaseController.dart';
@@ -139,16 +140,22 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
             key: _formkey,
             child: Scaffold(
       appBar: AppBar(
-        title: Text("Prime Members"),
+        title: Text("Prime Members", style:GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w800,
+                )),
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: FlatButton(
                   child: Text(
                     "Download Prime List",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                    style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
                   ),
                   color: Colors.blueAccent,
                   onPressed: (isProcessing)    ? null
@@ -195,6 +202,11 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
           labelColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).textTheme.caption.color,
           isScrollable: false,
+          labelStyle: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w600,
+                  ),
           tabs: <Widget>[
             Tab(
               text: "All Prime Members",
@@ -218,7 +230,11 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
         }
         if(snapshot.hasData && snapshot.data.length == 0 ){
           return 
-                     Text("No Members");
+                     Text("No Members", style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ));
         }
           if(snapshot.hasData && snapshot.data.length > 0 ){
           return

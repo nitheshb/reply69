@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/pages/imageFullView.dart';
 
 class PostItem extends StatefulWidget {
@@ -48,11 +49,11 @@ class _PostItemState extends State<PostItem> {
     print('check for urls ${widget.img}');
     var colorBg;
     if(widget.selMessageMode == 'All'){
-                colorBg= Color(0xff1AC470);
+                colorBg= Color(0xfff8471a);
               } else if(widget.selMessageMode == 'Prime') {
-                colorBg = Color(0xffFFCB2D);
+                colorBg =Color(0xff3ce262) ;
               }else{
-                colorBg = Color(0xff3AD4C5);
+                colorBg = Color(0xff2c87ff);
                 
               }
     return Padding(
@@ -78,16 +79,27 @@ class _PostItemState extends State<PostItem> {
             widget.type =='text' ? Container(
             
               width: MediaQuery.of(context).size.width,
-              color: colorBg,
+              decoration: BoxDecoration(
+                color: colorBg,
+              borderRadius: BorderRadius.circular(6),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade100,
+                  blurRadius: widget.messageMode == 'paymentAccept' ? 0 : 6,
+                  spreadRadius: widget.messageMode == 'paymentAccept' ? 0 : 10,
+                )
+              ],
+            ),
+            
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       widget.message == "" ? "Empty Message" :widget.message,
-                      style:  TextStyle(
-                        color: true
-                            ? Colors.white
-                            : Theme.of(context).textTheme.title.color,
-                      ),
+                      style:   GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
                     ),
                   )
             ):
@@ -175,10 +187,11 @@ class _PostItemState extends State<PostItem> {
                             ),
                             Text(
                             "${widget.time}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 11,
-                            ),
+                            style:GoogleFonts.poppins(
+                  fontSize: 10,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w300,
+                ),
                   ),
                           ],
                         ),

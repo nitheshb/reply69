@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/screens/conversation.dart';
 
@@ -82,12 +83,19 @@ class _ChatItemState extends State<ChatItem> {
         title: Text(
           "${widget.name}",
           maxLines: 1,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w600,
+                ),
         ),
         subtitle: Text(
           "${widget.msg}",
+          style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w300,
+                ),
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
         ),

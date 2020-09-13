@@ -5,6 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/pages/groupProfile1.dart';
@@ -91,6 +93,12 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
     loopFollowingGroup(widget.followingGroupsLocal);
     });
    
+  }
+
+
+  void _toggleTab() {
+    
+    _tabController.animateTo(1);
   }
 
 getlocalPrimeGroups() async {
@@ -235,12 +243,31 @@ Widget noGroupsFolllowed(){
                          SizedBox(height: MediaQuery.of(context).size.height/4.5),
                          
                          new Container(
-              height: MediaQuery.of(context).size.height / 3,
-              child: Image(image: AssetImage('assets/emptyMsgs.png'),),
+              height: MediaQuery.of(context).size.height / 5.5,
+              child:  Icon(FontAwesomeIcons.star, color: Colors.grey, size: 70,),
             
             ),
 
-            new Text("No Groups Subscribed Yet", style: TextStyle(color: Colors.grey, fontSize: 20, fontWeight: FontWeight.w400),),
+            Column(
+              children: <Widget>[
+                new Text("No groups subscribed yet", style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
+                SizedBox(height: 16),
+                InkWell(
+                  onTap: (){
+                      _toggleTab();
+                  },
+                child:new Text("Subscribe to a group", style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.w600,
+                )),
+                )
+              ],
+            ),
                          
                        ],
                      )
@@ -571,6 +598,11 @@ return followGroupState;
           labelColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).textTheme.caption.color,
           isScrollable: false,
+          labelStyle: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w400,
+                  ),
           onTap: (index){
             setState(() {
               selTabIndex= index;
@@ -616,17 +648,21 @@ SingleChildScrollView(
                       decoration: new InputDecoration(
                          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey[400], width: 4)
+                  borderSide: BorderSide(color: Colors.grey[400], width: 2)
             ),
             focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.black)
             ),
             border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey[400], width: 5)
+                  borderSide: BorderSide(color: Colors.grey[400], width: 2)
             ),
                         // border: InputBorder.none,
                           hintText: 'Search Group Name....',
-                          hintStyle: TextStyle(color: Colors.black),
+                          hintStyle: GoogleFonts.poppins(
+                  fontSize: 13,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                           prefixIcon: const Icon(Icons.search, color: Colors.black
                   ))),
                 ),
@@ -662,12 +698,16 @@ SingleChildScrollView(
              // width: 160,
              child: Column(
                children: <Widget>[
-                 Text("Popular Searches To Try", style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w400),),
+                 Text("Popular Searches To Try", style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
                  Row(
                    children: <Widget>[
-                     popularSearchTextContainer('helloPredictors'),
+                     popularSearchTextContainer('gamepro11'),
                      popularSearchTextContainer('allGamesPredictor'),
-                     popularSearchTextContainer('Dream11Pro'),
+                     popularSearchTextContainer('groupName1'),
                  
                 
                    ],

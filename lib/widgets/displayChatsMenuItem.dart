@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/controllers/firebaseController.dart';
 
 
@@ -75,14 +76,21 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
         ),
 
         title: Text(
-          "${widget.groupName}",
+          "${widget.groupName[0].toUpperCase() + widget.groupName.substring(1)}",
           maxLines: 1,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w800,
+                  ),
         ),
         subtitle: Text(
           "${widget.msg}",
+          style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w400,
+                ),
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
         ),

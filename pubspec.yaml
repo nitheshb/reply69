@@ -62,6 +62,9 @@ dependencies:
   basic_utils: ^2.2.4
   dio: ^3.0.10
   r_upgrade: ^0.3.1
+  admob_flutter: ^0.3.4
+  esys_flutter_share: ^1.0.2
+  flutter_share: ^1.0.2+1
   
 
 dev_dependencies:

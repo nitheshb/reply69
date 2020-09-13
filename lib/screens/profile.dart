@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/screens/phoneLoginScreen.dart';
 import 'package:notification/screens/sign_in.dart';
 import 'package:notification/util/state.dart';
@@ -52,24 +53,20 @@ class _ProfileState extends State<Profile> {
               SizedBox(height: 60),
               CircleAvatar(
                 backgroundImage: AssetImage(
-                  "assets/cm${random.nextInt(10)}.jpeg",
+                  "assets/cm${random.nextInt(1000)}.jpeg",
                 ),
                 radius: 50,
               ),
               SizedBox(height: 10),
               Text(
                 '${email}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               SizedBox(height: 3),
-              Text(
-                "Winner Choice",
-                style: TextStyle(
-                ),
-              ),
               SizedBox(height: 20),
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -108,9 +105,20 @@ class _ProfileState extends State<Profile> {
               //     ),
               //     SizedBox(width: 10),
                    FlatButton(
-                    child: Icon(
-                      Icons.exit_to_app,
-                      color: Colors.white,
+                    child: Row(
+                      children: <Widget>[
+                        
+                        Icon(
+                          Icons.exit_to_app,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 4),
+                        Text('Logout',style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ))
+                      ],
                     ),
                     color: Theme.of(context).accentColor,
                     onPressed: (){
@@ -133,9 +141,9 @@ class _ProfileState extends State<Profile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    _buildCategory("Posts"),
+                    _buildCategory("Followers"),
 
-                    _buildCategory("Friends"),
+                    _buildCategory("Earnings"),
 
                     _buildCategory("Groups"),
                   ],
@@ -155,16 +163,20 @@ class _ProfileState extends State<Profile> {
       children: <Widget>[
         Text(
           'NA',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
+          style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w800,
+                ),
         ),
         SizedBox(height: 4),
         Text(
           title,
-          style: TextStyle(
-          ),
+          style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
         ),
       ],
     );

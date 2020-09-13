@@ -1,6 +1,7 @@
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/screens/forget_password.dart';
@@ -92,10 +93,11 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                     //   ),
                       ),
                       SizedBox(height: 20,),
-                      FadeAnimation(1.2, Text("Login to your account", style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[700]
-                      ),)),
+                      FadeAnimation(1.2, Text("Login to your account", style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),)),
                     ],
                   ),
                   Padding(
@@ -132,51 +134,57 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)
                         ),
-                        child: Text("Login", style: TextStyle(
-                          fontWeight: FontWeight.w600, 
-                          fontSize: 18
-                        ),),
+                        child: Text("Login", style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w600,
+                ),),
                       ),
                     ),
                   )),
                   FadeAnimation(1.5, InkWell(
                     onTap: (){ 
                       Navigator.of(context).pushNamed('/signup');}  ,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Container(
-                            alignment: Alignment(1.0, 0.0),
-                            // padding: EdgeInsets.only(top: 15.0, left: 20.0,right:18),
-                            child: InkWell(
-                              onTap: (){
-                                //  Navigator.pushNamed(context, '/forgot-password');
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:40.0, right: 40.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment(1.0, 0.0),
+                              // padding: EdgeInsets.only(top: 15.0, left: 20.0,right:18),
+                              child: InkWell(
+                                onTap: (){
+                                  //  Navigator.pushNamed(context, '/forgot-password');
 
-                                   Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ForgotPasswordScreen(
-                                                              ),
-                                                      ));
+                                     Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ForgotPasswordScreen(
+                                                                ),
+                                                        ));
       
-                                //  StateWidget.of(context).resetPassword('nithe.nithesh@gmail.com');
+                                  //  StateWidget.of(context).resetPassword('nithe.nithesh@gmail.com');
          
-                              },
-                              child: Text(
-                                'Forgot Password',
-                                style: TextStyle(
-                                    color: Colors.blueGrey,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Montserrat',
-                                   ),
+                                },
+                                child: Text(
+                                  'Forgot Password',
+                                  style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
+                                ),
                               ),
-                            ),
-                        ),
-                        Text("Sign up", style: TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 18
-                        ),),
-                      ],
+                          ),
+                          Text("Sign up", style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w600,
+                ),),
+                        ],
+                      ),
                     ),
                   ))
                 ],
@@ -308,11 +316,11 @@ print('i was here with data %% ${NotifySnap['c']}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
         TextFormField(
           obscureText: obscureText,
@@ -340,11 +348,11 @@ print('i was here with data %% ${NotifySnap['c']}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
         TextFormField(
            keyboardType: TextInputType.emailAddress,

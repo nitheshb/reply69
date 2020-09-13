@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/util/data.dart';
@@ -81,7 +82,11 @@ try {
     final firstName = appState.user.firstName;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Membership Requests"),
+        title: Text("Membership Requests", style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w800,
+                )),
         centerTitle: true,
         bottom: TabBar(
           controller: _tabController,
@@ -89,6 +94,11 @@ try {
           labelColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).textTheme.caption.color,
           isScrollable: false,
+          labelStyle: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w600,
+                  ),
           tabs: <Widget>[
             Tab(
               text: "New Payments",
@@ -207,11 +217,11 @@ try {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(2)
                         ),
-      child: Text("${type == 2 ? "Reject" : "Accept"}", style: TextStyle(
-                          fontWeight: FontWeight.w600, 
-                          
-                          fontSize: 18
-                        ),),
+      child: Text("${type == 2 ? "Reject" : "Accept"}", style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
     );
   }
   Widget durationTag (){
