@@ -67,7 +67,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                           // color: Colors.red,
               height: MediaQuery.of(context).size.height / 5,
               width: MediaQuery.of(context).size.width,
-              child: Image(image: AssetImage('assets/11.png')),
+              child: Image(image: AssetImage('assets/13.png')),
             
             ),
                     //  child: Container(
