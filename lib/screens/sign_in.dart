@@ -37,21 +37,19 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       key: _scaffoldKey,
-      appBar: AppBar(
-        elevation: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-      ),
+      
       body: LoadingScreen(
          inAsyncCall: _loadingVisible,
           child: Form(
               key: _formKey,
               autovalidate: _autoValidate,
+              child:SingleChildScrollView(
+              
               child: Container(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height- 100,
         width: double.infinity,
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
@@ -62,12 +60,14 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                 children: <Widget>[
                   Column(
                     children: <Widget>[
-
+                      SizedBox(height: 30),
                       Align(
                         alignment: Alignment.center,
                         child: new Container(
-              height: MediaQuery.of(context).size.height / 12,
-              child: Image(image: AssetImage('assets/logo.png')),
+                          // color: Colors.red,
+              height: MediaQuery.of(context).size.height / 5,
+              width: MediaQuery.of(context).size.width,
+              child: Image(image: AssetImage('assets/11.png')),
             
             ),
                     //  child: Container(
@@ -92,18 +92,20 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                     //     ),
                     //   ),
                       ),
-                      SizedBox(height: 20,),
-                      FadeAnimation(1.2, Text("Login to your account", style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ),)),
+                     // SizedBox(height: 20,),
+                     
                     ],
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
                       children: <Widget>[
+                         FadeAnimation(1.2, Text("Login", style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w700,
+                ),)),
+                SizedBox(height: 15),
                         FadeAnimation(1.2, makeUserNameField(label: "Email", obscureText: false),),
                         FadeAnimation(1.3, makePasswordField(label: "Password", obscureText: true)),
                       ],
@@ -136,7 +138,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                         ),
                         child: Text("Login", style: GoogleFonts.poppins(
                   fontSize: 18,
-                  color: Color(0xff3A4276),
+                  color: Colors.white,
                   fontWeight: FontWeight.w600,
                 ),),
                       ),
@@ -193,6 +195,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
           ],
         ),
       ),
+              ),
           )
       )
     );

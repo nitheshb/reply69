@@ -303,23 +303,24 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
       }
       void upgrade() async {
         print('inside version upgrader');
-         bool isSuccess =await RUpgrade.upgradeFromUrl(
-                    PLAY_STORE_URL,
-                  );
-        print('check for upgrade ${isSuccess}');
+        await RUpgrade.upgradeFromAndroidStore(AndroidStore.GOOGLE_PLAY);
+      //    bool isSuccess =await RUpgrade.upgradeFromUrl(
+      //               PLAY_STORE_URL,
+      //             );
+      //   print('check for upgrade ${isSuccess}');
        
-      int id = await RUpgrade.upgrade(
-                 PLAY_STORE_URL,
-                 fileName: 'app-release.apk',
-                 isAutoRequestInstall: true,
-                  useDownloadManager: false
-                 );
+      // int id = await RUpgrade.upgrade(
+      //            PLAY_STORE_URL,
+      //            fileName: 'app-release.apk',
+      //            isAutoRequestInstall: true,
+      //             useDownloadManager: false
+      //            );
 
 
                 //  Navigator.pop(context);
          await _showFreezer(context);
 
-          print('app upgrade id is $id');
+          // print('app upgrade id is $id');
     }
 
         _showVersionDialog(context) async {
@@ -350,17 +351,18 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
           : new AlertDialog(
               title: Text(title),
               content: Text(message),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(btnLabel),
-                  onPressed: () => upgrade(),
+              // actions: <Widget>[
+                // FlatButton(
+                  // child: Text(btnLabel),
+                  // onPressed: (){},
+                  // onPressed: () => upgrade(),
                   // onPressed: () => _launchURL(PLAY_STORE_URL),
-                ),
+                // ),
                 // FlatButton(
                 //   child: Text(btnLabelCancel),
                 //   onPressed: () => Navigator.pop(context),
                 // ),
-              ],
+              // ],
             );
     },
   );
