@@ -309,6 +309,9 @@ followGroup(chatId,userId, userToken)async{
 }
 
 addGroupsCount(chatId, count) async {
+    if(count == null){
+    count = 0;
+  }
   print('getChatOwnerId called ');
    final dbRef1 = FirebaseDatabase.instance.reference().child("ChatOwnerId").child(chatId);
      dbRef1.update({ 'c' : count+1, });

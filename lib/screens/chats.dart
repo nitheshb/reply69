@@ -206,7 +206,7 @@ final information = await Navigator.push(
                                                 chatType: "",
                                                 waitingGroups: waitingGroups,
                                                 approvedGroups: [], 
-                                                followersCount: snap['c'],
+                                                followersCount: snap['c'] ?? 0,
                                                 msgFullCount: NotifyData[index]['c'],
                                                 msgFullPmCount: NotifyData[index]['pc'],
                                                 msgReadCount: 0 ),
