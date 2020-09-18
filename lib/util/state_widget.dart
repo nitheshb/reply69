@@ -32,6 +32,7 @@ class StateWidget extends StatefulWidget {
 
 class _StateWidgetState extends State<StateWidget> {
   StateModel state;
+   StateModel appState;  
   //GoogleSignInAccount googleAccount;
   //final GoogleSignIn googleSignIn = new GoogleSignIn();
 
@@ -77,29 +78,30 @@ class _StateWidgetState extends State<StateWidget> {
     Future<void> setFollowingGroupState(oldData,value, action) async {
     print('chec for this');
     //  await initUserLocation(location, locationId);
+    appState = StateWidget.of(context).state;
     state.followingGroups= oldData;
     print('state value recevied data  @ ${oldData}');
      print('values after set data @  ${state.followingGroups}');
     var x;
-    // setState(()  {
-    //   if(action =="remove"){
+    setState(()  {
+      if(action =="remove"){
 
-    //     oldData.remove(value);
-    //     x= oldData;
-    //     // print('var x is ${oldData}$x');
-    //     state.followingGroups= oldData;
-    //     print('vaues are, oldData remove ${state.followingGroups}');
-    //   }
-    //   else if(action =="add"){
-    //      oldData.add(value);
-    //     state.followingGroups = oldData;
-    //     print('vaues are, oldData remove ${state.followingGroups}');
-    //     //  x= oldData.add(value);
-    //     // state.followingGroups = x;
-    //   }
+        oldData.remove(value);
+        x= oldData;
+        // print('var x is ${oldData}$x');
+        appState.followingGroups= oldData;
+        print('vaues are, oldData remove1 ${appState.followingGroups}');
+      }
+      else if(action =="add"){
+         oldData.add(value);
+        appState.followingGroups = oldData;
+        print('vaues are, oldData remove1 ${appState.followingGroups}');
+        //  x= oldData.add(value);
+        // state.followingGroups = x;
+      }
      
  
-    // }); 
+    }); 
    await initUser();
   }
   

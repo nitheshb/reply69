@@ -76,6 +76,7 @@ Future<dynamic> myBackgroundHandler(Map<String, dynamic> message){
 class _MyAppState extends State<MyApp> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
+  List followingGroup;
 
   
 
@@ -86,6 +87,7 @@ if(message['notification']['title'] == 'Accepted Prime Group'){
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
  var approvedPrimeGroups = await prefs.getStringList('approvedPrimeGroups');
+ followingGroup = await prefs.getStringList('followingGroups');
   approvedPrimeGroups.add(message['data']['chatId']);
   await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
 }else if(message['notification']['action'] == 'expired membership'){
@@ -253,7 +255,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
                        if (snapshot.hasData){
                            // this is your user instance
                            /// is because there is user already logged
-                           return MainScreen();
+                           return MainScreen(followingGroupsLocal: followingGroup,);
                         }
                          /// other way there is no user logged.
                          return MySignInScreenHome();

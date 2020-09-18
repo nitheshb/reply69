@@ -54,7 +54,7 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
     super.initState();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 2);
     print('iwas called');
-    getlocalPrimeGroups();
+    getlocalPrimeGroups(); 
     selTabIndex =0;
 
 
@@ -118,6 +118,9 @@ widget.followingGroupsLocal.forEach((data){
     });
 }
  realTime (id){
+   if(id==null){
+     return;
+   }
     DatabaseReference postsRef =FirebaseDatabase.instance.reference().child("Notify").child(id);
     postsRef.onValue.listen((event){
         print('==>event is ,${event.snapshot.value}');
@@ -921,6 +924,7 @@ SingleChildScrollView(
                         setState(() {
                           // followingGroup_real.remove(ds['chatId']);
                           widget.followingGroupsLocal.remove(ds['payload'][index]['chatId']);
+                           prefs.setStringList('followingGroups',widget.followingGroupsLocal );
                           StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['payload'][index]['chatId'], 'remove' );
                         });
 
@@ -964,6 +968,7 @@ SingleChildScrollView(
                           print('i was hit ones');
                           // followingGroup_real.add(ds['chatId']);
                           widget.followingGroupsLocal.add(ds['payload'][index]['chatId']);
+ prefs.setStringList('followingGroups',widget.followingGroupsLocal );
                           StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
                         });
                           await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
