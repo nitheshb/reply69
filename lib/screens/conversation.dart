@@ -192,7 +192,15 @@ void initState() {
         groupCategoriesArray.add(data['categoryName']);
     });
     }
+    setReadCountToClear();
   
+  }
+
+  setReadCountToClear()async{
+    print("i was triggered ${widget.groupTitle}");
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+     prefs.setInt("${widget.chatId}", widget.msgFullCount);
+     print("i was count ${widget.msgFullCount}");
   }
  
 loadGrade()async{

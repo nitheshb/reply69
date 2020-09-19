@@ -44,6 +44,7 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
   List chatIdGroups = ['nQ4T04slkEdANneRb4k6','nQ4T04slkEdANneRb4k61','nQ4T04slkEdANneRb4k62','nQ4T04slkEdANneRb4k63','nQ4T04slkEdANneRb4k64','nQ4T04slkEdANneRb4k65','nQ4T04slkEdANneRb4k66','nQ4T04slkEdANneRb4k67','nQ4T04slkEdANneRb4k68','btl5r2JUwn5imaTToPKq'];
   String _searchTerm;
   bool allowGroupCreation = true;
+  List widgetCountCheck = [];
 
   List NotifyData = [];
   List searchLists = [];
@@ -57,6 +58,8 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
     getlocalPrimeGroups(); 
     selTabIndex =0;
 
+
+                  
 
   //   loadData().then((_) {
   //   getBizList();
@@ -111,7 +114,6 @@ getlocalPrimeGroups() async {
   }
 loopFollowingGroup(dataArray){
   print('litmus test ${widget.followingGroupsLocal}');
-  var testArray = ['kAUE9NsXpQyn4cseIpPt','om4c5QKsa5mk1pUG897z'];
 widget.followingGroupsLocal.forEach((data){
       realTime(data);
       print('data@@1 ${data}');
@@ -122,7 +124,7 @@ widget.followingGroupsLocal.forEach((data){
      return;
    }
     DatabaseReference postsRef =FirebaseDatabase.instance.reference().child("Notify").child(id);
-    postsRef.onValue.listen((event){
+    postsRef.onValue.listen((event) async {
         print('==>event is ,${event.snapshot.value}');
         var snap = event.snapshot;
           print('wow iwas here');
@@ -134,12 +136,22 @@ if(data!= null){
        item['t'] == 
        '${data['t']}');
 
+SharedPreferences prefs = await SharedPreferences.getInstance();
+var msgReadCountvar =  prefs.getInt("${"qoX1aNeMcKgl69UCntgq"}");
+    // var msgReadCountvar = 0;
+    // try {
+    //  msgReadCountvar =  prefs.getInt("${"qoX1aNeMcKgl69UCntgq"}");
+    // } catch (e) {
+    // }
+     
+     
 //  NotifyList notify = new NotifyList(
 //               data.c,
 //               data.m,
 //               data.t,
 //           );
           data['chatId']= id;
+          data['readCount'] = msgReadCountvar ?? 0;
           NotifyData.add(data);
 }else{
   return;
@@ -158,12 +170,20 @@ if(data!= null){
         });
     });
 }
+
+getMsgReadCount(chatId)async{
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+    var msgReadCountvar = prefs.getInt("${chatId}");
+    return msgReadCountvar ?? 1000;
+}
 Widget chatViewListRealtimeDb(context){
 
            appState = StateWidget.of(context).state;
     // final localFollowingGroups = appState.user;
       //  final approvedGroups = appState?.user?.approvedGroups;
       //  print('grops fro local fetch ${approvedGroups}');
+
+   
  if(widget.followingGroupsLocal.length >8){
     allowGroupCreation = false;
   }
@@ -185,7 +205,11 @@ return widget.followingGroupsLocal.length == 0 ? noGroupsFolllowed():
                 },
                 itemCount: NotifyData.length,
                 itemBuilder: (BuildContext context, int index)  {
-          //  var searchGroupForReadCount =   widget.followingGroupsReadCountLocal.firstWhere((data)=> data['id'] == NotifyData[index]['chatId']);
+                  
+var jakoo = getMsgReadCount(NotifyData[index]['chatId']);
+
+print('jakoo ${jakoo}');
+           var searchGroupForReadCount =   widgetCountCheck.firstWhere((data)=> data['chatId'] == NotifyData[index]['chatId']);
                 //  print('searchGroup ${searchGroupForReadCount['count'] ?? 0}');
                   return InkWell(
                        onTap: () async {
@@ -194,7 +218,7 @@ return widget.followingGroupsLocal.length == 0 ? noGroupsFolllowed():
 
               var chatId = approvedGroups.contains(NotifyData[index]['chatId']) ? "${NotifyData[index]['chatId']}PGrp" : "${NotifyData[index]['chatId']}" ;
                 
-final information = await Navigator.push(
+              final information = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => Conversation(followingGroupsLocal: widget.followingGroupsLocal,groupFullDetails: [],chatId: chatId, 
@@ -224,8 +248,8 @@ final information = await Navigator.push(
                       dp: "${NotifyData[index]['i']}",
                       groupName: "${NotifyData[index]['t']}",
                       isOnline: true,
-                      // counter: "${NotifyData[index]['c']- searchGroupForReadCount['count'] ?? 0}",
-                      counter: 0,
+                      counter: "${NotifyData[index]['c'] - searchGroupForReadCount['readCount']}",
+                      // counter: 0,
                       msg: "${approvedGroups.contains(NotifyData[index]['chatId']) ? NotifyData[index]['pm'] :  NotifyData[index]['m']}",
                       time: "${""}",
                     ),
@@ -564,6 +588,18 @@ return followGroupState;
       return;
     }
   }
+  readCountLooper(array) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+  widgetCountCheck =[];
+  print('litmus test ${widget.followingGroupsLocal}');
+widget.followingGroupsLocal.forEach((chatId){
+    var readCountLocal =  prefs.getInt("${chatId}");
+  var payload = {'chatId': chatId, 'readCount': readCountLocal ?? 0};
+      widgetCountCheck.add(payload);
+      print('read count on litmus ${widgetCountCheck}');
+    });
+}
+  
 
    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
          Future<SharedPreferences> prefs =  SharedPreferences.getInstance();
@@ -577,6 +613,14 @@ return followGroupState;
     final followGroupState = appState.followingGroups;
     final phoneNumber = appState.user.phoneNumber;
    var data = Auth.getFollowingGroups;
+
+   readCountLooper(widget.followingGroupsLocal);
+
+   print('value was ${widgetCountCheck}');
+
+   if(widget.followingGroupsReadCountLocal == null){
+                    widget.followingGroupsReadCountLocal = [];
+                  }
    print('own it has getFollowingGroups data ${data}');
    print('own it has widget value data ${widget.followingGroupsLocal}');
     print('own it has widget followGroupState data ${followGroupState}');
@@ -950,7 +994,7 @@ SingleChildScrollView(
      SharedPreferences prefs = await SharedPreferences.getInstance();
       String userToken = prefs.get('FCMToken');
 
-
+        prefs.setInt("${ds['payload'][index]['chatId']}", 00000);    
 
 
 
@@ -968,7 +1012,8 @@ SingleChildScrollView(
                           print('i was hit ones');
                           // followingGroup_real.add(ds['chatId']);
                           widget.followingGroupsLocal.add(ds['payload'][index]['chatId']);
- prefs.setStringList('followingGroups',widget.followingGroupsLocal );
+                          prefs.setStringList('followingGroups',widget.followingGroupsLocal );
+ 
                           StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
                         });
                           await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
