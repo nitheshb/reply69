@@ -32,14 +32,6 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
 
     updatePaymentRequestStatus(kycDocId,userId,chatId,status, period,phoneNumber, firstName) async{
 
-     try {
-          var response = await dio.get("https://asia-south1-royalpro.cloudfunctions.net/onMemberAdd?id=${userId}&chatId=${chatId}&groupName=${widget.groupName}");
-                  
-                  print('remove was clicked  ${response}');
-      } catch (e) {
-        print('error is ${e}');
-      }
-      return;
       DateTime d = Jiffy().add(days: 30);
       print('pancard hellooc ${d}');
         SharedPreferences prefs = await SharedPreferences.getInstance();

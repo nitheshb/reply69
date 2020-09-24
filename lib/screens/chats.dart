@@ -252,6 +252,7 @@ print('jakoo ${jakoo}');
                       // counter: 0,
                       msg: "${approvedGroups.contains(NotifyData[index]['chatId']) ? NotifyData[index]['pm'] :  NotifyData[index]['m']}",
                       time: "${""}",
+                      ownerOrPrime: approvedGroups.contains(NotifyData[index]['chatId']),
                     ),
                   );
                 
@@ -337,16 +338,8 @@ Widget groupSearViewRealDB (_searchTerm){
              // width: 160,
              child: Column(
                children: <Widget>[
-                 Text("Popular Searches To Try", style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w400),),
-                 Row(
-                   children: <Widget>[
-                     popularSearchTextContainer('helloPredictors'),
-                     popularSearchTextContainer('allGamesPredictor'),
-                     popularSearchTextContainer('Dream11Pro'),
-                 
+                 Text("Type to find a group...!", style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w400),),
                 
-                   ],
-                 ),
                 
 
                ],
@@ -556,7 +549,7 @@ Widget popularSearchTextContainer(searchText){
                 Container(
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.all(
-                                          Radius.circular(20),
+                                          Radius.circular(10),
                                         ),
                                         border: Border.all(
                                           color: Colors.grey,
@@ -661,7 +654,7 @@ widget.followingGroupsLocal.forEach((chatId){
               text: "Messages",
             ),
             Tab(
-              text: "Follow Groups",
+              text: "Follow Experts",
             ),
           ],
         ),
@@ -680,7 +673,39 @@ widget.followingGroupsLocal.forEach((chatId){
 SingleChildScrollView(
                   child: Column(
             children:<Widget>[ 
-           
+           Padding(
+             padding: const EdgeInsets.all(8.0),
+             child: Container(
+               child: 
+               Column(
+                 children: <Widget>[
+                   Align(
+                     alignment: Alignment.topLeft,
+                  child: Text(
+                      "Win more under guidance of Experts ",
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        color: Color(0xff3A4276),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                   ),
+                   SizedBox(height: 6),
+                   Align(
+                     alignment: Alignment.topLeft,
+                  child: Text(
+                      "Follow to receive expert messages",
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        color: Color(0xff3A4276),
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                   ),
+                 ],
+               ),
+             ),
+           ),
               Container(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -745,20 +770,15 @@ SingleChildScrollView(
              // width: 160,
              child: Column(
                children: <Widget>[
-                 Text("Popular Searches To Try", style: GoogleFonts.poppins(
+                 Align(
+                   alignment: Alignment.center,
+                 child: Text("Use above search bar to find", style: GoogleFonts.poppins(
                   fontSize: 15,
                   color: Color(0xff3A4276),
                   fontWeight: FontWeight.w500,
                 )),
-                 Row(
-                   children: <Widget>[
-                     popularSearchTextContainer('gamepro11'),
-                     popularSearchTextContainer('allGamesPredictor'),
-                     popularSearchTextContainer('groupName1'),
-                 
+                 )
                 
-                   ],
-                 ),
                 
 
                ],
@@ -923,119 +943,11 @@ SingleChildScrollView(
                                  DocumentSnapshot ds = snapshot.data; 
                                  print('===>value check $ds['']');
                                  var followersA =  [];
-                                return ListTile(
-                                   title: Text(ds['payload'][index]['title']?? "", style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w800 ),),
-                                   subtitle: Column(
-                                     children: <Widget>[
-                                       Padding(
-                                         padding: const EdgeInsets.only(bottom:8.0, top: 2.0),
-                                         child: Align(
-                                           alignment: Alignment.centerLeft,
-                                      child: Text("@ ${ ds['payload'][index]['ownerName'] ?? ""}" ?? "", style: TextStyle(color: Colors.black ),),
-                                         ),
-                                       ),
-                                       Row(
-                                         children: <Widget>[
-                                           Wrap(
-                    spacing: 4.0, // gap between adjacent chips
-                    runSpacing: 1.0, // gap between lines
-                    children:
-                    _buildSelectedOptions(ds['payload'][index]['category']),
-                  ),
-                                         ],
-                                       ),
-                                      
-                                     ],
-                                   ),
-                                   trailing: widget.followingGroupsLocal.contains(ds['payload'][index]['chatId']) ? 
-                                   FlatButton(
-                      child: Text(
-                        "Unfollow",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      color: Colors.grey,
-                      onPressed: ()async{
-                        //  this is for token 
-                        print('---> phonenumber is ${phoneNumber}');
-     SharedPreferences prefs = await SharedPreferences.getInstance();
-      String userToken = prefs.get('FCMToken');
-     await  FirebaseController.instanace.unfollowGroup(ds['payload'][index]['chatId'], userId, userToken);
-
-                        // Auth.setFollowingGroups(followingGroup_real,ds['chatId'], 'remove' );
-                        // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
-                        setState(() {
-                          // followingGroup_real.remove(ds['chatId']);
-                          widget.followingGroupsLocal.remove(ds['payload'][index]['chatId']);
-                           prefs.setStringList('followingGroups',widget.followingGroupsLocal );
-                          StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['payload'][index]['chatId'], 'remove' );
-                        });
-
-                          await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
-        builder: (BuildContext context)
-        => MainScreen(userId: userId,followingGroupsLocal: widget.followingGroupsLocal),
-        ),(Route<dynamic> route) => false);
-                      },
-                    ):
-                                 FlatButton(
-                      child: Text(
-                        "Follow",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      color: Theme.of(context).accentColor,
-                      onPressed: ()async{
-                        print("check for doc id of group ${ds['payload'][index]['chatId']}  id is ${userId}");
-                        // make an entry in db as joinedGroups
-                       try {
-                         //  this is for token 
-     SharedPreferences prefs = await SharedPreferences.getInstance();
-      String userToken = prefs.get('FCMToken');
-
-        prefs.setInt("${ds['payload'][index]['chatId']}", 00000);    
-
-
-
-  if(widget.followingGroupsLocal.length <9){
-    print('i was at following groups 0 with length  ${widget.followingGroupsLocal.length}, ${ds['chatId']}');
-    print('---> phonenumber is ${phoneNumber}');
-  
-    FirebaseController.instanace.followGroup(ds['payload'][index]['chatId'], userId, userToken);
-
-  
-  
-                        // Auth.setFollowingGroups(widget.followingGroupsLocal,ds['chatId'], 'add' );
-                        // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
-                        setState(() {
-                          print('i was hit ones');
-                          // followingGroup_real.add(ds['chatId']);
-                          widget.followingGroupsLocal.add(ds['payload'][index]['chatId']);
-                          prefs.setStringList('followingGroups',widget.followingGroupsLocal );
- 
-                          StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
-                        });
-                          await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
-        builder: (BuildContext context)
-        => MainScreen(userId: userId,followingGroupsLocal: widget.followingGroupsLocal),
-        ),(Route<dynamic> route) => false);
-  }else{
-
- _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Overall max 9 group can be followed...!');
-  }
-  
-                       } catch (e) {
-                          _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'error at following ${e}');
-                         print('error at joining a group ${e}');
-                       }
-          
- 
-                      },
-                    ),
-                      onTap: (){
-
-                        Navigator.push(
+                                 return 
+                                 Container(child:
+                                 InkWell(
+                                   onTap: (){
+                                      Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Profile3(
                 title: ds['payload'][index]['title'],
@@ -1053,9 +965,13 @@ SingleChildScrollView(
                 followingGroupsLocal: widget.followingGroupsLocal
               )),
             );
-                      },          
-                    );
-                    
+                                   },
+                                  child:Padding(
+                                    padding: const EdgeInsets.only(left:8.0, right: 8.0),
+                                    child: buildApplication(ds['payload'][index]['logo'],ds['payload'][index]['title'], ds['payload'][index]['ownerName'], ds['payload'][index]['category'],  widget.followingGroupsLocal.contains(ds['payload'][index]['chatId']), ds['payload'][index]['chatId'], userId ),
+                                  )
+                                 )
+                                 );
                               
                             },
                             childCount: snapshot.data['payload'].length ?? 0,
@@ -1125,7 +1041,209 @@ SingleChildScrollView(
       )
     );
   }
+// UnFollow Group Function
 
+unFollowFun(chatId, userId)async{
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+      String userToken = prefs.get('FCMToken');
+     await  FirebaseController.instanace.unfollowGroup(chatId, userId, userToken);
+
+                        // Auth.setFollowingGroups(followingGroup_real,ds['chatId'], 'remove' );
+                        // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
+                        setState(() {
+                          // followingGroup_real.remove(ds['chatId']);
+                          widget.followingGroupsLocal.remove(chatId);
+                           prefs.setStringList('followingGroups',widget.followingGroupsLocal );
+                          StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,chatId, 'remove' );
+                        });
+
+                          await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+        builder: (BuildContext context)
+        => MainScreen(userId: userId,followingGroupsLocal: widget.followingGroupsLocal),
+        ),(Route<dynamic> route) => false);
+}
+// Follow Group Function
+followFun(chatId, userId)async{
+         print("check for doc id of group ${chatId}  id is ${userId}");
+                        // make an entry in db as joinedGroups
+                       try {
+                         //  this is for token 
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+      String userToken = prefs.get('FCMToken');
+
+        prefs.setInt("${chatId}", 00000);    
+
+
+
+  if(widget.followingGroupsLocal.length <9){
+    print('i was at following groups 0 with length  ${widget.followingGroupsLocal.length}, ${chatId}');
+   
+  
+    FirebaseController.instanace.followGroup(chatId, userId, userToken);
+
+  
+  
+                        // Auth.setFollowingGroups(widget.followingGroupsLocal,ds['chatId'], 'add' );
+                        // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
+                        setState(() {
+                          print('i was hit ones');
+                          // followingGroup_real.add(ds['chatId']);
+                          widget.followingGroupsLocal.add(chatId);
+                          prefs.setStringList('followingGroups',widget.followingGroupsLocal );
+ 
+                          StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,chatId, 'add' );
+                        });
+                          await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
+        builder: (BuildContext context)
+        => MainScreen(userId: userId,followingGroupsLocal: widget.followingGroupsLocal),
+        ),(Route<dynamic> route) => false);
+  }else{
+
+ _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Overall max 9 group can be followed...!');
+  }
+  
+                       } catch (e) {
+                          _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'error at following ${e}');
+                         print('error at joining a group ${e}');
+                       }
+}
+  Widget buildApplication(logoUrl, title, owner, categories, isFollow, chatId, userId ){
+    return Container(
+      padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
+      margin: EdgeInsets.symmetric(vertical: 2),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.all(
+      //     Radius.circular(10),
+      //   ),
+      // ),
+          decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10), color: Color(0xffF1F3F6)),
+      child: Column(
+        children: [
+
+          Row(
+            children: [
+
+              Container(
+                height: 70,
+                width: 65,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(logoUrl), 
+                    fit: BoxFit.fill,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+
+                      Text(
+                        "${title[0].toUpperCase() + title.substring(1)}",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 4.0),
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                                                  FontAwesomeIcons.userAlt,
+                                                  size: 10,
+                                                  color: Colors.black,
+                                                ),
+                          SizedBox(width: 4.0),                      
+                          Text(
+                            "${owner[0].toUpperCase() + owner.substring(1)}",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(
+            height: 16,
+          ),
+            Row(
+                                         children: <Widget>[
+                                           Wrap(
+                    spacing: 4.0, // gap between adjacent chips
+                    runSpacing: 1.0, // gap between lines
+                    children:
+                    _buildSelectedOptions(categories),
+                  ),
+                                         ],
+                                       ),
+
+                    ],
+                  ),
+                )
+              ),
+
+               InkWell(
+                    onTap: (){
+                      if(isFollow){
+                        unFollowFun(chatId, userId);
+                      }else{
+                        followFun(chatId, userId);
+                      }
+                    },
+                child: Container(
+                    height: 35,
+                    width: 100,
+                    decoration: BoxDecoration(
+                       gradient:
+                       
+                     isFollow ?   LinearGradient(               
+                    colors: [
+                      Colors.grey,
+                      Colors.grey,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.topRight,
+          ): LinearGradient(          
+                    colors: [
+                      Color(0xff0072ff),
+                      Color(0xff00d4ff),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.topRight,
+          ),
+                      // color: isFollow ? Colors.grey :Colors.blueAccent,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(6),
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        isFollow ? "UnFollow" : "Follow",
+                        style: TextStyle(
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
   @override
   bool get wantKeepAlive => true;
 }

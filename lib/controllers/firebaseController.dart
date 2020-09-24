@@ -210,6 +210,30 @@ class FirebaseController {
     
     
   }
+
+   sendToClear121Message(chatId,body, lastMessageBody, type) async {
+    print('i was here at sendChatMessage');
+    //  final dbRef = FirebaseDatabase.instance.reference().child("royalPro").child(chatId);
+    //  dbRef.set({ 'lastMessageDetails':lastMessageBody});
+
+     final dbRef1 = FirebaseDatabase.instance.reference().child("Notify").child(chatId);
+     if(type== "Prime"){
+       print("===> try it prime");
+          dbRef1.update({ 'pm':"${lastMessageBody["lastPmMsg"] ?? ''}",'pc' : lastMessageBody["msgFullPmCount"] ?? 0, });
+          Firestore.instance.collection('Chats').document("${chatId}PGrp").updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : body });
+     }else if(type== "Non-Prime"){
+          dbRef1.update({ 'm':"${lastMessageBody["lastMsg"] ?? ''}", 'c' : lastMessageBody["msgFullCount"] ?? 0, });
+          Firestore.instance.collection('Chats').document(chatId).updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : body});
+     }else{
+         dbRef1.update({ 'm':"${lastMessageBody["lastMsg"] ?? ''}", 'c' : lastMessageBody["msgFullCount"] ?? 0, 'pm':"${lastMessageBody["lastPmMsg"] ?? ''}",'pc' : lastMessageBody["msgFullPmCount"] ?? 0, });
+         Firestore.instance.collection('Chats').document(chatId).updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : FieldValue.arrayUnion([body])});
+         Firestore.instance.collection('Chats').document("${chatId}PGrp").updateData({ 'lastMessageDetails':lastMessageBody, 'messages' : FieldValue.arrayUnion([body])});
+
+     
+     }
+    
+    
+  }
   
   sendChatImage(chatId,body, msgFullCount, msgFullPmCount, type){
     final dbRef1 = FirebaseDatabase.instance.reference().child("Notify").child(chatId);
@@ -364,7 +388,8 @@ submitKycDoc(body,userId, chatId)async{
           docReferance.setData(body); 
         final userTable = await Firestore.instance.collection('IAM');
        DocumentReference userTableDocRef = userTable.document(userId);
-     return  ;                                              userTableDocRef.updateData({ 'WaitingGroups' : FieldValue.arrayUnion([chatId]),  'WaitingGroupsJson' : FieldValue.arrayUnion([body])}); 
+      userTableDocRef.updateData({ 'WaitingGroups' : FieldValue.arrayUnion([chatId]),  'WaitingGroupsJson' : FieldValue.arrayUnion([body])}); 
+      return  ; 
 }
 
 getKycDocsList(chatId){
@@ -375,6 +400,7 @@ approveKycDoc(kycDocId,modifiedDate, period, userId, chatId, userToken, phoneNum
         Firestore.instance.collection('IAM').document(userId).updateData({'approvedGroups': FieldValue.arrayUnion([chatId]), 'approvedGroupsJson': FieldValue.arrayUnion([{'chatId':chatId,'kycDocId': kycDocId }]),'WaitingGroups':FieldValue.arrayRemove([chatId])});
               var groupUserBody = {'userId':userId, 'joinedId': DateTime.now(), 'expiresOn':  modifiedDate,'membershipDuration': period, 'kycDocId': kycDocId, 'phoneNumber': phoneNumber, 'firstName': firstName };
         Firestore.instance.collection('PrimeGroups').document(chatId).updateData({'premiumMembers': FieldValue.arrayUnion([userId]),'approvedGroupsJson': FieldValue.arrayUnion([groupUserBody]),'FdeviceTokens': FieldValue.arrayUnion([userToken]),'AlldeviceTokens': FieldValue.arrayRemove([userToken]),'rejectedId': FieldValue.arrayRemove([userId])});
+
 }
 
 rejectKycDoc(kycDocId,modifiedDate, period, userId, chatId){

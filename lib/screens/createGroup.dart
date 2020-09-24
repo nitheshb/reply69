@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
@@ -209,25 +210,7 @@ File _image;
     final firstName = appState.user?.firstName ?? '';
     return Scaffold(
           backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0.4,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        title: Text(
-          'Create Profile',
-          style: GoogleFonts.poppins(
-                    fontSize: 19,
-                    color: Colors.blueAccent,
-                    fontWeight: FontWeight.w800,
-                  )
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black,),
-        ),
-      ),
+     
       body: 
        LoadingScreen(
          inAsyncCall: _loadingVisible,
@@ -249,13 +232,22 @@ File _image;
               //     fontSize: 22,
               //   ),
               // ),
+              SizedBox(height: 80),
+               Text(
+              "Are you a fantasy sports expert ?",
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                color: Colors.redAccent,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
               SizedBox(height: 10),
               Text(
-                "Create your group profile",
+                "Create Group Profile",
                 style: GoogleFonts.poppins(
-                    fontSize: 15,
+                    fontSize: 20,
                     color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w500,
                   ),
               ),
           
@@ -273,65 +265,22 @@ File _image;
           children: <Widget>[
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                       Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: 
-                    InkWell(
-                       onTap: (){
-                      getImage();
-                    },
-                      child:Row(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                     CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Color(0xff476cfb),
-                        child: ClipOval(
-                          child: new SizedBox(
-                            width: 180.0,
-                            height: 180.0,
-                            child: (_image!=null)?Image.file(
-                              _image,
-                              fit: BoxFit.fill,
-                            ):Image.network(
-                              "https://img.icons8.com/bubbles/344/upload.png",
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
-                      ),
-                    Padding(padding: EdgeInsets.only(top:60.0),
-                    child: IconButton(icon: Icon(Icons.edit,),
-                    onPressed: (){
-                      getImage();
-                    },
-                    
-                    )),
-                      Padding(
-                        padding: const EdgeInsets.only(top:70.0),
-                        child: Text(
-                "Upload Group Profile Pic",
-                style: GoogleFonts.poppins(
-                  fontSize: 13,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-                      ),
-                ],
-              ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
+           
+                  SizedBox(height: 5),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: <Widget>[
+                        
                         FadeAnimation(1.2, makeUserNameField(label: "Group Name", obscureText: false),),
-                        groupCategoryFieldCustomField(),
-                        premiumGroupToggle(context),
+                       FadeAnimation(1.3,groupPicUpload()),
+                        SizedBox(height: 10),
+                        FadeAnimation(1.3,groupCategoryFieldCustomField()),
+                        SizedBox(height: 10),
+                        FadeAnimation(1.3,premiumGroupToggle(context)),
+                        SizedBox(height: 10),
                         // FadeAnimation(1.3, makeCagegoryField(label: "Group Category", obscureText: false)),
 //  premium
 
@@ -346,12 +295,12 @@ File _image;
         children: <Widget>[
           Expanded(
             flex: 3,
-            child: FadeAnimation(1.2, makePremiumPrice(label: "VIP Join Fee", obscureText: false, controlValue: _premiumPrice1),),
+            child: FadeAnimation(1.3, makePremiumPrice(label: "VIP Join Fee", obscureText: false, controlValue: _premiumPrice1),),
           ),
           SizedBox(width: 30),
           Expanded(
             flex: 3,
-            child: FadeAnimation(1.2, makePremiumDays(label: "Valid Days", obscureText: false, controlValue: _premiumDays1),),
+            child: FadeAnimation(1.3, makePremiumDays(label: "Valid Days", obscureText: false, controlValue: _premiumDays1),),
           ),
         ],
       ),
@@ -376,25 +325,12 @@ File _image;
                           ),
                         ),
 
-                        SizedBox(height: 10),
-        FadeAnimation(1.4, Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Container(
-                      padding: EdgeInsets.only(top: 3, left: 3),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border(
-                          bottom: BorderSide(color: Colors.black),
-                          top: BorderSide(color: Colors.black),
-                          left: BorderSide(color: Colors.black),
-                          right: BorderSide(color: Colors.black),
-                        )
-                      ),
-                      child: MaterialButton(
-                        minWidth: double.infinity,
-                        height: 60,
-                        onPressed: () async{
-                           
+                        SizedBox(height: 30),
+    
+                         InkWell(
+                    onTap: () async{
+                     
+                                       
                            Pattern pattern = r'^.{1,}$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(_groupTitle.text))
@@ -506,21 +442,38 @@ File _image;
       setState(() => _autoValidate = true);
     }
                         },
-                        color: Colors.blueAccent,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)
-                        ),
-                        child: Text("Create Group", style: TextStyle(
-                          fontWeight: FontWeight.w600, 
-                          fontSize: 18,
-                          color: Colors.white
-                        ),),
+                child: Container(
+                     height: 65,
+                    // width: 100,
+                    decoration: BoxDecoration(
+                       gradient:
+                       
+                      LinearGradient(          
+                    colors: [
+                      Color(0xff0072ff),
+                      Color(0xff00d4ff),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.topRight,
+          ) ,
+                      // color: isFollow ? Colors.grey :Colors.blueAccent,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(6),
                       ),
                     ),
-                  )),
-    
-                            
+                    child: Center(
+                      child: Text(
+                        "Create Group",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white,
+
+                        ),
+                      ),
+                    ),
+                ),
+                ),   
                       ],
                     ),
                   ),
@@ -591,21 +544,17 @@ Widget premiumGroupToggle(context){
                                     // ),
                                   
                                     Text(
-                                      'Premium Group',
+                                      'Prime Group Details',
                                       style:
                                           GoogleFonts.poppins(
-                  fontSize: 15,
+                  fontSize: 16,
                   color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w700,
                 )
                                     ),
                                   ],
                                 ),
-                                Switch(
-                                  value: configImageCompression,
-                                  onChanged: (value) => 
-                                  ConfigValueChanged(value)
-                                ),
+                               
                               ],
                             );
 }
@@ -681,9 +630,9 @@ Widget stateSelection(){
                     child: DropdownButton<String>(
                       isDense: true,
                       hint: new Text("Select State",style: GoogleFonts.poppins(
-                  fontSize: 15,
+                  fontSize: 16,
                   color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w700,
                 ),),
                       value: _selected,
                       onChanged: (String newValue) {
@@ -721,8 +670,8 @@ Widget makeCagegoryField({label, obscureText = false}) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
           color: Colors.black87
         ),),
         SizedBox(height: 5,),
@@ -754,9 +703,9 @@ Widget makeCagegoryField({label, obscureText = false}) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(label, style: GoogleFonts.poppins(
-                  fontSize: 15,
+                  fontSize: 16,
                   color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w700,
                 ),),
         SizedBox(height: 5,),
         TextFormField(
@@ -787,9 +736,9 @@ Widget makeCagegoryField({label, obscureText = false}) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(label, style: GoogleFonts.poppins(
-                  fontSize: 15,
+                  fontSize: 16,
                   color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w700,
                 ),),
         SizedBox(height: 5,),
         TextFormField(
@@ -820,9 +769,9 @@ Widget makeCagegoryField({label, obscureText = false}) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(label, style: GoogleFonts.poppins(
-                  fontSize: 15,
+                  fontSize: 16,
                   color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w700,
                 ),),
         SizedBox(height: 5,),
         TextFormField(
@@ -848,14 +797,73 @@ Widget makeCagegoryField({label, obscureText = false}) {
       ],
     );
   }
+
+  Widget groupPicUpload(){
+    return             
+                    Container(
+                      child: InkWell(
+                         onTap: (){
+                        getImage();
+                      },
+                        child:
+                        Container(
+                          decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6), color: Color(0xffF1F3F6)),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10,10,10,10.0),
+                            child: Row(
+                              
+                // mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                       CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Colors.transparent,
+                              child: ClipOval(
+                                child: new SizedBox(
+                                  width: 80.0,
+                                  height: 80.0,
+                                  child: (_image!=null)?Image.file(
+                                    _image,
+                                    fit: BoxFit.fill,
+                                  ):Image.network(
+                                    "https://www.iconfinder.com/data/icons/hawcons/32/698394-icon-130-cloud-upload-512.png",
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Row(
+                              children: <Widget>[
+                               
+                                SizedBox(width: 4.0),                      
+                                Text(
+                                  "Upload group profile picture",
+                                  style: GoogleFonts.poppins(
+                  fontSize: 13,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
+                                ),
+                              ],
+                            ),
+                   
+                            
+                ],
+              ),
+                          ),
+                        ),
+                      
+                  ),
+                    );
+  }
   Widget makeUserNameField({label, obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(label, style: GoogleFonts.poppins(
-                  fontSize: 15,
+                  fontSize: 16,
                   color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w700,
                 ),),
         SizedBox(height: 5,),
         TextFormField(

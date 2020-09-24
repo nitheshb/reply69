@@ -70,6 +70,10 @@ class _ConversationState extends State<Conversation> {
    int selectedRadioTile;
     List feeDetails;
     var groupGrade;
+    int messageCount, nonPrimeMsgCount =0;
+
+  List nonPrimeMessageContent;
+  
    
 
 
@@ -361,7 +365,7 @@ Future<void> _shareImages(textData, appLink) async {
                                   ),
                                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                   child: Text(
-                                    "👑 ${groupGrade}",
+                                    "👑 ${groupGrade } ",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
@@ -579,6 +583,8 @@ Future<void> _shareImages(textData, appLink) async {
                         widget.groupFullDetails = ds;
 
             if(snapshot.hasData && snapshot.data['messages'].length > 0){
+             messageCount = snapshot.data['messages'].length;
+              nonPrimeMessageContent= snapshot.data['messages'];
                 return ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   itemCount: snapshot.data['messages'].length,
@@ -613,7 +619,8 @@ Future<void> _shareImages(textData, appLink) async {
 
    if(((widget.approvedGroups.contains(widget.userId)) || (widget.chatOwnerId == widget.userId) || widget.chatId.contains('PGrp') ) && (snapshot.data['messages'][indexVal]['messageMode'] ==  'Prime' || snapshot.data['messages'][indexVal]['messageMode'] ==  'All') && (msgDeliveryMode =="Prime" || widget.chatId.contains('PGrp'))){
           //  owner display for Prime
-              print(' i was at prime');
+              print(' i was at prime yo you');
+              // check for primeMsgcount
               return PostItem(
               message: snapshot.data['messages'][indexVal]['type'] == "text"
                           ?snapshot.data['messages'][indexVal]['messageBody']
@@ -630,6 +637,7 @@ Future<void> _shareImages(textData, appLink) async {
          }else if(((widget.approvedGroups.contains(widget.userId)) || (widget.chatOwnerId == widget.userId)) && (snapshot.data['messages'][indexVal]['messageMode'] ==  'Non-Prime' || snapshot.data['messages'][indexVal]['messageMode'] ==  'All') && (msgDeliveryMode =="Non-Prime")){
           //  owner display for Prime
              print(' i was at non- prime');
+             // check for non primeMsgcount
               return PostItem(
               message: snapshot.data['messages'][indexVal]['type'] == "text"
                           ?snapshot.data['messages'][indexVal]['messageBody']
@@ -855,6 +863,7 @@ Future<void> _shareImages(textData, appLink) async {
                             groupValue: selectedRadio,
                             activeColor: Colors.green,
                             onChanged: (val) {
+                               
                               print("Radio $val");
                               setSelectedRadio(val);
                             },
@@ -929,7 +938,7 @@ Future<void> _shareImages(textData, appLink) async {
                             Text(
                               (!widget.waitingGroups.contains(widget.chatId)) 
                                 
-                               ? "Join Premium Rs  ${feeDetails}/-" : "Under Review",
+                               ? "Upgrade To Prime" : "Under Review",
                               style: TextStyle(
                                 color:
                                     Colors.white,
@@ -1019,7 +1028,7 @@ Future<void> _shareImages(textData, appLink) async {
                                 contentPadding: EdgeInsets.all(10.0),
                                 border: InputBorder.none,
                                 enabledBorder: InputBorder.none,
-                                hintText: "Write your message...",
+                                hintText: "Write your message... ${messageCount}",
                                 hintStyle:GoogleFonts.poppins(
                   fontSize: 12,
                   color: Color(0xff3A4276),
@@ -1072,12 +1081,21 @@ Future<void> _shareImages(textData, appLink) async {
         widget.msgFullPmCount = widget.msgFullPmCount + 1;
      }
                            
+        
                             var now = new DateTime.now();
                             var body ={ "messageBody":_chatMessageText.text, "date": now,"author": widget.userId, "type": "text" , "premium": (msgDeliveryMode  == "Prime"), "messageMode": msgDeliveryMode };
                             // var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now};
                             var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now.toString(), "title": widget.groupTitle, "msgFullCount" : widget.msgFullCount, "msgFullPmCount": widget.msgFullPmCount, "lastPmMsg": _chatMessageText.text };
                            
-                           FirebaseController.instanace.sendChatMessage(widget.chatId, body, lastMessageBody,msgDeliveryMode );
+                          if(messageCount > 120 && (msgDeliveryMode == "Prime" || msgDeliveryMode ==  "Non-Prime")){
+                            nonPrimeMessageContent.removeAt(0);
+                            nonPrimeMessageContent.add(body);
+                            FirebaseController.instanace.sendToClear121Message(widget.chatId, nonPrimeMessageContent, lastMessageBody,msgDeliveryMode ); 
+                          }else{
+                            FirebaseController.instanace.sendChatMessage(widget.chatId, body, lastMessageBody,msgDeliveryMode );
+                          }
+
+                           
                             _chatMessageText.text ="";
   
                               Timer(Duration(milliseconds: 500),

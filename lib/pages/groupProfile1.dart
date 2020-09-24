@@ -289,6 +289,8 @@ Widget winStats(context, _media, gameName, rating){
           left: 20,
         ),
         children: <Widget>[
+
+          
                     SizedBox(height: 20),
           RichText(
             text: TextSpan(
@@ -310,7 +312,7 @@ Widget winStats(context, _media, gameName, rating){
               child: 
 
               Container(
-                  height: 350,
+                 height: 370,
                  
                   margin: EdgeInsets.only(
               top: 15,
@@ -320,19 +322,13 @@ Widget winStats(context, _media, gameName, rating){
                    decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(6),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade100,
-                  blurRadius: 6,
-                  spreadRadius: 10,
-                )
-              ],
+             
             ),
                   child: Column(
                     children: <Widget>[
                       SizedBox(height:10),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16,),
+                        padding: EdgeInsets.symmetric(horizontal: 8,),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -380,13 +376,25 @@ Widget winStats(context, _media, gameName, rating){
                               height: 4,
                             ),
 
-                            Text(
-                              "Predictor Name: ${widget.groupOwnerName}",
-                              style: GoogleFonts.poppins(
-                  fontSize: 12,
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  "Predictor Name:  ",
+                                  style: GoogleFonts.poppins(
+                  fontSize: 16,
                   color: Color(0xff3A4276),
                   fontWeight: FontWeight.w500,
                 ),
+                                ),
+                                Text(
+                                  "${widget.groupOwnerName}",
+                                  style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w300,
+                ),
+                                ),
+                              ],
                             ),
 
                             SizedBox(
@@ -395,7 +403,7 @@ Widget winStats(context, _media, gameName, rating){
                             Text(
                               "Description",
                               style: GoogleFonts.poppins(
-                  fontSize: 12,
+                  fontSize: 16,
                   color: Color(0xff3A4276),
                   fontWeight: FontWeight.w500,
                 ),
