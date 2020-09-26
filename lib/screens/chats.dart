@@ -206,9 +206,7 @@ return widget.followingGroupsLocal.length == 0 ? noGroupsFolllowed():
                 itemCount: NotifyData.length,
                 itemBuilder: (BuildContext context, int index)  {
                   
-var jakoo = getMsgReadCount(NotifyData[index]['chatId']);
 
-print('jakoo ${jakoo}');
            var searchGroupForReadCount =   widgetCountCheck.firstWhere((data)=> data['chatId'] == NotifyData[index]['chatId']);
                 //  print('searchGroup ${searchGroupForReadCount['count'] ?? 0}');
                   return InkWell(
