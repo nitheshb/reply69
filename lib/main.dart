@@ -76,8 +76,27 @@ Future<dynamic> myBackgroundHandler(Map<String, dynamic> message){
 class _MyAppState extends State<MyApp> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
+  List followingGroup;
+
+  
 
      Future _showNotification(Map<String, dynamic> message) async {
+
+if(message['notification']['title'] == 'Accepted Prime Group'){
+  print(' i was inside');
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+ var approvedPrimeGroups = await prefs.getStringList('approvedPrimeGroups');
+ followingGroup = await prefs.getStringList('followingGroups');
+  approvedPrimeGroups.add(message['data']['chatId']);
+  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+}else if(message['notification']['action'] == 'expired membership'){
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+ var approvedPrimeGroups = await prefs.getStringList('approvedPrimeGroups');
+  approvedPrimeGroups.remove(message['data']['chatId']);
+  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+}
+
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       'channel id',
       'channel name',
@@ -88,17 +107,18 @@ class _MyAppState extends State<MyApp> {
  
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, null);
-    await flutterLocalNotificationsPlugin.show(
-        0,
-      'new message arived',
-      'i want ${message['data']['title']} for ${message['data']['price']}',
-      platformChannelSpecifics,
-      payload: 'Default_Sound',
-    );
+    // await flutterLocalNotificationsPlugin.show(
+    //     0,
+    //   'new message arived',
+    //   'i want ${message['data']['title']} for ${message['data']['price']}',
+    //   platformChannelSpecifics,
+    //   payload: 'Default_Sound',
+    // );
   }
  
 
   getTokenz() async {
+     print('i was called at getTokenz');
     String token = await _firebaseMessaging.getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
      prefs.setString('FCMToken', token);
@@ -128,12 +148,25 @@ var initializationSettings = InitializationSettings(
       onBackgroundMessage: myBackgroundHandler,
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage4: $message");
+        print('msgcheck ${message['notification']['title']}');
+        // update local storage
+        //  filter if message type is "removal"
+ SharedPreferences prefs = await SharedPreferences.getInstance();
+
+ var approvedPrimeGroups = await prefs.getStringList('approvedPrimeGroups');
+
+
+if(message['notification']['title'] == 'Accepted Prime Group'){
+  print(' i was inside');
+  approvedPrimeGroups.add(message['data']['chatId']);
+  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+
         showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text( 'new message arived'),
-                content: Text('i want ${message['data']['title']} for ${message['data']['price']}'),
+                title: Text('Congrulations..!'),
+                content: Text('Now you are Prime group member of ${message['data']['chatTitle']} :-)'),
                 actions: <Widget>[
                   FlatButton(
                     child: Text('Ok'),
@@ -144,7 +177,46 @@ var initializationSettings = InitializationSettings(
                 ],
               );
             });
-      },
+}else if(message['notification']['action'] == 'expired membership'){
+  approvedPrimeGroups.remove(message['data']['chatId']);
+  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+   showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Membership Expired..!'),
+                content: Text('Your Prime Group Membership is expired for ${message['data']['chatTitle']}'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Ok'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+}
+else if(message['notification']['action'] == 'Membership Rejected'){
+  
+   showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Membership Rejected..!'),
+                content: Text('Your membership request to group ${message['data']['chatTitle']} is rejected'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('Ok'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+}
+      }
     );
 
     getTokenz();
@@ -183,7 +255,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
                        if (snapshot.hasData){
                            // this is your user instance
                            /// is because there is user already logged
-                           return MainScreen();
+                           return MainScreen(followingGroupsLocal: followingGroup,);
                         }
                          /// other way there is no user logged.
                          return MySignInScreenHome();
@@ -233,23 +305,24 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
       }
       void upgrade() async {
         print('inside version upgrader');
-         bool isSuccess =await RUpgrade.upgradeFromUrl(
-                    PLAY_STORE_URL,
-                  );
-        print('check for upgrade ${isSuccess}');
+        await RUpgrade.upgradeFromAndroidStore(AndroidStore.GOOGLE_PLAY);
+      //    bool isSuccess =await RUpgrade.upgradeFromUrl(
+      //               PLAY_STORE_URL,
+      //             );
+      //   print('check for upgrade ${isSuccess}');
        
-      int id = await RUpgrade.upgrade(
-                 PLAY_STORE_URL,
-                 fileName: 'app-release.apk',
-                 isAutoRequestInstall: true,
-                  useDownloadManager: false
-                 );
+      // int id = await RUpgrade.upgrade(
+      //            PLAY_STORE_URL,
+      //            fileName: 'app-release.apk',
+      //            isAutoRequestInstall: true,
+      //             useDownloadManager: false
+      //            );
 
 
                 //  Navigator.pop(context);
          await _showFreezer(context);
 
-          print('app upgrade id is $id');
+          // print('app upgrade id is $id');
     }
 
         _showVersionDialog(context) async {
@@ -280,17 +353,18 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
           : new AlertDialog(
               title: Text(title),
               content: Text(message),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(btnLabel),
-                  onPressed: () => upgrade(),
+              // actions: <Widget>[
+                // FlatButton(
+                  // child: Text(btnLabel),
+                  // onPressed: (){},
+                  // onPressed: () => upgrade(),
                   // onPressed: () => _launchURL(PLAY_STORE_URL),
-                ),
+                // ),
                 // FlatButton(
                 //   child: Text(btnLabelCancel),
                 //   onPressed: () => Navigator.pop(context),
                 // ),
-              ],
+              // ],
             );
     },
   );

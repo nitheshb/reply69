@@ -1,7 +1,9 @@
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/screens/forget_password.dart';
 
 import 'package:notification/screens/main_screen.dart';
@@ -10,6 +12,7 @@ import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:notification/util/validators.dart';
 import 'package:notification/widgets/loading.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class MySignInScreenHome extends StatefulWidget {
@@ -24,6 +27,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
   final TextEditingController _email = new TextEditingController();
 
   final TextEditingController _password = new TextEditingController();
+  
 
   bool _autoValidate = false;
 
@@ -33,21 +37,19 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       key: _scaffoldKey,
-      appBar: AppBar(
-        elevation: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-      ),
+      
       body: LoadingScreen(
          inAsyncCall: _loadingVisible,
           child: Form(
               key: _formKey,
               autovalidate: _autoValidate,
+              child:SingleChildScrollView(
+              
               child: Container(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height- 100,
         width: double.infinity,
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
@@ -58,12 +60,14 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                 children: <Widget>[
                   Column(
                     children: <Widget>[
-
+                      SizedBox(height: 30),
                       Align(
                         alignment: Alignment.center,
                         child: new Container(
-              height: MediaQuery.of(context).size.height / 12,
-              child: Image(image: AssetImage('assets/logo.png')),
+                          // color: Colors.red,
+              height: MediaQuery.of(context).size.height / 5,
+              width: MediaQuery.of(context).size.width,
+              child: Image(image: AssetImage('assets/13.png')),
             
             ),
                     //  child: Container(
@@ -88,17 +92,20 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                     //     ),
                     //   ),
                       ),
-                      SizedBox(height: 20,),
-                      FadeAnimation(1.2, Text("Login to your account", style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey[700]
-                      ),)),
+                     // SizedBox(height: 20,),
+                     
                     ],
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
                       children: <Widget>[
+                         FadeAnimation(1.2, Text("Login", style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w700,
+                ),)),
+                SizedBox(height: 15),
                         FadeAnimation(1.2, makeUserNameField(label: "Email", obscureText: false),),
                         FadeAnimation(1.3, makePasswordField(label: "Password", obscureText: true)),
                       ],
@@ -129,51 +136,57 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50)
                         ),
-                        child: Text("Login", style: TextStyle(
-                          fontWeight: FontWeight.w600, 
-                          fontSize: 18
-                        ),),
+                        child: Text("Login", style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),),
                       ),
                     ),
                   )),
                   FadeAnimation(1.5, InkWell(
                     onTap: (){ 
                       Navigator.of(context).pushNamed('/signup');}  ,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Container(
-                            alignment: Alignment(1.0, 0.0),
-                            // padding: EdgeInsets.only(top: 15.0, left: 20.0,right:18),
-                            child: InkWell(
-                              onTap: (){
-                                //  Navigator.pushNamed(context, '/forgot-password');
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:40.0, right: 40.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment(1.0, 0.0),
+                              // padding: EdgeInsets.only(top: 15.0, left: 20.0,right:18),
+                              child: InkWell(
+                                onTap: (){
+                                  //  Navigator.pushNamed(context, '/forgot-password');
 
-                                   Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ForgotPasswordScreen(
-                                                              ),
-                                                      ));
+                                     Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ForgotPasswordScreen(
+                                                                ),
+                                                        ));
       
-                                //  StateWidget.of(context).resetPassword('nithe.nithesh@gmail.com');
+                                  //  StateWidget.of(context).resetPassword('nithe.nithesh@gmail.com');
          
-                              },
-                              child: Text(
-                                'Forgot Password',
-                                style: TextStyle(
-                                    color: Colors.blueGrey,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Montserrat',
-                                   ),
+                                },
+                                child: Text(
+                                  'Forgot Password',
+                                  style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
+                                ),
                               ),
-                            ),
-                        ),
-                        Text("Sign up", style: TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 18
-                        ),),
-                      ],
+                          ),
+                          Text("Sign up", style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w600,
+                ),),
+                        ],
+                      ),
                     ),
                   ))
                 ],
@@ -182,6 +195,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
           ],
         ),
       ),
+              ),
           )
       )
     );
@@ -255,16 +269,35 @@ Widget buildPasswordBox(){
     if (_formKey.currentState.validate()) {
       try {
         SystemChannels.textInput.invokeMethod('TextInput.hide');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
         await _changeLoadingVisible();
         //need await so it has chance to go through error if found.
         await StateWidget.of(context).logInUser(email, password);
         print('successfully validated');
                  appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
+
+    final approvedGroups = appState?.user?.approvedGroups;
     final followingGroups = await appState.followingGroups;
+  var followingGroupsReadCountLocal = [];
+    
+
+    await followingGroups.forEach((data) async {
+  print('i was here with data, $data');
+  // search for the rc count and update it 
+  var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
+ 
+print('i was here with data %% ${NotifySnap['c']}');
+  // followingGroupsLocal = data.cast<String>();
+ await followingGroupsReadCountLocal.add({"id":data, "count":NotifySnap['c']});
+  
+});
+
+
+    print('am i wroking  ${followingGroupsReadCountLocal}');
         await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
         builder: (BuildContext context)
-        => MainScreen(userId: userId,followingGroupsLocal: followingGroups),
+        => MainScreen(userId: userId,followingGroupsLocal: followingGroups,followingGroupsReadCountLocal: followingGroupsReadCountLocal),
         ),(Route<dynamic> route) => false);
         
       } catch (e) {
@@ -286,11 +319,11 @@ Widget buildPasswordBox(){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
         TextFormField(
           obscureText: obscureText,
@@ -318,11 +351,11 @@ Widget buildPasswordBox(){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
         TextFormField(
            keyboardType: TextInputType.emailAddress,

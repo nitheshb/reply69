@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/screens/Matches.dart';
 import 'package:notification/screens/profile.dart';
 import 'package:notification/util/state.dart';
@@ -14,10 +15,11 @@ class MainScreen extends StatefulWidget {
     Key key,
     this.userId,
     this.followingGroupsLocal,
-    this.launchKey
+    this.launchKey,
+    this.followingGroupsReadCountLocal
   }) : super(key: key);
   final String userId;
-  List followingGroupsLocal;
+  List followingGroupsLocal, followingGroupsReadCountLocal;
   int launchKey;
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -45,6 +47,7 @@ getUserData(userId)async {
      var followingGroups = await prefs.getStringList('followingGroups');
     // return followingGroups;
 
+
 print('wowow check this  ${followingGroups}');
    localDataFollowingGroups = followingGroups ?? [];
 
@@ -56,9 +59,12 @@ print('wowow check this  ${followingGroups}');
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
     // final localFollowingGroups = appState.user;
+       final approvedGroups = appState?.user?.approvedGroups;
+
+    print('approvedGroups==> ${approvedGroups}');
     print('checking groups 2 ${localDataFollowingGroups}');
     // loadingData();
-
+    print('it should show up here ${widget.followingGroupsReadCountLocal}');
   
     
 
@@ -71,7 +77,7 @@ print('wowow check this  ${followingGroups}');
           // ChatsOld(),
           // Home(),
            DisplayMatches(uId: userId, uEmailId: email),
-          Chats(uId: userId, uEmailId: email, followingGroupsLocal: widget.followingGroupsLocal ),
+          Chats(uId: userId, uEmailId: email, followingGroupsLocal: widget.followingGroupsLocal, followingGroupsReadCountLocal: widget.followingGroupsReadCountLocal ),
           // Notifications(),
           // Home(),
           Profile(),
@@ -111,7 +117,11 @@ print('wowow check this  ${followingGroups}');
               icon: Icon(
                 FontAwesomeIcons.calendarAlt,
               ),
-              title: Text("Schedule"),
+              title: Text("Schedule", style:GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
             ),
 
            
@@ -119,7 +129,11 @@ print('wowow check this  ${followingGroups}');
               icon: Icon(
                 Icons.message,
               ),
-              title: Text("Chats"),
+              title: Text("Chats", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
             ),
             
 
@@ -134,7 +148,11 @@ print('wowow check this  ${followingGroups}');
               icon: Icon(
                 Icons.settings,
               ),
-              title: Text("Profile"),
+              title: Text("Profile", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
             ),
           ],
           onTap: navigationTapped,

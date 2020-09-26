@@ -1,4 +1,4 @@
-package com.example.fcm_flutter_notification
+package com.candc.chatogram
 
 import android.os.Bundle
 import io.flutter.app.FlutterActivity
@@ -9,6 +9,6 @@ class MainActivity: FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
-         getWindow().addFlags(LayoutParams.FLAG_SECURE)
+        getWindow().addFlags(LayoutParams.FLAG_SECURE)
     }
 }

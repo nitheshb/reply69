@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/screen_size.dart';
@@ -120,12 +121,14 @@ class _Profile3State extends State<Profile3> {
           return selectedOptions;
         }
 Widget followUnfollowButtons(context){
-return lockModify ? FlatButton(
+return widget.followingGroupsLocal.contains(widget.chatId) ? FlatButton(
                       child: Text(
                         "Unfollow",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                        style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
                       ),
                       color: Colors.grey,
                       onPressed: ()async{
@@ -151,9 +154,11 @@ return lockModify ? FlatButton(
                                  FlatButton(
                       child: Text(
                         "Follow",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                        style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                       ),
                       color: Theme.of(context).accentColor,
                       onPressed: ()async{
@@ -177,10 +182,16 @@ return lockModify ? FlatButton(
   if(widget.followingGroupsLocal.length <9){
     print('i was at following groups 0 ${widget.chatId}');
      FirebaseController.instanace.followGroup(widget.chatId, widget.userId, userToken);
+
+     var notifySnap =FirebaseController.instanace.getMessagesCount(widget.chatId);
+
            setState(() {
                         lockModify = !lockModify;
                         followCountModify.add(widget.userId);
                        widget.followingGroupsLocal.add(widget.chatId);
+                      //  make a call and get read count 
+
+                      //  widget.followingGruppsReadCount.add(notifySnap);
                         StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,widget.chatId, 'add' );
                       });
                       await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
@@ -259,9 +270,11 @@ Widget winStats(context, _media, gameName, rating){
         backgroundColor: Colors.white,
         title: Text(
           'Summary',
-          style: TextStyle(
-            color: Colors.black,
-          ),
+          style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w800,
+                ),
         ),
         leading: IconButton(
           onPressed: () {
@@ -276,18 +289,19 @@ Widget winStats(context, _media, gameName, rating){
           left: 20,
         ),
         children: <Widget>[
+
+          
                     SizedBox(height: 20),
           RichText(
             text: TextSpan(
               children: [
                 TextSpan(
                   text: "Profile",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: "Varela",
-                  ),
+                  style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                 ),
               ],
             ),
@@ -298,7 +312,7 @@ Widget winStats(context, _media, gameName, rating){
               child: 
 
               Container(
-                  height: size.height * 0.45,
+                 height: 370,
                  
                   margin: EdgeInsets.only(
               top: 15,
@@ -308,19 +322,13 @@ Widget winStats(context, _media, gameName, rating){
                    decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(6),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade100,
-                  blurRadius: 6,
-                  spreadRadius: 10,
-                )
-              ],
+             
             ),
                   child: Column(
                     children: <Widget>[
-
+                      SizedBox(height:10),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16,),
+                        padding: EdgeInsets.symmetric(horizontal: 8,),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -357,47 +365,64 @@ Widget winStats(context, _media, gameName, rating){
 
                             Text(
                               "${widget.title.toUpperCase()}",
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w800,
+                  ),
                             ),
 
                             SizedBox(
-                              height: 8,
+                              height: 4,
                             ),
 
-                            Text(
-                              "@ ${widget.groupOwnerName}",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  "Predictor Name:  ",
+                                  style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
+                                ),
+                                Text(
+                                  "${widget.groupOwnerName}",
+                                  style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w300,
+                ),
+                                ),
+                              ],
                             ),
 
                             SizedBox(
-                              height: 8,
+                              height: 4,
                             ),
                             Text(
                               "Description",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
+                              style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                             ),
 
                             SizedBox(
-                              height: 8,
+                              height: 4,
                             ),
 
                             Text(
                               "NA",
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
+                              style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                             ),
                             SizedBox(
-                              height: 8,
+                              height: 20,
                             ),
                              Row(
                                          children: <Widget>[
@@ -436,10 +461,11 @@ Widget winStats(context, _media, gameName, rating){
 
                                   Text(
                                     "30-DAYS FEE", 
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                    ),
+                                    style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                                   ),
                                   
                                   SizedBox(
@@ -466,10 +492,11 @@ Widget winStats(context, _media, gameName, rating){
 
                                   Text(
                                     "FOLLOWERS", 
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                    ),
+                                    style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                                   ),
                                   
                                   SizedBox(
@@ -497,10 +524,11 @@ Widget winStats(context, _media, gameName, rating){
 
                                   Text(
                                     "RATING", 
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                    ),
+                                    style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                                   ),
                                   
                                   SizedBox(
@@ -535,64 +563,6 @@ Widget winStats(context, _media, gameName, rating){
             SizedBox(
             height: 30,
           ),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "Win Statistics",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Varela",
-                  ),
-                ),
-                TextSpan(
-                  text: "    This Week",
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    fontFamily: "Varela",
-                  ),
-                ),
-              ],
-            ),
-          ),
-         Container(
-            margin: EdgeInsets.only(
-              top: 15,
-              right: 20,
-            ),
-            padding: EdgeInsets.all(10),
-            // height: screenAwareSize(145, context),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(6),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade100,
-                  blurRadius: 6,
-                  spreadRadius: 10,
-                )
-              ],
-            ),
-            child: 
-            
-            Column(
-              children: <Widget>[
-                     Wrap(
-                    spacing: 0.0, // gap between adjacent chips
-                    runSpacing: 1.0, // gap between lines
-                    children:
-                    
-                    _buildStatsView(widget.categories, _media),
-                  )
-
-              ],
-            ),
-          )
-
         ],
         
         

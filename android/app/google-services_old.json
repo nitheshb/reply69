@@ -1,0 +1,193 @@
+{
+  "project_info": {
+    "project_number": "131516114950",
+    "firebase_url": "https://royalpro.firebaseio.com",
+    "project_id": "royalpro",
+    "storage_bucket": "royalpro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131516114950:android:f71efc0287b6cd7320fb87",
+        "android_client_info": {
+          "package_name": "com.example.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbCzrsDE7uSXaafRBxo3KSa67lyWlGJuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131516114950:android:aeac6ee934d8a35920fb87",
+        "android_client_info": {
+          "package_name": "com.example.cricles_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbCzrsDE7uSXaafRBxo3KSa67lyWlGJuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131516114950:android:45549b5b724f8fc820fb87",
+        "android_client_info": {
+          "package_name": "com.example.fcm_flutter_notification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbCzrsDE7uSXaafRBxo3KSa67lyWlGJuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131516114950:android:3458fcb77d4e90a320fb87",
+        "android_client_info": {
+          "package_name": "com.example.meetPro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbCzrsDE7uSXaafRBxo3KSa67lyWlGJuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131516114950:android:1899ed326184769d20fb87",
+        "android_client_info": {
+          "package_name": "com.example.prochats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131516114950-55093d8orqdj7hq4dmvdri3qjt1lm0ub.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.prochats",
+            "certificate_hash": "e1cbc1040af8db92042d3754ae54baa109fec3ae"
+          }
+        },
+        {
+          "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbCzrsDE7uSXaafRBxo3KSa67lyWlGJuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131516114950:android:60ba5b02c6ebd1ff20fb87",
+        "android_client_info": {
+          "package_name": "de.janoodle.circlesApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbCzrsDE7uSXaafRBxo3KSa67lyWlGJuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

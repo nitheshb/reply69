@@ -142,7 +142,7 @@ class Auth {
 
   static Future<String> storeUserLocal(User user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-  
+  List<String> approvedGroupsList =[];
     String storeUser = userToJson(user);
     await prefs.setString('user', storeUser);
     
@@ -151,32 +151,60 @@ class Auth {
     await prefs.setString('FireUserId', storeUserId);
     await prefs.setString('firstName', user.firstName);
 
-List<String> followingGroupsLocal =[];
-if(user.followingGroups != null){
-await user.followingGroups.forEach((data){
+    if(user.approvedGroups != null){
+await user.approvedGroups.forEach((data) async {
   print('i was here with data, $data');
+  // search for the rc count and update it 
+await approvedGroupsList.add( data);
+  // var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
+ 
+// print('i was here with data %% ${NotifySnap['c']}');
   // followingGroupsLocal = data.cast<String>();
-  followingGroupsLocal.add( data);
+//  await followingGroupsReadCountLocal.add(NotifySnap['c'].toString());
+  
+});
+}
+    await prefs.setStringList('approvedPrimeGroups', approvedGroupsList);
+
+List<String> followingGroupsLocal =[];
+
+List<String> followingGroupsReadCountLocal =[];
+if(user.followingGroups != null){
+await user.followingGroups.forEach((data) async {
+  print('i was here with data, $data');
+  // search for the rc count and update it 
+await followingGroupsLocal.add( data);
+  // var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
+ 
+// print('i was here with data %% ${NotifySnap['c']}');
+  // followingGroupsLocal = data.cast<String>();
+//  await followingGroupsReadCountLocal.add(NotifySnap['c'].toString());
+  
 });
 }
 
 
     await prefs.setStringList('followingGroups', followingGroupsLocal);
+    await prefs.setStringList('followingGroupsReadCountLocal', followingGroupsReadCountLocal);
     var check = await prefs.getStringList('followingGroups');
     print('check,group, ${check}');
+     var followingGroupsReadCountLocal1 = await prefs.getStringList('followingGroupsReadCountLocal');
+    print('check,followingGroupsReadCountLocal, ${followingGroupsReadCountLocal1}');
     return user.userId;
   }
 
   static Future<String> getAndUpdateFcmToken(User user, userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     var oldFcm = user.FCMToken;
+     var oldFcm = prefs.get('FCMToken');
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
      String currentFcm = await _firebaseMessaging.getToken();
+     print('current ${oldFcm} ${currentFcm}');
      //String currentFcm = 'xyz3';
     if(oldFcm != currentFcm){
       print('userid is ${userId}');
       print('oldFcm is ${oldFcm}');
       print('NewFcm is ${currentFcm}');
+      prefs.setString('FCMToken',currentFcm);
       // now set in user iam
       FirebaseController.instanace.updateUserToken(userId, currentFcm,oldFcm );
       // fetch the following groups and update and remove the data 

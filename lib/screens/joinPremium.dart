@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flash/flash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/editGroup.dart';
@@ -37,11 +38,12 @@ class JoinPremiumGroup extends StatefulWidget {
     this.feeArray, this.paymentScreenshotNo, 
     this.seasonRating,this.thisWeekRating, this.lastWeekRating,
     this.followingGroupsLocal,
+    this.followersCount,
     this.avatarUrl}) : super(key: key);
    final String chatId, userId,title,  
                 paymentScreenshotNo, avatarUrl,
                 accessingBy,
-                groupOwnerName, seasonRating,thisWeekRating, lastWeekRating;
+                groupOwnerName, seasonRating,thisWeekRating, lastWeekRating, followersCount;
                 List followingGroupsLocal;
    final feeArray;
    final List categories, followers;
@@ -210,9 +212,11 @@ Widget editGroupButton(context){
  return FlatButton(
                       child: Text(
                         "Edit",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                        style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
                       ),
                       color: Colors.redAccent,
                       onPressed: ()async{
@@ -234,9 +238,11 @@ Widget followUnfollowButtons(context){
 return lockModify ? FlatButton(
                       child: Text(
                         "Unfollow",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                        style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
                       ),
                       color: Colors.grey,
                       onPressed: ()async{
@@ -266,9 +272,11 @@ await FirebaseController.instanace.unfollowGroup(widget.chatId, widget.userId, u
                                  FlatButton(
                       child: Text(
                         "Follow",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                        style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
                       ),
                       color: Theme.of(context).accentColor,
                       onPressed: ()async{
@@ -332,21 +340,22 @@ if(widget.followingGroupsLocal.length <9){
                                 children: <Widget>[
  Text(
                                     value, 
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w800,
+                ),
                                   ),
                                    SizedBox(
                                     height: 4,
                                   ),
                                   Text(
                                     title, 
-                                    style: TextStyle(
-                                      // color: Colors.grey,
-                                      // fontSize: 12,
-                                    ),
+                                    style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                                   ),
                                   
                                  
@@ -381,7 +390,11 @@ var followersA = widget.followers ?? [];
           onPressed: ()=>Navigator.pop(context),
         ),
         titleSpacing: 0,
-        title: Text("Summary"),
+        title: Text("Summary",style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w800,
+                )),
        ),
        body: LoadingScreen(
             inAsyncCall: _loadingVisible,
@@ -398,12 +411,11 @@ var followersA = widget.followers ?? [];
               children: [
                 TextSpan(
                   text: "Profile",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: "Varela",
-                  ),
+                  style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                 ),
               ],
             ),
@@ -427,7 +439,7 @@ var followersA = widget.followers ?? [];
               child: 
 
               Container(
-                  height: size.height * 0.45,
+                  height: 400,
                  
                   margin: EdgeInsets.only(
               top: 15,
@@ -454,7 +466,7 @@ var followersA = widget.followers ?? [];
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-
+                            SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
@@ -489,10 +501,11 @@ var followersA = widget.followers ?? [];
 
                             Text(
                               "${widget.title.toUpperCase()}",
-                              style: TextStyle(
-                                fontSize: 27,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w800,
+                  ),
                             ),
 
                             SizedBox(
@@ -500,11 +513,12 @@ var followersA = widget.followers ?? [];
                             ),
 
                             Text(
-                              "@ ${widget.groupOwnerName}",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
+                              "Predictor Name: ${widget.groupOwnerName}",
+                              style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                             ),
 
                             SizedBox(
@@ -512,10 +526,11 @@ var followersA = widget.followers ?? [];
                             ),
                             Text(
                               "Description",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
+                              style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                             ),
 
                             SizedBox(
@@ -524,22 +539,25 @@ var followersA = widget.followers ?? [];
 
                             Text(
                               "NA",
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
+                              style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                             ),
                             SizedBox(
-                              height: 16,
+                              height: 20,
                             ),
                             Text(
                               "Category",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
+                              style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                             ),
                             SizedBox(
-                              height: 8,
+                              height: 10,
                             ),
                              Row(
                                          children: <Widget>[
@@ -569,7 +587,7 @@ var followersA = widget.followers ?? [];
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                     _buildCategory("30-DAYS FEE", "Rs ${widget.feeArray[0]['fee']}"),
-                    _buildCategory("Followers", "${followCountModify.length}"),
+                    _buildCategory("Followers", "${widget.followersCount}"),
                     _buildCategory("Rating", "${widget.seasonRating ?? 'NA'}"),
                           ],
                         ),
@@ -590,13 +608,12 @@ var followersA = widget.followers ?? [];
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: "Payment Screenshot",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: "Varela",
-                  ),
+                  text: "Send payment Phonepe or GPay",
+                  style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w700,
+                ),
                 ),
                  WidgetSpan(
         child: Padding(
@@ -610,12 +627,11 @@ var followersA = widget.followers ?? [];
       ),       
                 TextSpan(
                   text: " ${widget.paymentScreenshotNo}",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    fontFamily: "Varela",
-                  ),
+                  style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),
                 ),
               ],
             ),
@@ -715,63 +731,7 @@ var followersA = widget.followers ?? [];
             SizedBox(
             height: 30,
           ),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "Win Statistics",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Varela",
-                  ),
-                ),
-                TextSpan(
-                  text: "    This Week",
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    fontFamily: "Varela",
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(
-              top: 15,
-              right: 20,
-            ),
-            padding: EdgeInsets.all(10),
-            // height: screenAwareSize(145, context),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(6),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade100,
-                  blurRadius: 6,
-                  spreadRadius: 10,
-                )
-              ],
-            ),
-            child: 
-            
-            Column(
-              children: <Widget>[
-                     Wrap(
-                    spacing: 0.0, // gap between adjacent chips
-                    runSpacing: 1.0, // gap between lines
-                    children:
-                    
-                    _buildStatsView(widget.categories, _media),
-                  )
-
-              ],
-            ),
-          ),
+          
 
 
                     // Container(
@@ -856,7 +816,7 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
         // 
         // upload to approve
         DateTime now = new DateTime.now();
-          var datestamp = new DateFormat("yyyyMMdd'T'HHmmss");
+          var datestamp = new DateFormat.yMMMMd('en_US');
           String currentdate = datestamp.format(now);
         // myimage1
     final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('${userId}${now.millisecondsSinceEpoch}.jpg');
@@ -893,9 +853,11 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
 
     },
     color: Theme.of(context).accentColor,
-    child: Text("Submit For Verification",style: TextStyle(
-                          color: Colors.white,
-                        ),),
+    child: Text("Submit For Verification",style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),),
   ),
                                             ],
                                           ),
@@ -954,11 +916,11 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
                     ),
                     Text(
                       'Upload Payment Screenshot',
-                      style: TextStyle(
-                        color:
-                            Colors.white,
-                        fontSize: 16.0,
-                      ),
+                      style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
                     ),
                   ],
                 ),

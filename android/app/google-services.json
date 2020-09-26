@@ -8,6 +8,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:131516114950:android:52a85d7f67e2e6c420fb87",
+        "android_client_info": {
+          "package_name": "com.candc.chatogram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbCzrsDE7uSXaafRBxo3KSa67lyWlGJuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131516114950-77pnt0j38hfg98lq3liv99ih58kj6i9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:131516114950:android:f71efc0287b6cd7320fb87",
         "android_client_info": {
           "package_name": "com.example.chat_app"

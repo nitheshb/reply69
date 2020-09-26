@@ -1,19 +1,22 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/widgets/chat_item.dart';
 import 'package:path_provider/path_provider.dart';
 
 class GroupMembersHome extends StatefulWidget {
   // GroupMembersJson
-    GroupMembersHome({Key key, this.groupMembersJson, this.chatId, this.ownerMailId});
-    final List  groupMembersJson;
-    final String chatId, ownerMailId;
+    GroupMembersHome({Key key, this.groupMembersJson, this.chatId, this.ownerMailId, this.groupTitle});
+     List  groupMembersJson;
+    final String chatId, ownerMailId, groupTitle;
   @override
   _GroupMembersHomeState createState() => _GroupMembersHomeState();
 }
@@ -42,8 +45,17 @@ Future<String> get _localPath async {
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 2);
+  setInitialValue();
   }
 
+setInitialValue() async{
+  print('was i called2');
+ var docSnap = await FirebaseController.instanace.getPrimeGroupsContent(widget.chatId);
+  print('docSnap is ${docSnap}');
+  setState(() {
+    widget.groupMembersJson = docSnap;
+  });
+}
 // static  filterList(users) {
 //   var now = new DateTime.now();
 //   var tempUsers = users;
@@ -76,16 +88,16 @@ Future<String> get _localPath async {
       "Days",
       "Joined Date",
       "Expiry Date",
-      "KycId",
+      "uxId",
     ]);
     if (cloud != null) {
       for (int i = 0; i < widget.groupMembersJson.length; i++) {
         List<dynamic> row = List<dynamic>();
-        row.add(cloud[i]["userId"]);
+        row.add(cloud[i]["firstName"]);
         row.add(cloud[i]["membershipDuration"]);    
         row.add(datestamp.format(cloud[i]["joinedId"].toDate()).toString());
         row.add(datestamp.format(cloud[i]["expiresOn"].toDate()).toString());
-        row.add(cloud[i]["kycDocId"]);
+        row.add(cloud[i]["uxId"]);
         rows.add(row);
       }
 
@@ -128,16 +140,22 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
             key: _formkey,
             child: Scaffold(
       appBar: AppBar(
-        title: Text("Prime Members"),
+        title: Text("Prime Members", style:GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w800,
+                )),
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: FlatButton(
                   child: Text(
                     "Download Prime List",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                    style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
                   ),
                   color: Colors.blueAccent,
                   onPressed: (isProcessing)    ? null
@@ -184,9 +202,14 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
           labelColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).textTheme.caption.color,
           isScrollable: false,
+          labelStyle: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w600,
+                  ),
           tabs: <Widget>[
             Tab(
-              text: "All Members",
+              text: "All Prime Members",
             ),
             Tab(
               text: "Expired Members",
@@ -198,6 +221,23 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
+    
+        FutureBuilder(
+        future:  FirebaseController.instanace.getPrimeGroupsContent(widget.chatId),
+        builder: (context,snapshot){
+                     if (snapshot.hasError) {
+          return Text('Error ${snapshot.error}');
+        }
+        if(snapshot.hasData && snapshot.data.length == 0 ){
+          return 
+                     Text("No Members", style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ));
+        }
+          if(snapshot.hasData && snapshot.data.length > 0 ){
+          return
           ListView.separated(
             padding: EdgeInsets.all(10),
             separatorBuilder: (BuildContext context, int index) {
@@ -217,22 +257,30 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
               Map chat = chats[4];
               return ChatItem(
                 dp: chat['dp'],
-                name: member['userName'] ?? 'User ${index + 1}',
+                name: member['firstName'] ?? 'User ${index + 1}',
                 //name: 'User ${index + 1}',
                 isOnline: chat['isOnline'],
-                counter: "Remove",
+                counter: 0,
                 msg: "${member['membershipDuration']} days plan 🚀",
                 time: Jiffy(member['expiresOn'].toDate()).fromNow().toString(),
+                groupTitle: widget.groupTitle,
               );
             },
-          ),
+          );
+          }
+         return Container(width: 0.0, height: 0.0);
+        }),
+      
+      
+          
+          
           ListView.separated(
             padding: EdgeInsets.all(10),
             separatorBuilder: (BuildContext context, int index) {
               return Align(
                 alignment: Alignment.centerRight,
                 child: Container(
-                  height: 0.5,
+                  height: 0.0,
                   width: MediaQuery.of(context).size.width / 1.3,
                   child: Divider(),
                 ),
@@ -251,20 +299,15 @@ final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
                 msg: "The last rocket🚀",
                 time: Jiffy(member['expiresOn'].toDate()).fromNow().toString(),
                 fullUserJson: member,
-                chatId: widget.chatId
+                chatId: widget.chatId,
+                groupTitle: widget.groupTitle,
               );
+              }else{
+                return Container();
               }
             },
           ),
         ],
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: (){},
       ),
     )
     );

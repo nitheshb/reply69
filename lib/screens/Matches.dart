@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/controllers/firebaseController.dart';
@@ -84,6 +85,11 @@ class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProvid
           labelColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).textTheme.caption.color,
           isScrollable: false,
+          labelStyle: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w400,
+                  ),
           tabs: <Widget>[
             Tab(
               text: "Cricket",
@@ -137,7 +143,11 @@ class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProvid
               height: MediaQuery.of(context).size.height / 3,
               child: SvgPicture.asset('assets/performance.svg'),       
             ),
-            new Text('No ${categoryName} Matches Scedules', style: TextStyle(color: Colors.black, fontSize: 20),),                
+            new Text('No ${categoryName} Matches Scedules', style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),                
                        ],
                      )
                      );
@@ -180,15 +190,27 @@ class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProvid
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top:8.0),
-                      child: Text("${matchDetails['team-1']}", style: TextStyle(fontWeight: FontWeight.w500)),
+                      child: Text("${matchDetails['team-1']}", style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w800,
+                  )),
                     )
                   ],
                 ),
                  Column(
                   children: <Widget>[
-                    Text("${matchDetails['type']}", style: TextStyle(fontWeight: FontWeight.w500)),
+                    Text("${matchDetails['type']}", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w700,
+                )),
                     SizedBox(height: 30),
-                    Text("${format.format(DateTime.fromMicrosecondsSinceEpoch(int.parse(ds['startTime']) * 1000))}"),
+                    Text("${format.format(DateTime.fromMicrosecondsSinceEpoch(int.parse(ds['startTime']) * 1000))}", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
                   ],
                 ),
                 Column(
@@ -201,7 +223,11 @@ class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProvid
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top:8.0),
-                      child: Text("${matchDetails['team-2']}", style: TextStyle(fontWeight: FontWeight.w500),),
+                      child: Text("${matchDetails['team-2']}", style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w800,
+                  )),
                     )
                   ],
                 ),

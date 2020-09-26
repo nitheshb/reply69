@@ -4,6 +4,7 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/models/users.dart';
@@ -73,15 +74,17 @@ class _SignupPageState extends State<SignupPage> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  FadeAnimation(1, Text("Sign up", style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold
-                  ),)),
+                  FadeAnimation(1, Text("Sign up", style: GoogleFonts.poppins(
+                  fontSize: 30,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w800,
+                ),)),
                   SizedBox(height: 20,),
-                  FadeAnimation(1.2, Text("Create an account, It's free", style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey[700]
-                  ),)),
+                  FadeAnimation(1.2, Text("Create an account, It's free", style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),)),
                 ],
               ),
               Column(
@@ -142,19 +145,26 @@ class _SignupPageState extends State<SignupPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)
                   ),
-                  child: Text("Sign up", style: TextStyle(
-                    fontWeight: FontWeight.w600, 
-                    fontSize: 18
-                  ),),
+                  child: Text("Sign up", style:  GoogleFonts.poppins(
+                  fontSize: 18,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w600,
+                ),),
                 ),
               )),
               FadeAnimation(1.6, Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text("Already have an account?"),
-                  Text(" Login", style: TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 18
-                  ),),
+                  Text("Already have an account?", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
+                  Text(" Login", style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w600,
+                ),),
                 ],
               )),
             ],
@@ -170,11 +180,11 @@ class _SignupPageState extends State<SignupPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
         TextFormField(
           keyboardType: TextInputType.emailAddress,
@@ -204,11 +214,11 @@ class _SignupPageState extends State<SignupPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
        TextFormField(
                                     autofocus: false,
@@ -236,11 +246,11 @@ class _SignupPageState extends State<SignupPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
         TextFormField(
           keyboardType: TextInputType.text,
@@ -272,11 +282,11 @@ class _SignupPageState extends State<SignupPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87
-        ),),
+        Text(label, style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                ),),
         SizedBox(height: 5,),
         TextFormField(
                                     autofocus: false,
