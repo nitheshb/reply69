@@ -45,8 +45,10 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
       new TextEditingController();
   final TextEditingController _premium = new TextEditingController();
   final TextEditingController _premiumPrice1 = new TextEditingController();
-  final TextEditingController _premiumPrice2 = new TextEditingController();
-  final TextEditingController _premiumPrice3 = new TextEditingController();
+
+  // we are not using below two lines controllers
+  //final TextEditingController _premiumPrice2 = new TextEditingController();
+  //final TextEditingController _premiumPrice3 = new TextEditingController();
 
   final TextEditingController _premiumDays1 = new TextEditingController();
   final TextEditingController _premiumDays2 = new TextEditingController();
@@ -59,6 +61,8 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
   bool configImageCompression = true;
   List selCategoryValue = [];
   String groupNameAlreadyExists;
+  String str_validatefess, str_validatedays, str_validate_phoneno;
+
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -325,9 +329,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                                     1.3,
                                                     makePremiumPrice(
                                                         label: "VIP Join Fee",
-                                                        obscureText: false,
-                                                        controlValue:
-                                                            _premiumPrice1),
+                                                        obscureText: false),
                                                   ),
                                                 ),
                                                 SizedBox(width: 30),
@@ -337,9 +339,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                                     1.3,
                                                     makePremiumDays(
                                                         label: "Valid Days",
-                                                        obscureText: false,
-                                                        controlValue:
-                                                            _premiumDays1),
+                                                        obscureText: false),
                                                   ),
                                                 ),
                                               ],
@@ -369,11 +369,11 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
 
                                     InkWell(
                                       onTap: () async {
-                                        Pattern pattern = '([@#^%&*=-_])';
+                                        Pattern pattern = '[@#^%&]';
                                         RegExp regex = new RegExp(pattern);
                                         String checklen =
                                             _groupTitle.toString();
-                                        if (checklen.length >= 0) {
+                                        if (!(checklen.length >=3)) {
                                           setState(() {
                                             this.groupNameAlreadyExists =
                                                 "enter Name";
@@ -419,6 +419,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                           //           )..show(context);
                                           return;
                                         }
+
 
                                         if (_formKey.currentState.validate()) {
                                           //  the below save line is to trigger the save of multi select category
@@ -821,6 +822,8 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
     );
   }
 
+  // by - Padmanabh wattamwar
+  // below widget for phone pe / g pay phone no (previous dev wrote wrong name)
   Widget makePremiumField({label, obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -839,8 +842,27 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
         TextFormField(
           obscureText: obscureText,
           autofocus: false,
+          keyboardType: TextInputType.number,
           controller: _paymentScreenshotPhoneNo,
           // validator: Validator.validatePassword,
+          validator: (String value) {
+            int val;
+            if(!(value.isEmpty))
+            val = int.tryParse(value);
+            Pattern pattern = '[.,]';
+            RegExp regex = new RegExp(pattern);
+            String retstatemnt;
+            if (value.isEmpty) {
+              retstatemnt= 'Enter Phone Number';
+            } else if (regex.hasMatch(value)) {
+              retstatemnt= 'Enter only Numbers';
+            } else if (val.toString().length > 10|| val.toString().length <10 ) {
+              retstatemnt= 'Enter Valid phone Number';
+            }
+
+            return retstatemnt;
+          },
+
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(
@@ -859,7 +881,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
     );
   }
 
-  Widget makePremiumPrice({label, obscureText = false, controlValue}) {
+  Widget makePremiumPrice({label, obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -877,8 +899,26 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
         TextFormField(
           obscureText: obscureText,
           autofocus: false,
-          controller: controlValue,
+          controller: _premiumPrice1,
+          keyboardType: TextInputType.number,
           // validator: Validator.validatePassword,
+          validator: (String value) {
+            int val;
+            if(!(value.isEmpty))
+              val = int.tryParse(value);
+            Pattern pattern = '[.,]';
+            RegExp regex = new RegExp(pattern);
+
+            String retstatemnt;
+            if (value.isEmpty) {
+              retstatemnt= 'Enter Fess';
+            } else if (regex.hasMatch(value)) {
+              retstatemnt='Enter only Numbers';
+            } else if (!(val >= 0)) {
+              retstatemnt= 'Enter postivie fees';
+            }
+            return retstatemnt;
+          },
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(
@@ -897,7 +937,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
     );
   }
 
-  Widget makePremiumDays({label, obscureText = false, controlValue}) {
+  Widget makePremiumDays({label, obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -914,8 +954,25 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
         ),
         TextFormField(
           obscureText: obscureText,
-          autofocus: false,
-          controller: controlValue,
+          autofocus: true,
+          keyboardType: TextInputType.number,
+          controller: _premiumDays1,
+          validator: (String value) {
+            int val;
+            if(!(value.isEmpty))
+              val = int.parse(value);
+            Pattern pattern = '[.,]';
+            RegExp regex = new RegExp(pattern);
+            String retstatemnt;
+            if (value.isEmpty) {
+              retstatemnt= 'Enter Days';
+            }else if (regex.hasMatch(value)) {
+              retstatemnt= 'Enter only Numbers';
+            }  else if (!(val >= 0)) {
+              retstatemnt= 'Enter postivie Days';
+            }
+            return retstatemnt;
+          },
           // validator: Validator.validatePassword,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
