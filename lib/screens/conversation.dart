@@ -654,7 +654,7 @@ Future<void> _shareImages(textData, appLink) async {
          }
          else if(((widget.approvedGroups.contains(widget.userId)) || (widget.chatOwnerId == widget.userId)) && ( snapshot.data['messages'][indexVal]['messageMode'] ==  'All') && (msgDeliveryMode =="All")){
           //  owner display for All
-             print(' i was at All');
+             print('i was at All');
               return PostItem(
               message: snapshot.data['messages'][indexVal]['type'] == "text"
                           ?snapshot.data['messages'][indexVal]['messageBody']
@@ -1072,13 +1072,13 @@ Future<void> _shareImages(textData, appLink) async {
                           try {
 
                              if(msgDeliveryMode== "Prime"){
-        widget.msgFullPmCount = widget.msgFullPmCount + 1;
+        widget.msgFullPmCount = widget.msgFullPmCount?? 0 + 1;
      }else if(msgDeliveryMode== "Non-Prime"){
-         widget.msgFullCount = widget.msgFullCount + 1;
+         widget.msgFullCount = widget.msgFullCount ?? 0 + 1;
      }else{
 
-        widget.msgFullCount = widget.msgFullCount + 1;
-        widget.msgFullPmCount = widget.msgFullPmCount + 1;
+        widget.msgFullCount = widget.msgFullCount??0 + 1;
+        widget.msgFullPmCount = widget.msgFullPmCount??0 + 1;
      }
                            
         
@@ -1086,12 +1086,13 @@ Future<void> _shareImages(textData, appLink) async {
                             var body ={ "messageBody":_chatMessageText.text, "date": now,"author": widget.userId, "type": "text" , "premium": (msgDeliveryMode  == "Prime"), "messageMode": msgDeliveryMode };
                             // var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now};
                             var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now.toString(), "title": widget.groupTitle, "msgFullCount" : widget.msgFullCount, "msgFullPmCount": widget.msgFullPmCount, "lastPmMsg": _chatMessageText.text };
-                           
+                           print("${messageCount  > 120 && (msgDeliveryMode == "Prime" || msgDeliveryMode ==  "Non-Prime")}");
                           if(messageCount > 120 && (msgDeliveryMode == "Prime" || msgDeliveryMode ==  "Non-Prime")){
                             nonPrimeMessageContent.removeAt(0);
                             nonPrimeMessageContent.add(body);
                             FirebaseController.instanace.sendToClear121Message(widget.chatId, nonPrimeMessageContent, lastMessageBody,msgDeliveryMode ); 
                           }else{
+                            print('i was at send message');
                             FirebaseController.instanace.sendChatMessage(widget.chatId, body, lastMessageBody,msgDeliveryMode );
                           }
 
@@ -1101,6 +1102,7 @@ Future<void> _shareImages(textData, appLink) async {
                               Timer(Duration(milliseconds: 500),
               () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
                           } catch (e) {
+                            print('error at sending msg ${e}');
                           }
                         },
                           )

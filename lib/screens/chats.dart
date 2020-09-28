@@ -41,7 +41,6 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
   TabController _tabController;
   StateModel appState;  
   List waitingGroups = [], approvedGroups =[], followingGroups =[], primeGroups=[];
-  List chatIdGroups = ['nQ4T04slkEdANneRb4k6','nQ4T04slkEdANneRb4k61','nQ4T04slkEdANneRb4k62','nQ4T04slkEdANneRb4k63','nQ4T04slkEdANneRb4k64','nQ4T04slkEdANneRb4k65','nQ4T04slkEdANneRb4k66','nQ4T04slkEdANneRb4k67','nQ4T04slkEdANneRb4k68','btl5r2JUwn5imaTToPKq'];
   String _searchTerm;
   bool allowGroupCreation = true;
   List widgetCountCheck = [];

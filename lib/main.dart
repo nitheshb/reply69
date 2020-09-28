@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:notification/screens/forget_password.dart';
 
 import 'package:notification/screens/main_screen.dart';
@@ -157,11 +158,10 @@ var initializationSettings = InitializationSettings(
 
 
 if(message['notification']['title'] == 'Accepted Prime Group'){
-  print(' i was inside');
   approvedPrimeGroups.add(message['data']['chatId']);
   await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
-
         showDialog(
+          barrierDismissible: false,
             context: context,
             builder: (context) {
               return AlertDialog(
@@ -171,17 +171,19 @@ if(message['notification']['title'] == 'Accepted Prime Group'){
                   FlatButton(
                     child: Text('Ok'),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                        Phoenix.rebirth(context);
                     },
                   ),
                 ],
               );
             });
-}else if(message['notification']['action'] == 'expired membership'){
+}else if(message['notification']['title'] == 'expired membership'){
   approvedPrimeGroups.remove(message['data']['chatId']);
   await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+  
    showDialog(
             context: context,
+            barrierDismissible: false,
             builder: (context) {
               return AlertDialog(
                 title: Text('Membership Expired..!'),
@@ -190,14 +192,14 @@ if(message['notification']['title'] == 'Accepted Prime Group'){
                   FlatButton(
                     child: Text('Ok'),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                        Phoenix.rebirth(context);
                     },
                   ),
                 ],
               );
             });
 }
-else if(message['notification']['action'] == 'Membership Rejected'){
+else if(message['notification']['title'] == 'Membership Rejected'){
   
    showDialog(
             context: context,
@@ -428,7 +430,10 @@ void main() {
   
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
     .then((_) {
-      runApp(new MaterialApp(home: stateWidget));
+      runApp(
+        Phoenix(
+      child: 
+        new MaterialApp(home: stateWidget)));
     });
 }
 

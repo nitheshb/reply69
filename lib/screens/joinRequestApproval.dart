@@ -57,9 +57,9 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>with SingleTic
                         var modifiedDate =  now.add(Duration(days: 30));
                          FirebaseController.instanace.approveKycDoc(kycDocId,modifiedDate, period, userId, chatId,userToken, phoneNumber, firstName);
 try {
-          var response = await dio.get("https://asia-south1-royalpro.cloudfunctions.net/onMemberAdd?id=${userId}&chatId=${chatId}&groupName=${widget.groupName}");
+          var response = await dio.get("https://asia-south1-royalpro.cloudfunctions.net/onMemberAdd?id=$userId&chatId=${chatId}&groupName=${widget.groupName}");
                   
-                  print('remove was clicked  ${response}');
+                  print('add was clicked  ${response}');
       } catch (e) {
         print('error is ${e}');
       }
