@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notification/models/settings.dart';
 import 'package:notification/models/users.dart';
 import 'package:notification/util/state.dart';
+import 'package:notification/controllers/firebaseController.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth.dart';
 
@@ -32,7 +34,9 @@ class StateWidget extends StatefulWidget {
 
 class _StateWidgetState extends State<StateWidget> {
   StateModel state;
-   StateModel appState;  
+   StateModel appState;
+
+   final obj= FirebaseController();
   //GoogleSignInAccount googleAccount;
   //final GoogleSignIn googleSignIn = new GoogleSignIn();
 
@@ -125,6 +129,10 @@ class _StateWidgetState extends State<StateWidget> {
   Future<void> logOutUser() async {
     await Auth.signOut();
     FirebaseUser firebaseUserAuth = await Auth.getCurrentFirebaseUser();
+
+
+    obj.logout_removeall_fcmtoken(firebaseUserAuth);//for removing fcm tokens
+
     setState(() {
       state.user = null;
       state.settings = null;

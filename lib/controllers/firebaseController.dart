@@ -83,6 +83,7 @@ class FirebaseController {
     }
   }
 
+
   Future<void> updateUserToken(userID, token, oldToken) async {
     await Firestore.instance.collection('IAM').document(userID).updateData({
       'FCMToken':token,
@@ -111,6 +112,45 @@ class FirebaseController {
      });
 
      
+  }
+
+  //below code for remove user tokens when user logs out
+
+  void logout_removeall_fcmtoken(userid) async {
+    SharedPreferences shd_prefs = await SharedPreferences.getInstance();
+      var token= shd_prefs.get('FCMToken');
+
+      logout_updateUserToken(userid, token);
+  }
+
+  Future<void> logout_updateUserToken(userID, token) async {
+    await Firestore.instance.collection('IAM').document(userID).updateData({
+      'FCMToken':token,
+    });
+    await Firestore.instance.collection('IAM').document(userID).get().then((doc) {
+      print('doc ${doc.data['followingGroups0']}');
+      print('doc ${doc.data['joinedGroups']}');
+
+      var joinedGroups = doc.data['joinedGroups'] ?? [];
+      var followingGroups0 = doc.data['followingGroups0'];
+
+      for(final e in joinedGroups){
+        //
+        var currentElement = e;
+        Firestore.instance.collection('groups').document(e).updateData({ 'FdeviceTokens' : FieldValue.arrayRemove([token])});
+      }
+
+      for(final e in followingGroups0){
+        //
+        var currentElement = e;
+        Firestore.instance.collection('groups').document(e).updateData({ 'AlldeviceTokens' : FieldValue.arrayRemove([token])});
+      }
+
+
+
+    });
+
+
   }
 
   Future<List<DocumentSnapshot>> takeUserInformationFromFBDB() async{
