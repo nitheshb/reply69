@@ -20,6 +20,7 @@ import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:notification/widgets/displayChatsMenuItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 class Chats extends StatefulWidget {
@@ -49,6 +50,7 @@ class _ChatsState extends State<Chats> with SingleTickerProviderStateMixin,
   List NotifyData = [];
   List searchLists = [];
   int selTabIndex;
+  var shimmer = true;
 
   @override
   void initState() {
@@ -130,11 +132,21 @@ widget.followingGroupsLocal.forEach((data){
           print('wow iwas here');
         // var keys = snap.value.keys;
         var data = snap.value;
+
+
+
         // NotifyData.clear();
 if(data!= null){
+      //code for disabaling shiimmer effect
+      setState(() {
+        shimmer=false;
+      });
+
        NotifyData.removeWhere((item) => 
        item['t'] == 
        '${data['t']}');
+
+
 
 SharedPreferences prefs = await SharedPreferences.getInstance();
 var msgReadCountvar =  prefs.getInt("${"qoX1aNeMcKgl69UCntgq"}");
@@ -154,7 +166,60 @@ var msgReadCountvar =  prefs.getInt("${"qoX1aNeMcKgl69UCntgq"}");
           data['readCount'] = msgReadCountvar ?? 0;
           NotifyData.add(data);
 }else{
-  return;
+
+  //code for shimmer effect
+
+  double containerWidth = 280;
+  double containerHeight = 15;
+  //code for shimmer effect
+  ListView.builder(
+      itemCount: 6,
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Shimmer.fromColors(
+              highlightColor: Colors.white,
+              baseColor: Colors.grey[300],
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 7.5),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.grey,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          height: containerHeight,
+                          width: containerWidth,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 5),
+                        Container(
+                          height: containerHeight,
+                          width: containerWidth,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 5),
+                        Container(
+                          height: containerHeight,
+                          width: containerWidth * 0.75,
+                          color: Colors.grey,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              period: Duration(milliseconds: 2),
+            ));
+      },
+  );
 }
     // print(' wow i have snap ${snap.value}');
     //     for(var individualKeys in keys){

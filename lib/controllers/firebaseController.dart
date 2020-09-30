@@ -125,7 +125,7 @@ class FirebaseController {
 
   Future<void> logout_updateUserToken(userID, token) async {
     await Firestore.instance.collection('IAM').document(userID).updateData({
-      'FCMToken':token,
+      'FCMToken':"",
     });
     await Firestore.instance.collection('IAM').document(userID).get().then((doc) {
       print('doc ${doc.data['followingGroups0']}');

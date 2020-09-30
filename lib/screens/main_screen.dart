@@ -8,7 +8,7 @@ import 'package:notification/util/state_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-import 'chats.dart';
+import 'groups_landing.dart';
 
 class MainScreen extends StatefulWidget {
     MainScreen({
