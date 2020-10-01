@@ -1,4 +1,3 @@
-
 import 'package:notification/screens/sign_in.dart';
 import 'package:notification/util/auth.dart';
 import 'package:notification/util/validators.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
 class ForgotPasswordScreen extends StatefulWidget {
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
@@ -16,7 +14,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _email = new TextEditingController();
-    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _autoValidate = false;
   bool _loadingVisible = false;
@@ -81,14 +79,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         style: TextStyle(color: Colors.black54),
       ),
       onPressed: () {
-            Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            MySignInScreenHome(
-                                                              ),
-                                                      ));
-
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MySignInScreenHome(),
+            ));
       },
     );
 
@@ -136,10 +131,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         await _changeLoadingVisible();
         await Auth.forgotPasswordEmail(email);
         await _changeLoadingVisible();
-        _scaffoldKey.currentState
-                                          .showSnackBar(SnackBar(
-                                        content: Text("Check your email and follow the instructions to reset your password."),
-                                      ));
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text(
+              "Check your email and follow the instructions to reset your password."),
+        ));
         //   Fluttertoast.showToast(
         // msg: 'Check your email and follow the instructions to reset your password.'
         //   );
@@ -151,12 +146,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         // )..show(context);
       } catch (e) {
         _changeLoadingVisible();
-        print("Forgot Password Error: $e");
+
         String exception = Auth.getExceptionText(e);
-              _scaffoldKey.currentState
-                                          .showSnackBar(SnackBar(
-                                        content: Text("Error ${exception}"),
-                                      ));
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text("Error ${exception}"),
+        ));
         //   Fluttertoast.showToast(
         // msg: "Forgot Password Error ${exception}");
         // Flushbar(

@@ -14,24 +14,28 @@ import 'package:path_provider/path_provider.dart';
 
 class GroupMembersHome extends StatefulWidget {
   // GroupMembersJson
-    GroupMembersHome({Key key, this.groupMembersJson, this.chatId, this.ownerMailId, this.groupTitle});
-     List  groupMembersJson;
-    final String chatId, ownerMailId, groupTitle;
+  GroupMembersHome(
+      {Key key,
+      this.groupMembersJson,
+      this.chatId,
+      this.ownerMailId,
+      this.groupTitle});
+  List groupMembersJson;
+  final String chatId, ownerMailId, groupTitle;
   @override
   _GroupMembersHomeState createState() => _GroupMembersHomeState();
 }
 
-class _GroupMembersHomeState extends State<GroupMembersHome> with SingleTickerProviderStateMixin,
-    AutomaticKeepAliveClientMixin{
+class _GroupMembersHomeState extends State<GroupMembersHome>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TabController _tabController;
   List filteredData;
   String filePath;
   String currentProcess;
   bool isProcessing = false;
 
-Future<String> get _localPath async {
+  Future<String> get _localPath async {
     final directory = await getApplicationSupportDirectory();
-
 
     return directory.absolute.path;
   }
@@ -41,21 +45,22 @@ Future<String> get _localPath async {
     filePath = '$path/Chatogram.csv';
     return File('$path/Chatogram.csv').create();
   }
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 2);
-  setInitialValue();
+    setInitialValue();
   }
 
-setInitialValue() async{
-  print('was i called2');
- var docSnap = await FirebaseController.instanace.getPrimeGroupsContent(widget.chatId);
-  print('docSnap is ${docSnap}');
-  setState(() {
-    widget.groupMembersJson = docSnap;
-  });
-}
+  setInitialValue() async {
+    var docSnap =
+        await FirebaseController.instanace.getPrimeGroupsContent(widget.chatId);
+
+    setState(() {
+      widget.groupMembersJson = docSnap;
+    });
+  }
 // static  filterList(users) {
 //   var now = new DateTime.now();
 //   var tempUsers = users;
@@ -75,7 +80,7 @@ setInitialValue() async{
 //         filteredData.add(u);
 //     });
 // }
- getCsv() async {
+  getCsv() async {
     setState(() {
       currentProcess = "Getting data from the cloud";
       isProcessing = true;
@@ -94,7 +99,7 @@ setInitialValue() async{
       for (int i = 0; i < widget.groupMembersJson.length; i++) {
         List<dynamic> row = List<dynamic>();
         row.add(cloud[i]["firstName"]);
-        row.add(cloud[i]["membershipDuration"]);    
+        row.add(cloud[i]["membershipDuration"]);
         row.add(datestamp.format(cloud[i]["joinedId"].toDate()).toString());
         row.add(datestamp.format(cloud[i]["expiresOn"].toDate()).toString());
         row.add(cloud[i]["uxId"]);
@@ -109,10 +114,10 @@ setInitialValue() async{
       String csv = const ListToCsvConverter().convert(rows);
       f.writeAsString(csv);
       filePath = f.uri.path;
-      print('file path is ${filePath}, ${csv}');
     }
   }
-    sendMailAndAttachment() async {
+
+  sendMailAndAttachment() async {
     final Email email = Email(
       body:
           'Data Collected and Compiled by the CHATOGRAM. <br> A CSV file is attached to this <b></b> <hr><br> Compiled at ${DateTime.now()}',
@@ -124,193 +129,198 @@ setInitialValue() async{
 
     await FlutterEmailSender.send(email);
   }
-final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
     // var expiredDataJson = widget.groupMembersJson.removeWhere((m) => m['expiresOn'].toDate().isAfter(new DateTime.now()));
-;
+    ;
 // searchResults(widget.groupMembersJson);
 
-
-
     return Form(
-            key: _formkey,
-            child: Scaffold(
-      appBar: AppBar(
-        title: Text("Prime Members", style:GoogleFonts.poppins(
+        key: _formkey,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Prime Members",
+                style: GoogleFonts.poppins(
                   fontSize: 18,
                   color: Color(0xff3A4276),
                   fontWeight: FontWeight.w800,
                 )),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: FlatButton(
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: FlatButton(
                   child: Text(
                     "Download Prime List",
                     style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
+                      fontSize: 12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   color: Colors.blueAccent,
-                  onPressed: (isProcessing)    ? null
-                        : () async {
-                            if (_formkey.currentState.validate()) {
-                              try {
-                                final result =
-                                    await InternetAddress.lookup('google.com');
-                                if (result.isNotEmpty &&
-                                    result[0].rawAddress.isNotEmpty) {
-                                  await getCsv().then((v) {
-                                    //print('check for email csv ${v}');
-                                    setState(() {
-                                      currentProcess =
-                                          "Compiling and sending mail";
-                         
-                                    });
-                                    
-                                    sendMailAndAttachment().whenComplete(() {
-                                      setState(() {
-                                        isProcessing = false;
-                                      });
-                                      _scaffoldKey.currentState
-                                          .showSnackBar(SnackBar(
-                                        content: Text("Data Sent"),
-                                      ));
-                                    });
+                  onPressed: (isProcessing)
+                      ? null
+                      : () async {
+                          if (_formkey.currentState.validate()) {
+                            try {
+                              final result =
+                                  await InternetAddress.lookup('google.com');
+                              if (result.isNotEmpty &&
+                                  result[0].rawAddress.isNotEmpty) {
+                                await getCsv().then((v) {
+                                  //print('check for email csv ${v}');
+                                  setState(() {
+                                    currentProcess =
+                                        "Compiling and sending mail";
                                   });
-                                }
-                              } on SocketException catch (_) {
-                                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  content: Text(
-                                      "Connect your device to the internet, and try again"),
-                                ));
-                              }
-                            }
-                          },
-                ),
-          ),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Theme.of(context).accentColor,
-          labelColor: Theme.of(context).accentColor,
-          unselectedLabelColor: Theme.of(context).textTheme.caption.color,
-          isScrollable: false,
-          labelStyle: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w600,
-                  ),
-          tabs: <Widget>[
-            Tab(
-              text: "All Prime Members",
-            ),
-            Tab(
-              text: "Expired Members",
-            ),
-          ],
-        ),
-      ),
 
-      body: TabBarView(
-        controller: _tabController,
-        children: <Widget>[
-    
-        FutureBuilder(
-        future:  FirebaseController.instanace.getPrimeGroupsContent(widget.chatId),
-        builder: (context,snapshot){
-                     if (snapshot.hasError) {
-          return Text('Error ${snapshot.error}');
-        }
-        if(snapshot.hasData && snapshot.data.length == 0 ){
-          return 
-                     Text("No Members", style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ));
-        }
-          if(snapshot.hasData && snapshot.data.length > 0 ){
-          return
-          ListView.separated(
-            padding: EdgeInsets.all(10),
-            separatorBuilder: (BuildContext context, int index) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  height: 0.5,
-                  width: MediaQuery.of(context).size.width / 1.3,
-                  child: Divider(),
+                                  sendMailAndAttachment().whenComplete(() {
+                                    setState(() {
+                                      isProcessing = false;
+                                    });
+                                    _scaffoldKey.currentState
+                                        .showSnackBar(SnackBar(
+                                      content: Text("Data Sent"),
+                                    ));
+                                  });
+                                });
+                              }
+                            } on SocketException catch (_) {
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                content: Text(
+                                    "Connect your device to the internet, and try again"),
+                              ));
+                            }
+                          }
+                        },
                 ),
-              );
-            },
-            itemCount: widget.groupMembersJson.length,
-            itemBuilder: (BuildContext context, int index) {
-              var member = widget.groupMembersJson[index];
-              print('memeber details ${index}== ${member}');
-              Map chat = chats[4];
-              return ChatItem(
-                dp: chat['dp'],
-                name: member['firstName'] ?? 'User ${index + 1}',
-                //name: 'User ${index + 1}',
-                isOnline: chat['isOnline'],
-                counter: 0,
-                msg: "${member['membershipDuration']} days plan 🚀",
-                time: Jiffy(member['expiresOn'].toDate()).fromNow().toString(),
-                groupTitle: widget.groupTitle,
-              );
-            },
-          );
-          }
-         return Container(width: 0.0, height: 0.0);
-        }),
-      
-      
-          
-          
-          ListView.separated(
-            padding: EdgeInsets.all(10),
-            separatorBuilder: (BuildContext context, int index) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  height: 0.0,
-                  width: MediaQuery.of(context).size.width / 1.3,
-                  child: Divider(),
+              ),
+            ],
+            bottom: TabBar(
+              controller: _tabController,
+              indicatorColor: Theme.of(context).accentColor,
+              labelColor: Theme.of(context).accentColor,
+              unselectedLabelColor: Theme.of(context).textTheme.caption.color,
+              isScrollable: false,
+              labelStyle: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Color(0xff3A4276),
+                fontWeight: FontWeight.w600,
+              ),
+              tabs: <Widget>[
+                Tab(
+                  text: "All Prime Members",
                 ),
-              );
-            },
-            itemCount: widget.groupMembersJson.length,
-            itemBuilder: (BuildContext context, int index) {
-              var member = widget.groupMembersJson[index];
-              if(member['expiresOn'].toDate().isBefore(new DateTime.now())){
-              Map chat = chats[2];
-              return ChatItem(
-                dp: chat['dp'],
-                name: member['userId'],
-                isOnline: chat['isOnline'],
-                counter: "Remove",
-                msg: "The last rocket🚀",
-                time: Jiffy(member['expiresOn'].toDate()).fromNow().toString(),
-                fullUserJson: member,
-                chatId: widget.chatId,
-                groupTitle: widget.groupTitle,
-              );
-              }else{
-                return Container();
-              }
-            },
+                Tab(
+                  text: "Expired Members",
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
-    )
-    );
+          body: TabBarView(
+            controller: _tabController,
+            children: <Widget>[
+              FutureBuilder(
+                  future: FirebaseController.instanace
+                      .getPrimeGroupsContent(widget.chatId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error ${snapshot.error}');
+                    }
+                    if (snapshot.hasData && snapshot.data.length == 0) {
+                      return Text("No Members",
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          ));
+                    }
+                    if (snapshot.hasData && snapshot.data.length > 0) {
+                      return ListView.separated(
+                        padding: EdgeInsets.all(10),
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              height: 0.5,
+                              width: MediaQuery.of(context).size.width / 1.3,
+                              child: Divider(),
+                            ),
+                          );
+                        },
+                        itemCount: widget.groupMembersJson.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          var member = widget.groupMembersJson[index];
+
+                          Map chat = chats[4];
+                          return ChatItem(
+                            dp: chat['dp'],
+                            name: member['firstName'] ?? 'User ${index + 1}',
+                            //name: 'User ${index + 1}',
+                            isOnline: chat['isOnline'],
+                            counter: 0,
+                            msg: "${member['membershipDuration']} days plan 🚀",
+                            time: Jiffy(member['expiresOn'].toDate())
+                                .fromNow()
+                                .toString(),
+                            groupTitle: widget.groupTitle,
+                          );
+                        },
+                      );
+                    }
+                    return Container(width: 0.0, height: 0.0);
+                  }),
+              ListView.separated(
+                padding: EdgeInsets.all(10),
+                separatorBuilder: (BuildContext context, int index) {
+                  return Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      height: 0.0,
+                      width: MediaQuery.of(context).size.width / 1.3,
+                      child: Divider(),
+                    ),
+                  );
+                },
+                itemCount: widget.groupMembersJson.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var member = widget.groupMembersJson[index];
+                  if (member['expiresOn']
+                      .toDate()
+                      .isBefore(new DateTime.now())) {
+                    Map chat = chats[2];
+                    return ChatItem(
+                      dp: chat['dp'],
+                      name: member['userId'],
+                      isOnline: chat['isOnline'],
+                      counter: "Remove",
+                      msg: "The last rocket🚀",
+                      time: Jiffy(member['expiresOn'].toDate())
+                          .fromNow()
+                          .toString(),
+                      fullUserJson: member,
+                      chatId: widget.chatId,
+                      groupTitle: widget.groupTitle,
+                    );
+                  } else {
+                    return Container(
+                        child: Text("No Expired Members",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Color(0xff3A4276),
+                              fontWeight: FontWeight.w500,
+                            )));
+                  }
+                },
+              ),
+            ],
+          ),
+        ));
   }
 
   @override

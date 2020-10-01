@@ -15,48 +15,44 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum authProblems { UserNotFound, PasswordNotValid, NetworkError, UnknownError }
 
 class Auth {
-  
   static Future<String> signUp(String email, String password) async {
     AuthResult user = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
     return user.user.uid;
   }
 
-    static addUserSettingsDB(User user) async {
+  static addUserSettingsDB(User user) async {
     checkUserExist(user.userId).then((value) async {
       if (!value) {
-        print(
-            "user ${user.firstName} ${user.email} added with referral code ${user.referralCode} with wallet ${user.walletMoney} ");
-       
-       String emails= user.email;
-      var userId =  await Firestore.instance
+        String emails = user.email;
+        var userId = await Firestore.instance
             .document("IAM/${user.userId}")
             .setData(user.toJson());
-        QuerySnapshot docs =    await Firestore.instance
-              .collection('IAM')
-              .where("email", isEqualTo: emails)
-              .getDocuments();
+        QuerySnapshot docs = await Firestore.instance
+            .collection('IAM')
+            .where("email", isEqualTo: emails)
+            .getDocuments();
 
-        if(!docs.documents.isEmpty){
-              String docId = await docs.documents[0].data["userId"];
+        if (!docs.documents.isEmpty) {
+          String docId = await docs.documents[0].data["userId"];
 
-             await  Firestore.instance.document("IAM/$docId").updateData({'walletMoney': (docs.documents[0].data["walletMoney"] + 50)});
+          await Firestore.instance.document("IAM/$docId").updateData(
+              {'walletMoney': (docs.documents[0].data["walletMoney"] + 50)});
 
-              await print("query data is ${docId}");
-}else{
-  print("referral email id not found");
-}
+          await print("query data is ${docId}");
+        } else {}
         _addSettings(new Settings(
           settingsId: user.userId,
         ));
-      } else {
-        print("user ${user.firstName} ${user.email} exists");
-      }
+      } else {}
     });
   }
- static showBasicsFlash({
+
+  static showBasicsFlash({
     Duration duration,
-    flashStyle = FlashStyle.floating,BuildContext context, String messageText,
+    flashStyle = FlashStyle.floating,
+    BuildContext context,
+    String messageText,
   }) {
     showFlash(
       context: context,
@@ -74,12 +70,18 @@ class Auth {
       },
     );
   }
-      static addReportData(uId, chatId, category, description) async {
-        var jsonData = {'uid': uId, 'chatId':chatId, 'category': category, 'description': description};
-             var userId =  await Firestore.instance.collection('complaints')
-            .document()
-            .setData(jsonData);
 
+  static addReportData(uId, chatId, category, description) async {
+    var jsonData = {
+      'uid': uId,
+      'chatId': chatId,
+      'category': category,
+      'description': description
+    };
+    var userId = await Firestore.instance
+        .collection('complaints')
+        .document()
+        .setData(jsonData);
   }
 
   static Future<bool> checkUserExist(String userId) async {
@@ -108,10 +110,12 @@ class Auth {
         .signInWithEmailAndPassword(email: email, password: password);
     return user.user.uid;
   }
-   static Future<void> forgetPassword(String email,) async {
- await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-    // AuthResult user = await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
+  static Future<void> forgetPassword(
+    String email,
+  ) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    // AuthResult user = await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 
   static Future<User> getUserFirestore(String userId) async {
@@ -122,7 +126,6 @@ class Auth {
           .get()
           .then((documentSnapshot) => User.fromDocument(documentSnapshot));
     } else {
-      print('firestore userId can not be null');
       return null;
     }
   }
@@ -135,105 +138,101 @@ class Auth {
           .get()
           .then((documentSnapshot) => Settings.fromDocument(documentSnapshot));
     } else {
-      print('no firestore settings available');
       return null;
     }
   }
 
   static Future<String> storeUserLocal(User user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-  List<String> approvedGroupsList =[];
+    List<String> approvedGroupsList = [];
     String storeUser = userToJson(user);
     await prefs.setString('user', storeUser);
-    
+
     //  this is used in notifications
     String storeUserId = user.userId;
     await prefs.setString('FireUserId', storeUserId);
     await prefs.setString('firstName', user.firstName);
 
-    if(user.approvedGroups != null){
-await user.approvedGroups.forEach((data) async {
-  print('i was here with data, $data');
-  // search for the rc count and update it 
-await approvedGroupsList.add( data);
-  // var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
- 
+    if (user.approvedGroups != null) {
+      await user.approvedGroups.forEach((data) async {
+        // search for the rc count and update it
+        await approvedGroupsList.add(data);
+        // var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
+
 // print('i was here with data %% ${NotifySnap['c']}');
-  // followingGroupsLocal = data.cast<String>();
+        // followingGroupsLocal = data.cast<String>();
 //  await followingGroupsReadCountLocal.add(NotifySnap['c'].toString());
-  
-});
-}
+      });
+    }
     await prefs.setStringList('approvedPrimeGroups', approvedGroupsList);
 
-List<String> followingGroupsLocal =[];
+    List<String> followingGroupsLocal = [];
 
-List<String> followingGroupsReadCountLocal =[];
-if(user.followingGroups != null){
-await user.followingGroups.forEach((data) async {
-  print('i was here with data, $data');
-  // search for the rc count and update it 
-await followingGroupsLocal.add( data);
-  // var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
- 
+    List<String> followingGroupsReadCountLocal = [];
+    if (user.followingGroups != null) {
+      await user.followingGroups.forEach((data) async {
+        // search for the rc count and update it
+        await followingGroupsLocal.add(data);
+        // var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
+
 // print('i was here with data %% ${NotifySnap['c']}');
-  // followingGroupsLocal = data.cast<String>();
+        // followingGroupsLocal = data.cast<String>();
 //  await followingGroupsReadCountLocal.add(NotifySnap['c'].toString());
-  
-});
-}
-
+      });
+    }
 
     await prefs.setStringList('followingGroups', followingGroupsLocal);
-    await prefs.setStringList('followingGroupsReadCountLocal', followingGroupsReadCountLocal);
+    await prefs.setStringList(
+        'followingGroupsReadCountLocal', followingGroupsReadCountLocal);
     var check = await prefs.getStringList('followingGroups');
-    print('check,group, ${check}');
-     var followingGroupsReadCountLocal1 = await prefs.getStringList('followingGroupsReadCountLocal');
-    print('check,followingGroupsReadCountLocal, ${followingGroupsReadCountLocal1}');
+
+    var followingGroupsReadCountLocal1 =
+        await prefs.getStringList('followingGroupsReadCountLocal');
+
     return user.userId;
   }
 
   static Future<String> getAndUpdateFcmToken(User user, userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     var oldFcm = prefs.get('FCMToken');
+    var oldFcm = prefs.get('FCMToken');
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-     String currentFcm = await _firebaseMessaging.getToken();
-     print('current ${oldFcm} ${currentFcm}');
-     //String currentFcm = 'xyz3';
-    if(oldFcm != currentFcm){
-      print('userid is ${userId}');
-      print('oldFcm is ${oldFcm}');
-      print('NewFcm is ${currentFcm}');
-      prefs.setString('FCMToken',currentFcm);
+    String currentFcm = await _firebaseMessaging.getToken();
+
+    //String currentFcm = 'xyz3';
+    if (oldFcm != currentFcm) {
+      prefs.setString('FCMToken', currentFcm);
       // now set in user iam
-      FirebaseController.instanace.updateUserToken(userId, currentFcm,oldFcm );
-      // fetch the following groups and update and remove the data 
+      FirebaseController.instanace.updateUserToken(userId, currentFcm, oldFcm);
+      // fetch the following groups and update and remove the data
     }
-  return '';  
+    return '';
   }
-    
-  static  getFollowingGroups() async {
+
+  static getFollowingGroups() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     List followingGroups = await prefs.getStringList('followingGroups');
+    List followingGroups = await prefs.getStringList('followingGroups');
     return followingGroups;
   }
-  static Future<List> setFollowingGroups(oldData,value, action) async {
+
+  static Future<List> setFollowingGroups(oldData, value, action) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(action == 'remove'){
+    if (action == 'remove') {
       // await prefs.setStringList('followingGroups', oldData.remove(value));
-    }else {
+    } else {
       //  await prefs.setStringList('followingGroups', oldData.add(value));
     }
-   // return followingGroups;
+    // return followingGroups;
   }
-  static Future<String> storeUserLocationLocal(String user, locationId,soId,soName,hoId,hoName) async {
+
+  static Future<String> storeUserLocationLocal(
+      String user, locationId, soId, soName, hoId, hoName) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String storeUser = (user);
     await prefs.setString('locationName', storeUser);
-    await prefs.setString('locationId',locationId);
-    await prefs.setString('soId',soId);
+    await prefs.setString('locationId', locationId);
+    await prefs.setString('soId', soId);
     await prefs.setString('soName', soName);
-    await prefs.setString('hoId',hoId);
+    await prefs.setString('hoId', hoId);
     await prefs.setString('hoName', hoName);
     return user;
   }
@@ -261,7 +260,7 @@ await followingGroupsLocal.add( data);
     }
   }
 
-    static Future<String> getUserLocationLocal() async {
+  static Future<String> getUserLocationLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('locationName') != null) {
       String locationName = prefs.getString('locationName');
@@ -271,7 +270,8 @@ await followingGroupsLocal.add( data);
       return null;
     }
   }
-   static Future<String> getLocationIdLocal() async {
+
+  static Future<String> getLocationIdLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('locationId') != null) {
       String locationId = prefs.getString('locationId');
@@ -281,7 +281,8 @@ await followingGroupsLocal.add( data);
       return null;
     }
   }
-   static Future<String> gethoIdLocal() async {
+
+  static Future<String> gethoIdLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('hoId') != null) {
       String hoId = prefs.getString('hoId');
@@ -291,8 +292,8 @@ await followingGroupsLocal.add( data);
       return null;
     }
   }
-  
-    static Future<String> getsoIdLocal() async {
+
+  static Future<String> getsoIdLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('soId') != null) {
       String soId = prefs.getString('soId');
@@ -302,6 +303,7 @@ await followingGroupsLocal.add( data);
       return null;
     }
   }
+
   static Future<String> gethoNameLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('hoName') != null) {
@@ -311,6 +313,7 @@ await followingGroupsLocal.add( data);
       return null;
     }
   }
+
   static Future<String> getsoNameLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('soName') != null) {
@@ -321,12 +324,6 @@ await followingGroupsLocal.add( data);
       return null;
     }
   }
-  
-
-
-
-  
-
 
   static Future<Settings> getSettingsLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -16,9 +16,8 @@ import 'package:notification/util/state_widget.dart';
 import 'package:notification/widgets/displayChatsMenuItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class DisplayMatches extends StatefulWidget {
-    DisplayMatches({
+  DisplayMatches({
     Key key,
     this.uId,
     this.uEmailId,
@@ -28,57 +27,61 @@ class DisplayMatches extends StatefulWidget {
   _DisplayMatchesState createState() => _DisplayMatchesState();
 }
 
-class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProviderStateMixin,
-    AutomaticKeepAliveClientMixin{
+class _DisplayMatchesState extends State<DisplayMatches>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TabController _tabController;
-  StateModel appState;  
-  List waitingGroups = [], approvedGroups =[], followingGroups =[];
-  List chatIdGroups = ['nQ4T04slkEdANneRb4k6','nQ4T04slkEdANneRb4k61','nQ4T04slkEdANneRb4k62','nQ4T04slkEdANneRb4k63','nQ4T04slkEdANneRb4k64','nQ4T04slkEdANneRb4k65','nQ4T04slkEdANneRb4k66','nQ4T04slkEdANneRb4k67','nQ4T04slkEdANneRb4k68','btl5r2JUwn5imaTToPKq'];
+  StateModel appState;
+  List waitingGroups = [], approvedGroups = [], followingGroups = [];
+  List chatIdGroups = [
+    'nQ4T04slkEdANneRb4k6',
+    'nQ4T04slkEdANneRb4k61',
+    'nQ4T04slkEdANneRb4k62',
+    'nQ4T04slkEdANneRb4k63',
+    'nQ4T04slkEdANneRb4k64',
+    'nQ4T04slkEdANneRb4k65',
+    'nQ4T04slkEdANneRb4k66',
+    'nQ4T04slkEdANneRb4k67',
+    'nQ4T04slkEdANneRb4k68',
+    'btl5r2JUwn5imaTToPKq'
+  ];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 4);
-    print('iwas called');
-    
   }
 
-    // void dispose() {
+  // void dispose() {
   //   super.dispose();
   // }
 
+  saveLocal(index, lastMessagesIs, chatDocId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-
-  saveLocal(index,lastMessagesIs, chatDocId)async{
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-  
     var body = {'chatId': index, 'lastMessage': lastMessagesIs.length};
-              // new chat id means no reads
-             
-            if(chatDocId == null) {
-                prefs.setInt('$chatDocId',lastMessagesIs.length);
-                return lastMessagesIs.length ;
-            }else{
-              var chatDataIs = await prefs.getInt('$chatDocId');
+    // new chat id means no reads
 
-              return (lastMessagesIs.length - chatDataIs);
-            }
-            //  print('chat data is ${chatDataIs}');
+    if (chatDocId == null) {
+      prefs.setInt('$chatDocId', lastMessagesIs.length);
+      return lastMessagesIs.length;
+    } else {
+      var chatDataIs = await prefs.getInt('$chatDocId');
+
+      return (lastMessagesIs.length - chatDataIs);
+    }
+    //  print('chat data is ${chatDataIs}');
   }
 
-
-
-         Future<SharedPreferences> prefs =  SharedPreferences.getInstance();
+  Future<SharedPreferences> prefs = SharedPreferences.getInstance();
   @override
   Widget build(BuildContext context) {
     super.build(context);
     //followingGroups =  ['nQ4T04slkEdANneRb4k62'];
-        appState = StateWidget.of(context).state;
-   // getUserData(userId);
-    print('check ${followingGroups}');
+    appState = StateWidget.of(context).state;
+    // getUserData(userId);
+
     return Scaffold(
       appBar: AppBar(
-        
         title: TabBar(
           controller: _tabController,
           indicatorColor: Theme.of(context).accentColor,
@@ -86,10 +89,10 @@ class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProvid
           unselectedLabelColor: Theme.of(context).textTheme.caption.color,
           isScrollable: false,
           labelStyle: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w400,
-                  ),
+            fontSize: 14,
+            color: Color(0xff3A4276),
+            fontWeight: FontWeight.w400,
+          ),
           tabs: <Widget>[
             Tab(
               text: "Cricket",
@@ -97,7 +100,7 @@ class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProvid
             Tab(
               text: "Baseball",
             ),
-             Tab(
+            Tab(
               text: "Basketball",
             ),
             Tab(
@@ -106,141 +109,146 @@ class _DisplayMatchesState extends State<DisplayMatches> with SingleTickerProvid
           ],
         ),
       ),
-
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-     MatchListBuilder('Cricket'),
-     MatchListBuilder('Baseball'),
-     MatchListBuilder('Basetball'),
-     MatchListBuilder('Football'),
+          MatchListBuilder('Cricket'),
+          MatchListBuilder('Baseball'),
+          MatchListBuilder('Basetball'),
+          MatchListBuilder('Football'),
           // second tab
-
         ],
       ),
     );
   }
 
-  Widget MatchListBuilder(categoryName){
-    return      Container(child:StreamBuilder(
-        stream:  FirebaseController.instanace.getMatchesList(categoryName),
-        builder: (context,snapshot){
-                     if (snapshot.hasError) {
-          return Text('Error ${snapshot.error}');
-        }
-        if(snapshot.hasData && snapshot.data.documents.length == 0 ){
-          var imgLink;
-          if(categoryName =="Basketball") {
-            imgLink = "https://static.sports.roanuz.com/images/plans/performance.svg";
-          }
-          return 
-                     Align(
-                       alignment: Alignment.center,
-                     child: Column(
-                       children: <Widget>[
-                         SizedBox(height: MediaQuery.of(context).size.height/4.5),                   
-                         new Container(
-              height: MediaQuery.of(context).size.height / 3,
-              child: SvgPicture.asset('assets/performance.svg'),       
-            ),
-            new Text('No ${categoryName} Matches Scedules', style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ),),                
-                       ],
-                     )
-                     );
-        }
-          if(snapshot.hasData && snapshot.data.documents.length > 0 ){
-              // return Text("snapshot ${snapshot.data.documents.length}");  
-      return 
-       ListView.separated(
-        padding: EdgeInsets.all(10),
-        separatorBuilder: (BuildContext context, int index) {
-          return Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              height: 0.5,
-              // width: MediaQuery.of(context).size.width / 1.3,
-              child: Divider(color: Colors.grey,),
-            ),
-          );
-        },
-        itemCount: snapshot.data.documents.length,
-        itemBuilder: (BuildContext context, int index) {
-          Map friend = friends[index];
-          DocumentSnapshot ds = snapshot.data.documents[index];
-          var matchDetails = ds['matchDetails'] ?? {};
-          var format = DateFormat('d-MMMM HH:mm a');
+  Widget MatchListBuilder(categoryName) {
+    return Container(
+        child: StreamBuilder(
+            stream: FirebaseController.instanace.getMatchesList(categoryName),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error ${snapshot.error}');
+              }
+              if (snapshot.hasData && snapshot.data.documents.length == 0) {
+                var imgLink;
+                if (categoryName == "Basketball") {
+                  imgLink =
+                      "https://static.sports.roanuz.com/images/plans/performance.svg";
+                }
+                return Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height / 4.5),
+                        new Container(
+                          height: MediaQuery.of(context).size.height / 3,
+                          child: SvgPicture.asset('assets/performance.svg'),
+                        ),
+                        new Text(
+                          'No ${categoryName} Matches Scedules',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ));
+              }
+              if (snapshot.hasData && snapshot.data.documents.length > 0) {
+                // return Text("snapshot ${snapshot.data.documents.length}");
+                return ListView.separated(
+                  padding: EdgeInsets.all(10),
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 0.5,
+                        // width: MediaQuery.of(context).size.width / 1.3,
+                        child: Divider(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Map friend = friends[index];
+                    DocumentSnapshot ds = snapshot.data.documents[index];
+                    var matchDetails = ds['matchDetails'] ?? {};
+                    var format = DateFormat('d-MMMM HH:mm a');
 
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Column(
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        matchDetails['team_1_pic'],
-                      ),
-                      radius: 25,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top:8.0),
-                      child: Text("${matchDetails['team-1']}", style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w800,
-                  )),
-                    )
-                  ],
-                ),
-                 Column(
-                  children: <Widget>[
-                    Text("${matchDetails['type']}", style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w700,
-                )),
-                    SizedBox(height: 30),
-                    Text("${format.format(DateTime.fromMicrosecondsSinceEpoch(int.parse(ds['startTime']) * 1000))}", style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                )),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        matchDetails['team_2_pic'],
-                      ),
-                      radius: 25,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top:8.0),
-                      child: Text("${matchDetails['team-2']}", style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w800,
-                  )),
-                    )
-                  ],
-                ),
-                ]
-              )
-            ),
-          );
-        },
-      );
-          }
-          return Text("Loading...");
-        }
-      ));
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    matchDetails['team_1_pic'],
+                                  ),
+                                  radius: 25,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text("${matchDetails['team-1']}",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        color: Color(0xff3A4276),
+                                        fontWeight: FontWeight.w800,
+                                      )),
+                                )
+                              ],
+                            ),
+                            Column(
+                              children: <Widget>[
+                                Text("${matchDetails['type']}",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      color: Color(0xff3A4276),
+                                      fontWeight: FontWeight.w700,
+                                    )),
+                                SizedBox(height: 30),
+                                Text(
+                                    "${format.format(DateTime.fromMicrosecondsSinceEpoch(int.parse(ds['startTime']) * 1000))}",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      color: Color(0xff3A4276),
+                                      fontWeight: FontWeight.w500,
+                                    )),
+                              ],
+                            ),
+                            Column(
+                              children: <Widget>[
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    matchDetails['team_2_pic'],
+                                  ),
+                                  radius: 25,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text("${matchDetails['team-2']}",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        color: Color(0xff3A4276),
+                                        fontWeight: FontWeight.w800,
+                                      )),
+                                )
+                              ],
+                            ),
+                          ])),
+                    );
+                  },
+                );
+              }
+              return Text("Loading...");
+            }));
   }
 
   @override

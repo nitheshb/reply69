@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth.dart';
 
-
 class StateWidget extends StatefulWidget {
   final StateModel state;
   final Widget child;
@@ -34,9 +33,9 @@ class StateWidget extends StatefulWidget {
 
 class _StateWidgetState extends State<StateWidget> {
   StateModel state;
-   StateModel appState;
+  StateModel appState;
 
-   final obj= FirebaseController();
+  final obj = FirebaseController();
   //GoogleSignInAccount googleAccount;
   //final GoogleSignIn googleSignIn = new GoogleSignIn();
 
@@ -79,38 +78,31 @@ class _StateWidgetState extends State<StateWidget> {
     });
   }
 
-    Future<void> setFollowingGroupState(oldData,value, action) async {
-    print('chec for this');
+  Future<void> setFollowingGroupState(oldData, value, action) async {
     //  await initUserLocation(location, locationId);
     appState = StateWidget.of(context).state;
-    state.followingGroups= oldData;
-    print('state value recevied data  @ ${oldData}');
-     print('values after set data @  ${state.followingGroups}');
-    var x;
-    setState(()  {
-      if(action =="remove"){
+    state.followingGroups = oldData;
 
+    var x;
+    setState(() {
+      if (action == "remove") {
         oldData.remove(value);
-        x= oldData;
+        x = oldData;
         // print('var x is ${oldData}$x');
-        appState.followingGroups= oldData;
-        print('vaues are, oldData remove1 ${appState.followingGroups}');
-      }
-      else if(action =="add"){
-         oldData.add(value);
         appState.followingGroups = oldData;
-        print('vaues are, oldData remove1 ${appState.followingGroups}');
+      } else if (action == "add") {
+        oldData.add(value);
+        appState.followingGroups = oldData;
+
         //  x= oldData.add(value);
         // state.followingGroups = x;
       }
-     
- 
-    }); 
-   await initUser();
+    });
+    await initUser();
   }
-  
-  Future<void> userLocation(location, locationId,soId,soName,hoId,hoName) async {
-    print('chec for this');
+
+  Future<void> userLocation(
+      location, locationId, soId, soName, hoId, hoName) async {
     //  await initUserLocation(location, locationId);
     setState(() {
       state.locationId = locationId;
@@ -119,19 +111,17 @@ class _StateWidgetState extends State<StateWidget> {
       state.soName = soName;
       state.hoId = hoId;
       state.hoName = hoName;
- 
     });
-    await Auth.storeUserLocationLocal(location, locationId,soId,soName,hoId,hoName);
+    await Auth.storeUserLocationLocal(
+        location, locationId, soId, soName, hoId, hoName);
     await initUser();
   }
-
 
   Future<void> logOutUser() async {
     await Auth.signOut();
     FirebaseUser firebaseUserAuth = await Auth.getCurrentFirebaseUser();
 
-
-    obj.logout_removeall_fcmtoken(firebaseUserAuth);//for removing fcm tokens
+    obj.logout_removeall_fcmtoken(firebaseUserAuth); //for removing fcm tokens
 
     setState(() {
       state.user = null;
@@ -139,15 +129,15 @@ class _StateWidgetState extends State<StateWidget> {
       state.firebaseUserAuth = firebaseUserAuth;
     });
   }
+
   Future<void> resetPassword(email) async {
     await Auth.forgetPassword(email);
-  
   }
 
   Future<void> logInUser(email, password) async {
     String userId = await Auth.signIn(email, password);
     User user = await Auth.getUserFirestore(userId);
-    print('user data on login is @@@# ${user}');
+
     await Auth.getAndUpdateFcmToken(user, userId);
     await Auth.storeUserLocal(user);
     Settings settings = await Auth.getSettingsFirestore(userId);

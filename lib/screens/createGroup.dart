@@ -63,12 +63,10 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
   String groupNameAlreadyExists;
   String str_validatefess, str_validatedays, str_validate_phoneno;
 
-
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       _image = image;
-      print('image path ${_image}');
     });
   }
 
@@ -234,6 +232,8 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
 
   @override
   Widget build(BuildContext context) {
+    double dh = MediaQuery.of(context).size.height;
+    double dw = MediaQuery.of(context).size.width;
     appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
@@ -373,7 +373,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                         RegExp regex = new RegExp(pattern);
                                         String checklen =
                                             _groupTitle.toString();
-                                        if (!(checklen.length >=3)) {
+                                        if (!(checklen.length >= 3)) {
                                           setState(() {
                                             this.groupNameAlreadyExists =
                                                 "enter Name";
@@ -420,7 +420,6 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                           return;
                                         }
 
-
                                         if (_formKey.currentState.validate()) {
                                           //  the below save line is to trigger the save of multi select category
 
@@ -449,8 +448,6 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                                 .getDownloadURL();
                                             String ImageUrl = dowurl.toString();
                                             setState(() {
-                                              print(
-                                                  "Profile Picture uploaded $fileName");
                                               // Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
                                             });
                                             String groupTitle = _groupTitle.text
@@ -567,8 +564,6 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                                 context: context,
                                                 duration: Duration(seconds: 4),
                                                 messageText: 'Error $e ');
-                                            print(
-                                                "Create Group Creation Error: $e");
                                           }
                                         } else {
                                           setState(() => _autoValidate = true);
@@ -720,14 +715,12 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           required: true,
           value: null,
           onSaved: (value) {
-            print('The value is $value');
             for (var x in value) {
               // print('cateog ${categoryArray[x]}');
               selCategoryValue
                   .add({'categoryName': categoryArray[x], 'rating': 20});
             }
             // selCategoryValue = value;
-            print('category check  ${selCategoryValue}');
           }),
     );
   }
@@ -761,8 +754,6 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                       setState(() {
                         _selected = newValue;
                       });
-
-                      print(_selected);
                     },
                     items: _myJson.map((Map map) {
                       return new DropdownMenuItem<String>(
@@ -847,17 +838,17 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           // validator: Validator.validatePassword,
           validator: (String value) {
             int val;
-            if(!(value.isEmpty))
-            val = int.tryParse(value);
+            if (!(value.isEmpty)) val = int.tryParse(value);
             Pattern pattern = '[.,]';
             RegExp regex = new RegExp(pattern);
             String retstatemnt;
             if (value.isEmpty) {
-              retstatemnt= 'Enter Phone Number';
+              retstatemnt = 'Enter Phone Number';
             } else if (regex.hasMatch(value)) {
-              retstatemnt= 'Enter only Numbers';
-            } else if (val.toString().length > 10|| val.toString().length <10 ) {
-              retstatemnt= 'Enter Valid phone Number';
+              retstatemnt = 'Enter only Numbers';
+            } else if (val.toString().length > 10 ||
+                val.toString().length < 10) {
+              retstatemnt = 'Enter Valid phone Number';
             }
 
             return retstatemnt;
@@ -904,18 +895,17 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           // validator: Validator.validatePassword,
           validator: (String value) {
             int val;
-            if(!(value.isEmpty))
-              val = int.tryParse(value);
+            if (!(value.isEmpty)) val = int.tryParse(value);
             Pattern pattern = '[.,]';
             RegExp regex = new RegExp(pattern);
 
             String retstatemnt;
             if (value.isEmpty) {
-              retstatemnt= 'Enter Fess';
+              retstatemnt = 'Enter Fess';
             } else if (regex.hasMatch(value)) {
-              retstatemnt='Enter only Numbers';
+              retstatemnt = 'Enter only Numbers';
             } else if (!(val >= 0)) {
-              retstatemnt= 'Enter postivie fees';
+              retstatemnt = 'Enter postivie fees';
             }
             return retstatemnt;
           },
@@ -959,17 +949,16 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           controller: _premiumDays1,
           validator: (String value) {
             int val;
-            if(!(value.isEmpty))
-              val = int.parse(value);
+            if (!(value.isEmpty)) val = int.parse(value);
             Pattern pattern = '[.,]';
             RegExp regex = new RegExp(pattern);
             String retstatemnt;
             if (value.isEmpty) {
-              retstatemnt= 'Enter Days';
-            }else if (regex.hasMatch(value)) {
-              retstatemnt= 'Enter only Numbers';
-            }  else if (!(val >= 0)) {
-              retstatemnt= 'Enter postivie Days';
+              retstatemnt = 'Enter Days';
+            } else if (regex.hasMatch(value)) {
+              retstatemnt = 'Enter only Numbers';
+            } else if (!(val >= 0)) {
+              retstatemnt = 'Enter postivie Days';
             }
             return retstatemnt;
           },

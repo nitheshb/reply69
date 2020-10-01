@@ -26,33 +26,44 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bid365_app_theme.dart';
 
-
 class JoinPremiumGroup extends StatefulWidget {
-    JoinPremiumGroup({Key key, 
-    this.chatId,this.groupOwnerName,
-    this.userId,
-    this.categories,
-    this.followers,
-    this.accessingBy,
-    this.lock, this.title, 
-    this.feeArray, this.paymentScreenshotNo, 
-    this.seasonRating,this.thisWeekRating, this.lastWeekRating,
-    this.followingGroupsLocal,
-    this.followersCount,
-    this.avatarUrl}) : super(key: key);
-   final String chatId, userId,title,  
-                paymentScreenshotNo, avatarUrl,
-                accessingBy,
-                groupOwnerName, seasonRating,thisWeekRating, lastWeekRating, followersCount;
-                List followingGroupsLocal;
-   final feeArray;
-   final List categories, followers;
+  JoinPremiumGroup(
+      {Key key,
+      this.chatId,
+      this.groupOwnerName,
+      this.userId,
+      this.categories,
+      this.followers,
+      this.accessingBy,
+      this.lock,
+      this.title,
+      this.feeArray,
+      this.paymentScreenshotNo,
+      this.seasonRating,
+      this.thisWeekRating,
+      this.lastWeekRating,
+      this.followingGroupsLocal,
+      this.followersCount,
+      this.avatarUrl})
+      : super(key: key);
+  final String chatId,
+      userId,
+      title,
+      paymentScreenshotNo,
+      avatarUrl,
+      accessingBy,
+      groupOwnerName,
+      seasonRating,
+      thisWeekRating,
+      lastWeekRating,
+      followersCount;
+  List followingGroupsLocal;
+  final feeArray;
+  final List categories, followers;
 
-
-   bool lock;
+  bool lock;
   @override
-  _JoinPremiumGroupState createState() =>
-      _JoinPremiumGroupState();
+  _JoinPremiumGroupState createState() => _JoinPremiumGroupState();
 }
 
 class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
@@ -65,14 +76,12 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
   StateModel appState;
   File _image;
   bool kycData = false;
-  String panCardImageUrl,panHolderName, panNo;
-   bool lockModify;
-  List followCountModify =[] ;
-  
+  String panCardImageUrl, panHolderName, panNo;
+  bool lockModify;
+  List followCountModify = [];
 
   var date = DateTime.now();
   bool _loadingVisible = false;
-
 
   var panNameController = new TextEditingController();
   var panNoController = new TextEditingController();
@@ -81,7 +90,7 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
   void initState() {
     // getPancardData();
     super.initState();
-       lockModify = widget.followers.contains(widget.userId);
+    lockModify = widget.followers.contains(widget.userId);
     followCountModify = widget.followers;
   }
 
@@ -101,7 +110,9 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
   // }
   void _showBasicsFlash({
     Duration duration,
-    flashStyle = FlashStyle.floating,BuildContext context, String messageText,
+    flashStyle = FlashStyle.floating,
+    BuildContext context,
+    String messageText,
   }) {
     showFlash(
       context: context,
@@ -116,206 +127,213 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
             message: Text('$messageText'),
           ),
         );
-    },
+      },
     );
   }
+
   List<Widget> _buildSelectedOptions(dynamic values) {
-    print('values of categories ${values}');
-          List<Widget> selectedOptions = [];
+    List<Widget> selectedOptions = [];
 
-          if (values != null) {
-            values.forEach((item) {
-              selectedOptions.add(
-                Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(20),
-                                        ),
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12,),
-                                      child: Center(
-                                        child: Text(
-                                          "${item['categoryName'] ?? ''}",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-              );
-            });
-          }
+    if (values != null) {
+      values.forEach((item) {
+        selectedOptions.add(
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
+              ),
+              border: Border.all(
+                color: Colors.grey,
+              ),
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: 8,
+              horizontal: 12,
+            ),
+            child: Center(
+              child: Text(
+                "${item['categoryName'] ?? ''}",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+        );
+      });
+    }
 
-          return selectedOptions;
-        }
+    return selectedOptions;
+  }
+
   List<Widget> _buildStatsView(dynamic values, _media) {
-          List<Widget> selectedOptions = [];
+    List<Widget> selectedOptions = [];
 
-          if (values != null) {
-            values.forEach((item) {
-              selectedOptions.add(
-                winStats(context, _media, item['categoryName'] ?? '', item['rating'] ?? 0)
+    if (values != null) {
+      values.forEach((item) {
+        selectedOptions.add(winStats(
+            context, _media, item['categoryName'] ?? '', item['rating'] ?? 0));
+      });
+    }
 
-             
-              );
-            });
-          }
+    return selectedOptions;
+  }
 
-          return selectedOptions;
-        }
-  
-  Widget winStats(context, _media, gameName, rating){
-  return         Row(
-                  children: <Widget>[
-                    Container(
-                      width: 70,
-                      child:
-                    Text('${gameName}', style: TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    fontFamily: "Varela",
+  Widget winStats(context, _media, gameName, rating) {
+    return Row(
+      children: <Widget>[
+        Container(
+          width: 70,
+          child: Text(
+            '${gameName}',
+            style: TextStyle(
+              color: Colors.black87,
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+              fontFamily: "Varela",
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        SizedBox(width: 6),
+        LinearPercentIndicator(
+          width: screenAwareSize(
+              _media.width - (_media.longestSide <= 775 ? 140 : 200), context),
+          lineHeight: 20.0,
+          percent: rating / 100,
+          backgroundColor: Colors.grey.shade300,
+          progressColor: Color(0xFF1b52ff),
+          animation: true,
+          animateFromLastPercent: true,
+          alignment: MainAxisAlignment.spaceEvenly,
+          animationDuration: 1000,
+          linearStrokeCap: LinearStrokeCap.roundAll,
+          center: Text(
+            "${rating} %",
+            style: rating > 45
+                ? TextStyle(color: Colors.white)
+                : TextStyle(color: Colors.black),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget editGroupButton(context) {
+    return FlatButton(
+      child: Text(
+        "Edit",
+        style: GoogleFonts.poppins(
+          fontSize: 14,
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      color: Colors.redAccent,
+      onPressed: () async {
+        //  this is for token
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditGroupProfile(
+                primaryButtonRoute: "/home",
+                groupName: widget.title,
+                groupCategory: widget.categories,
+                fee: widget.feeArray,
+                chatId: widget.chatId,
+                expiryDays: widget.feeArray,
+                phNumber: widget.paymentScreenshotNo,
+                dp: widget.avatarUrl),
+          ),
+        );
+        return;
+      },
+    );
+  }
+
+  Widget followUnfollowButtons(context) {
+    return lockModify
+        ? FlatButton(
+            child: Text(
+              "Unfollow",
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            color: Colors.grey,
+            onPressed: () async {
+              //  this is for token
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              String userToken = prefs.get('FCMToken');
+              await FirebaseController.instanace
+                  .unfollowGroup(widget.chatId, widget.userId, userToken);
+
+              setState(() {
+                lockModify = !lockModify;
+                followCountModify.remove(widget.userId);
+                widget.followingGroupsLocal.remove(widget.chatId);
+
+                StateWidget.of(context).setFollowingGroupState(
+                    widget.followingGroupsLocal, widget.chatId, 'remove');
+              });
+              appState = StateWidget.of(context).state;
+              final userId = appState?.firebaseUserAuth?.uid ?? '';
+              final followingGroups = await appState.followingGroups;
+              await Navigator.of(context).pushAndRemoveUntil(
+                  new MaterialPageRoute(
+                    builder: (BuildContext context) => MainScreen(
+                        userId: widget.userId,
+                        followingGroupsLocal: widget.followingGroupsLocal),
                   ),
-                  overflow: TextOverflow.ellipsis,),
-                    ),
-                  SizedBox(
-                    width: 6
-                  ),
-                    LinearPercentIndicator(
-                      width: screenAwareSize(
-                          _media.width - (_media.longestSide <= 775 ? 140 : 200),
-                          context),
-                      lineHeight: 20.0,
-                      percent: rating/ 100,
-                      backgroundColor: Colors.grey.shade300,
-                      progressColor: Color(0xFF1b52ff),
-                      animation: true,
-                      animateFromLastPercent: true,
-                      alignment: MainAxisAlignment.spaceEvenly,
-                      animationDuration: 1000,
-                      linearStrokeCap: LinearStrokeCap.roundAll,
-                      center: Text(
-                        "${rating} %",
-                        style: 
-                        rating > 45?
-                        TextStyle(color: Colors.white): TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ],
-                );
-}
-Widget editGroupButton(context){
- return FlatButton(
-                      child: Text(
-                        "Edit",
-                        style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-                      ),
-                      color: Colors.redAccent,
-                      onPressed: ()async{
-                        //  this is for token 
-    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditGroupProfile(primaryButtonRoute: "/home",
-                          groupName: widget.title,groupCategory:  widget.categories,fee: widget.feeArray,chatId: widget.chatId, expiryDays:widget.feeArray,phNumber:widget.paymentScreenshotNo,
-                         dp: widget.avatarUrl
-                          ),
-                        ),
-                      );
-                      return;
-                      },
-                    );
-                    }
-Widget followUnfollowButtons(context){
-return lockModify ? FlatButton(
-                      child: Text(
-                        "Unfollow",
-                        style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-                      ),
-                      color: Colors.grey,
-                      onPressed: ()async{
-                        //  this is for token 
-     SharedPreferences prefs = await SharedPreferences.getInstance();
-      String userToken = prefs.get('FCMToken');
-await FirebaseController.instanace.unfollowGroup(widget.chatId, widget.userId, userToken);
-                      
-                      setState(() {
-                        lockModify = !lockModify;
-                        followCountModify.remove(widget.userId);
-                        widget.followingGroupsLocal.remove(widget.chatId);
-                        print('value of premium unfollow ${followCountModify}');
-                        StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,widget.chatId, 'remove' );
-                      
-                      });
-    appState = StateWidget.of(context).state;
-    final userId = appState?.firebaseUserAuth?.uid ?? '';
-    final followingGroups = await appState.followingGroups;
-        await Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(
-        builder: (BuildContext context)
-        => MainScreen(userId: widget.userId,followingGroupsLocal: widget.followingGroupsLocal),
-        ),(Route<dynamic> route) => false);
-                      return;
-                      },
-                    ):
-                                 FlatButton(
-                      child: Text(
-                        "Follow",
-                        style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-                      ),
-                      color: Theme.of(context).accentColor,
-                      onPressed: ()async{
-                        print("check for doc id of group ${widget.chatId}  id is ${widget.userId}");
-                        // make an entry in db as joinedGroups
-                       try {
-                           setState(() {
-                        lockModify = !lockModify;
-                        followCountModify.add(widget.userId);
-                      });
-                         //  this is for token 
-     SharedPreferences prefs = await SharedPreferences.getInstance();
-      String userToken = prefs.get('FCMToken');
-  
-   
-if(widget.followingGroupsLocal.length <9){
-    print('i was at following groups 0 ${widget.chatId}');
-      FirebaseController.instanace.followGroup(widget.chatId, widget.userId, userToken);
-      return;
-  }else{
-   
- _showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Overall max 9 group can be followed...!');
-  
-  }  
-  //     return;
-  // }
-                       } catch (e) {
-                         print('error at joining a group ${e}');
-                       }
-                      },
-                    );
-}
+                  (Route<dynamic> route) => false);
+              return;
+            },
+          )
+        : FlatButton(
+            child: Text(
+              "Follow",
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            color: Theme.of(context).accentColor,
+            onPressed: () async {
+              // make an entry in db as joinedGroups
+              try {
+                setState(() {
+                  lockModify = !lockModify;
+                  followCountModify.add(widget.userId);
+                });
+                //  this is for token
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                String userToken = prefs.get('FCMToken');
 
- Future<void> _changeLoadingVisible() async {
+                if (widget.followingGroupsLocal.length < 9) {
+                  FirebaseController.instanace
+                      .followGroup(widget.chatId, widget.userId, userToken);
+                  return;
+                } else {
+                  _showBasicsFlash(
+                      context: context,
+                      duration: Duration(seconds: 4),
+                      messageText: 'Overall max 9 group can be followed...!');
+                }
+                //     return;
+                // }
+              } catch (e) {}
+            },
+          );
+  }
+
+  Future<void> _changeLoadingVisible() async {
     setState(() {
       _loadingVisible = !_loadingVisible;
     });
   }
-  Widget _buildCategory(String title,value){
+
+  Widget _buildCategory(String title, value) {
     // return Column(
     //   children: <Widget>[
     //     Text(
@@ -334,558 +352,541 @@ if(widget.followingGroupsLocal.length <9){
     //   ],
     // );
     return Container(
-                              width: 110,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
- Text(
-                                    value, 
-                                    style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w800,
-                ),
-                                  ),
-                                   SizedBox(
-                                    height: 4,
-                                  ),
-                                  Text(
-                                    title, 
-                                    style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ),
-                                  ),
-                                  
-                                 
-
-                                 
-                                ],
-                              ),
-                            );
+      width: 110,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            value,
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              color: Color(0xff3A4276),
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: Color(0xff3A4276),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
+
   @override
   Widget build(BuildContext context) {
-
-       appState = StateWidget.of(context).state;
+    appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
     final phoneNumber = appState.user.phoneNumber;
     final firstName = appState.user.firstName;
 
-var followersA = widget.followers ?? [];
+    var followersA = widget.followers ?? [];
     Size size = MediaQuery.of(context).size;
     final _media = MediaQuery.of(context).size;
-  
-        // var kycLock = kycData??['pancardLock'] ?? false;
+
+    // var kycLock = kycData??['pancardLock'] ?? false;
     //  getKycDetails(userId);
-     return Scaffold(
-       appBar:  AppBar(
+    return Scaffold(
+      appBar: AppBar(
         elevation: 3,
         leading: IconButton(
           icon: Icon(
             Icons.keyboard_backspace,
           ),
-          onPressed: ()=>Navigator.pop(context),
+          onPressed: () => Navigator.pop(context),
         ),
         titleSpacing: 0,
-        title: Text("Summary",style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w800,
-                )),
-       ),
-       body: LoadingScreen(
-            inAsyncCall: _loadingVisible,
-            child: 
-                ListView(
-        physics: BouncingScrollPhysics(),
-        padding: EdgeInsets.only(
-          left: 20,
-        ),
-        children: <Widget>[
-                           SizedBox(height: 20),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "Profile",
-                  style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ),
-                ),
-              ],
-            ),
+        title: Text("Summary",
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              color: Color(0xff3A4276),
+              fontWeight: FontWeight.w800,
+            )),
+      ),
+      body: LoadingScreen(
+        inAsyncCall: _loadingVisible,
+        child: ListView(
+          physics: BouncingScrollPhysics(),
+          padding: EdgeInsets.only(
+            left: 20,
           ),
-                //            Profile3(
-                //              title: widget.title,
-                // avatarUrl: widget.avatarUrl,
-                // categories: widget.categories,
-                // following: followersA.contains(widget.userId),
-                // chatId: widget.chatId,
-                // userId: userId,
-                // followers: widget.followers,
-                // groupOwnerName : widget.groupOwnerName,
-                // feeDetails: widget.feeArray,
-                // seasonRating: widget.seasonRating,
-                // thisWeekRating: widget.thisWeekRating,
-                // lastWeekRating: widget.lastWeekRating),
-
-                Align(
-              alignment: Alignment.topCenter,
-              child: 
-
-              Container(
-                  height: 400,
-                 
-                  margin: EdgeInsets.only(
-              top: 15,
-              right: 20,
-            ),
-            padding: EdgeInsets.all(10),
-                   // height: screenAwareSize(145, context),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(6),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade100,
-                  blurRadius: 6,
-                  spreadRadius: 10,
-                )
-              ],
-            ),
-                  child: Column(
-                    children: <Widget>[
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16,),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-
-                                CircleAvatar(
-                                  radius: 36,
-                                  backgroundImage: NetworkImage("${widget.avatarUrl}"),
-                                ),
-
-                                Row(
-                                  children: <Widget>[
-                                    Visibility(
-                                      visible: widget.accessingBy == 'owner',
-                                      child:editGroupButton(context),),
-                                 
-
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-
-                             followUnfollowButtons(context),
-
-                                  ],
-                                ),
-
-                              ],
-                            ),
-
-                            SizedBox(
-                              height: 8,
-                            ),
-
-                            Text(
-                              "${widget.title.toUpperCase()}",
-                              style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w800,
-                  ),
-                            ),
-
-                            SizedBox(
-                              height: 8,
-                            ),
-
-                            Text(
-                              "Predictor Name: ${widget.groupOwnerName}",
-                              style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ),
-                            ),
-
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              "Description",
-                              style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ),
-                            ),
-
-                            SizedBox(
-                              height: 8,
-                            ),
-
-                            Text(
-                              "NA",
-                              style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              "Category",
-                              style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                             Row(
-                                         children: <Widget>[
-                                           Wrap(
-                    spacing: 4.0, // gap between adjacent chips
-                    runSpacing: 1.0, // gap between lines
-                    children:
-                    _buildSelectedOptions(widget.categories),
-                  ),
-                                         ],
-                                       ),
-
-                          ],
-                        ),
-                      ),
-
-                      Expanded(
-                        child: Container(),
-                      ),
-
-                      Divider(
-                        color: Colors.grey[400],
-                      ),
-                      Container(
-                        height: 64,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                    _buildCategory("30-DAYS FEE", "Rs ${widget.feeArray[0]['fee']}"),
-                    _buildCategory("Followers", "${widget.followersCount}"),
-                    _buildCategory("Rating", "${widget.seasonRating ?? 'NA'}"),
-                          ],
-                        ),
-                      ),
-                    
-                    ],
-                  ),
-                ),
-              
-            ),
-          
-
-
-            SizedBox(
-            height: 30,
-          ),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "Send payment Phonepe or GPay",
-                  style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w700,
-                ),
-                ),
-                 WidgetSpan(
-        child: Padding(
-          padding: const EdgeInsets.only(left:8.0),
-          child: Icon(
-                            FontAwesomeIcons.phoneAlt,
-                            color: Colors.green,
-                            size: 20,
-                          ),
-        ),
-      ),       
-                TextSpan(
-                  text: " ${widget.paymentScreenshotNo}",
-                  style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w500,
-                ),
-                ),
-              ],
-            ),
-          ),
-         Container(
-            margin: EdgeInsets.only(
-              top: 15,
-              right: 20,
-            ),
-            padding: EdgeInsets.all(10),
-            // height: screenAwareSize(145, context),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(6),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade100,
-                  blurRadius: 6,
-                  spreadRadius: 10,
-                )
-              ],
-            ),
-            child:             StreamBuilder(
-          stream: FirebaseController.instanace.getUserKycStatus(widget.chatId, widget.userId),
-          builder: (context,snapshot){
-                    if(snapshot.hasError) {
-                                  return Center(child: Text('Error: '));
-                    }
-                                else if(snapshot.hasData && snapshot.data.documents.length > 0){
-                                  print('yo yo ${snapshot.data.documents.length}');
-                                return   ListView.builder(
-                          shrinkWrap: true,
-                          primary: false,
-                          itemCount: snapshot.data.documents.length,
-                          itemBuilder: (_, int index) {
-                              DocumentSnapshot doc = snapshot.data.documents[index];
-                              print(' data is ${doc.data}');
-                                          DocumentSnapshot kycDetailsSnap = snapshot.data.documents[index];
-                    panCardImageUrl = kycDetailsSnap.data['pancardDocUrl'] ?? "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png";
-                    payment_approve_status = kycDetailsSnap.data['payment_approve_status'] ?? "NA";
-        
-        if(payment_approve_status == "Rejected" || payment_approve_status == "Review_Waiting"){
-          print('iwas inside clearr');
-          widget.lock = true;     
-        }else{
-          widget.lock = false;
-          
-        }
-      //  return uploadDocContent(context,payment_approve_status,userId, panCardImageUrl,widget.lock,_image );
-                              return new Container(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Text('Your Documents is ${doc.data["payment_approve_status"] ?? "NULL"}'),
-                                      SizedBox(height: 10,),
-                                                 Container(
-      height: 220.0,
-      width: 220.0,
-       decoration: BoxDecoration(
-         color: Colors.red,
-                    image: DecorationImage(
-                      image: NetworkImage(panCardImageUrl),
-                      fit: BoxFit.cover,
+          children: <Widget>[
+            SizedBox(height: 20),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Profile",
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: Color(0xff3A4276),
+                      fontWeight: FontWeight.w500,
                     ),
-                    borderRadius: BorderRadius.circular(20.0),
-                  )
-    )
-                                    ],
-                                  ));
-                          },
-                        );
+                  ),
+                ],
+              ),
+            ),
+            //            Profile3(
+            //              title: widget.title,
+            // avatarUrl: widget.avatarUrl,
+            // categories: widget.categories,
+            // following: followersA.contains(widget.userId),
+            // chatId: widget.chatId,
+            // userId: userId,
+            // followers: widget.followers,
+            // groupOwnerName : widget.groupOwnerName,
+            // feeDetails: widget.feeArray,
+            // seasonRating: widget.seasonRating,
+            // thisWeekRating: widget.thisWeekRating,
+            // lastWeekRating: widget.lastWeekRating),
 
-        
-        }
-        // return Container(child: Text('check'));
-        return uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image, phoneNumber, firstName);
-          }
-        ),
-            // child: uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image)
-            
-            // Column(
-            //   children: <Widget>[
-            //     expandData(context, widget.lock , _image, panCardImageUrl),
-            //          Wrap(
-            //         spacing: 0.0, // gap between adjacent chips
-            //         runSpacing: 1.0, // gap between lines
-            //         children:
-                    
-            //         _buildStatsView(widget.categories, _media),
-            //       )
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                height: 400,
 
-            //   ],
-            // ),
-            
-          ),
-
-
-            SizedBox(
-            height: 30,
-          ),
-          
-
-
-                    // Container(
-                    //   child: Padding(
-                    //           padding: const EdgeInsets.all(8),
-                    //           child: Row(
-                    //             children: <Widget>[
-                    //               priceDispUI('1000', '30 days'),
-                    //               priceDispUI('1500', '45 days'),
-                    //               priceDispUI('100', '10 days'),
-                    //             ],
-                    //           ),
-                    //         ),
-                    // ),
-                    // uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image),
+                margin: EdgeInsets.only(
+                  top: 15,
+                  right: 20,
+                ),
+                padding: EdgeInsets.all(10),
+                // height: screenAwareSize(145, context),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(6),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade100,
+                      blurRadius: 6,
+                      spreadRadius: 10,
+                    )
                   ],
                 ),
-              
-            
-        ),
-     );
-     
-  }
-Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, lock, _image, phoneNumber, firstName ){
-                      return Container(
-        decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-          gradient: LinearGradient(
-                    colors: [
-                      Colors.white,
-                      Colors.white,
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-          ),
-        ),
-        child:Stack(
-          
-                                  alignment: AlignmentDirectional.bottomCenter,
-                                  children: <Widget>[
-                                    Column(
-                                      children: <Widget>[
-                                        
-                                           Container(
-                                            child: expandData(context, lock, _image, panCardImageUrl),
-                                          ),
-                                        
-                                      ],
-                                    ),
-                                      (widget.lock)
-                                        ? Positioned(
-                                            bottom: 32,
-                                            left: 0,
-                                            right: 0,
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                  top: 8, left: 32, right: 32),
-                                              child: Text(
-                                                "Your Join Request is ${payment_approve_status} ${userId}",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(color: Colors.green),
-                                              ),
-                                            )
-                                            )
-                                          
-                                        : SizedBox(
-                                          child: Column(
-                                            children: <Widget>[
-                                              SizedBox(height:10),
-                                              FlatButton(
-    onPressed: () async {
-        if(widget.lock){
-                              Scaffold.of(context).showSnackBar(SnackBar(content: Text("Doc already uploaded"),));
-                          }else if (_image == null){
-                             Scaffold.of(context).showSnackBar(SnackBar(content: Text("Wanted Payment screenshot for Owner"),));
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              CircleAvatar(
+                                radius: 36,
+                                backgroundImage:
+                                    NetworkImage("${widget.avatarUrl}"),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Visibility(
+                                    visible: widget.accessingBy == 'owner',
+                                    child: editGroupButton(context),
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  followUnfollowButtons(context),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            "${widget.title.toUpperCase()}",
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              color: Color(0xff3A4276),
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            "Predictor Name: ${widget.groupOwnerName}",
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: Color(0xff3A4276),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            "Description",
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: Color(0xff3A4276),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            "NA",
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: Color(0xff3A4276),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Category",
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: Color(0xff3A4276),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Wrap(
+                                spacing: 4.0, // gap between adjacent chips
+                                runSpacing: 1.0, // gap between lines
+                                children:
+                                    _buildSelectedOptions(widget.categories),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    Divider(
+                      color: Colors.grey[400],
+                    ),
+                    Container(
+                      height: 64,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          _buildCategory(
+                              "30-DAYS FEE", "Rs ${widget.feeArray[0]['fee']}"),
+                          _buildCategory(
+                              "Followers", "${widget.followersCount}"),
+                          _buildCategory(
+                              "Rating", "${widget.seasonRating ?? 'NA'}"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(
+              height: 30,
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Send payment Phonepe or GPay",
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: Color(0xff3A4276),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  WidgetSpan(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Icon(
+                        FontAwesomeIcons.phoneAlt,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                  TextSpan(
+                    text: " ${widget.paymentScreenshotNo}",
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Color(0xff3A4276),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                top: 15,
+                right: 20,
+              ),
+              padding: EdgeInsets.all(10),
+              // height: screenAwareSize(145, context),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade100,
+                    blurRadius: 6,
+                    spreadRadius: 10,
+                  )
+                ],
+              ),
+              child: StreamBuilder(
+                  stream: FirebaseController.instanace
+                      .getUserKycStatus(widget.chatId, widget.userId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: '));
+                    } else if (snapshot.hasData &&
+                        snapshot.data.documents.length > 0) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        primary: false,
+                        itemCount: snapshot.data.documents.length,
+                        itemBuilder: (_, int index) {
+                          DocumentSnapshot doc = snapshot.data.documents[index];
+
+                          DocumentSnapshot kycDetailsSnap =
+                              snapshot.data.documents[index];
+                          panCardImageUrl = kycDetailsSnap
+                                  .data['pancardDocUrl'] ??
+                              "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png";
+                          payment_approve_status =
+                              kycDetailsSnap.data['payment_approve_status'] ??
+                                  "NA";
+
+                          if (payment_approve_status == "Rejected" ||
+                              payment_approve_status == "Review_Waiting") {
+                            widget.lock = true;
+                          } else {
+                            widget.lock = false;
                           }
-                          else{
-                           
-           await _changeLoadingVisible();
-        // uplaod the detail of this in user details table
-        // with details of uid, emailid, pandcard no, pancard holder name,approve status 
-        // 
-        // upload to approve
-        DateTime now = new DateTime.now();
-          var datestamp = new DateFormat.yMMMMd('en_US');
-          String currentdate = datestamp.format(now);
-        // myimage1
-    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('${userId}${now.millisecondsSinceEpoch}.jpg');
-    final StorageUploadTask uploadTask = await firebaseStorageRef.putFile(_image);
-       var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-    String url = dowurl.toString();
-    print('uploaded url is $url ${panNoController.text}');
+                          //  return uploadDocContent(context,payment_approve_status,userId, panCardImageUrl,widget.lock,_image );
+                          return new Container(
+                              child: Column(
+                            children: <Widget>[
+                              Text(
+                                  'Your Documents is ${doc.data["payment_approve_status"] ?? "NULL"}'),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                  height: 220.0,
+                                  width: 220.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    image: DecorationImage(
+                                      image: NetworkImage(panCardImageUrl),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ))
+                            ],
+                          ));
+                        },
+                      );
+                    }
+                    // return Container(child: Text('check'));
+                    return uploadDocContent(
+                        context,
+                        "payment_approve_status",
+                        userId,
+                        "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png",
+                        widget.lock,
+                        _image,
+                        phoneNumber,
+                        firstName);
+                  }),
+              // child: uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image)
 
-    // return url; 
+              // Column(
+              //   children: <Widget>[
+              //     expandData(context, widget.lock , _image, panCardImageUrl),
+              //          Wrap(
+              //         spacing: 0.0, // gap between adjacent chips
+              //         runSpacing: 1.0, // gap between lines
+              //         children:
 
-    // StorageTaskSnapshot taskSnapshot =  uploadTask.onComplete;
+              //         _buildStatsView(widget.categories, _media),
+              //       )
 
-    
+              //   ],
+              // ),
+            ),
 
-        var body ={
-          "uid": userId,
-          "chatId": widget.chatId,
-          "uxId": phoneNumber,
-          "firstName": firstName,
-          "pancardDocUrl": url,
-          "uploadedTime": currentdate,
-          "payment_approve_status": "Review_Waiting",
-          "approve_status": "Review_Waiting",
-        };
+            SizedBox(
+              height: 30,
+            ),
 
-        await  FirebaseController.instanace.submitKycDoc(body, userId, widget.chatId);
-        // 
-        await _changeLoadingVisible();
-        setState(() {
-        widget.lock = true;
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text("Doc Uploaded Successfully"),));
-    });
-}
+            // Container(
+            //   child: Padding(
+            //           padding: const EdgeInsets.all(8),
+            //           child: Row(
+            //             children: <Widget>[
+            //               priceDispUI('1000', '30 days'),
+            //               priceDispUI('1500', '45 days'),
+            //               priceDispUI('100', '10 days'),
+            //             ],
+            //           ),
+            //         ),
+            // ),
+            // uploadDocContent(context,"payment_approve_status",userId, "http://www.pngall.com/wp-content/uploads/2/Upload-PNG.png", widget.lock ,_image),
+          ],
+        ),
+      ),
+    );
+  }
 
-    },
-    color: Theme.of(context).accentColor,
-    child: Text("Submit For Verification",style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),),
-  ),
-                                            ],
-                                          ),
-                                        ),
-                                  ],
-                                ),
-                     
-        );
-}
-  Widget expandData(context, lock, _image,panCardImageUrl) {
+  Widget uploadDocContent(context, payment_approve_status, userId,
+      panCardImageUrl, lock, _image, phoneNumber, firstName) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(6),
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            Colors.white,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Container(
+                child: expandData(context, lock, _image, panCardImageUrl),
+              ),
+            ],
+          ),
+          (widget.lock)
+              ? Positioned(
+                  bottom: 32,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.only(top: 8, left: 32, right: 32),
+                    child: Text(
+                      "Your Join Request is ${payment_approve_status} ${userId}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.green),
+                    ),
+                  ))
+              : SizedBox(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 10),
+                      FlatButton(
+                        onPressed: () async {
+                          if (widget.lock) {
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text("Doc already uploaded"),
+                            ));
+                          } else if (_image == null) {
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text("Wanted Payment screenshot for Owner"),
+                            ));
+                          } else {
+                            await _changeLoadingVisible();
+                            // uplaod the detail of this in user details table
+                            // with details of uid, emailid, pandcard no, pancard holder name,approve status
+                            //
+                            // upload to approve
+                            DateTime now = new DateTime.now();
+                            var datestamp = new DateFormat.yMMMMd('en_US');
+                            String currentdate = datestamp.format(now);
+                            // myimage1
+                            final StorageReference firebaseStorageRef =
+                                await FirebaseStorage.instance.ref().child(
+                                    '${userId}${now.millisecondsSinceEpoch}.jpg');
+                            final StorageUploadTask uploadTask =
+                                await firebaseStorageRef.putFile(_image);
+                            var dowurl = await (await uploadTask.onComplete)
+                                .ref
+                                .getDownloadURL();
+                            String url = dowurl.toString();
+
+                            // return url;
+
+                            // StorageTaskSnapshot taskSnapshot =  uploadTask.onComplete;
+
+                            var body = {
+                              "uid": userId,
+                              "chatId": widget.chatId,
+                              "uxId": phoneNumber,
+                              "firstName": firstName,
+                              "pancardDocUrl": url,
+                              "uploadedTime": currentdate,
+                              "payment_approve_status": "Review_Waiting",
+                              "approve_status": "Review_Waiting",
+                            };
+
+                            await FirebaseController.instanace
+                                .submitKycDoc(body, userId, widget.chatId);
+                            //
+                            await _changeLoadingVisible();
+                            setState(() {
+                              widget.lock = true;
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text("Doc Uploaded Successfully"),
+                              ));
+                            });
+                          }
+                        },
+                        color: Theme.of(context).accentColor,
+                        child: Text(
+                          "Submit For Verification",
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget expandData(context, lock, _image, panCardImageUrl) {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-
-
           Container(
             padding: EdgeInsets.only(top: 38, left: 16, right: 16, bottom: 8),
-       
-        child: 
-            
-            
-            Container(
+            child: Container(
               height: 48,
               decoration: new BoxDecoration(
                 color: Colors.redAccent,
                 borderRadius: const BorderRadius.all(
-                                          Radius.circular(2.0),
-                                        ),
+                  Radius.circular(2.0),
+                ),
                 //  boxShadow: <BoxShadow>[
                 //                           BoxShadow(
                 //                               color: Bid365AppTheme
@@ -897,13 +898,14 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
               ),
               child: InkWell(
                 onTap: () {
-                if(lock){
-                  // showInSnackBar('Doc already uploaded');
-                    Scaffold.of(context).showSnackBar(SnackBar(content: Text("Doc already uploaded"),));
-                }else{
-                  getImage();
-                }
-
+                  if (lock) {
+                    // showInSnackBar('Doc already uploaded');
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text("Doc already uploaded"),
+                    ));
+                  } else {
+                    getImage();
+                  }
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
@@ -917,59 +919,50 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
                     Text(
                       'Upload Payment Screenshot',
                       style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-                        ),
-          
-
-
+          ),
 
           SizedBox(
             height: 20,
           ),
-    //       Visibility(
-    //         visible: _image == null ,
-    //         child: 
-    //       Container(
-    //   height: 220.0,
-    //   width: 220.0,
-    //    decoration: BoxDecoration(
-    //      color: Colors.red,
-    //                 image: DecorationImage(
-    //                   image: NetworkImage(panCardImageUrl),
-    //                   fit: BoxFit.cover,
-    //                 ),
-    //                 borderRadius: BorderRadius.circular(20.0),
-    //               )
-    // )
-    //       ),
-           Container(
-                  //           height: screenHeight * 0.6,
-                  // width: screenWidth,
-                            child: _image == null ? Text('No payment deatail upload') : 
-                              Container(
-      height: 220.0,
-      width: 220.0,
-      decoration: BoxDecoration(
-                  
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-
-
-                  
-  child: Image.file(_image, height:250, width: 250),
-    )
-                            
-                            
-                          ),
-                           SizedBox(
+          //       Visibility(
+          //         visible: _image == null ,
+          //         child:
+          //       Container(
+          //   height: 220.0,
+          //   width: 220.0,
+          //    decoration: BoxDecoration(
+          //      color: Colors.red,
+          //                 image: DecorationImage(
+          //                   image: NetworkImage(panCardImageUrl),
+          //                   fit: BoxFit.cover,
+          //                 ),
+          //                 borderRadius: BorderRadius.circular(20.0),
+          //               )
+          // )
+          //       ),
+          Container(
+              //           height: screenHeight * 0.6,
+              // width: screenWidth,
+              child: _image == null
+                  ? Text('No payment deatail upload')
+                  : Container(
+                      height: 220.0,
+                      width: 220.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Image.file(_image, height: 250, width: 250),
+                    )),
+          SizedBox(
             height: 20,
           ),
         ],
@@ -978,13 +971,12 @@ Widget uploadDocContent(context, payment_approve_status,userId,panCardImageUrl, 
   }
 
   Future getImage() async {
-   print("launching image picker");
-var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-  print('ending image picker');
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    print('ending image picker');
 
-      setState(() {
-          _image = image;
-        });
+    setState(() {
+      _image = image;
+    });
     // if (image != null) {
     //   File cropimage = await cropImage(image);
     //   if (cropimage != null) {
@@ -1019,7 +1011,8 @@ var image = await ImagePicker.pickImage(source: ImageSource.gallery);
       ),
     );
   }
-    Widget priceDispUI(String text1, String txt2) {
+
+  Widget priceDispUI(String text1, String txt2) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(

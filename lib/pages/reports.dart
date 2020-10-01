@@ -1,4 +1,3 @@
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:notification/util/auth.dart';
 import 'package:notification/util/validators.dart';
@@ -8,9 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
 class ReportScreen extends StatefulWidget {
-   ReportScreen({
+  ReportScreen({
     Key key,
     this.chatId,
     this.uId,
@@ -30,6 +28,7 @@ class _ReportScreenState extends State<ReportScreen> {
   void initState() {
     super.initState();
   }
+
   String _selected;
   List<Map> _myJson = [
     {"id": '1', "image": "assets/banks/affinbank.png", "name": "Payment"},
@@ -37,54 +36,52 @@ class _ReportScreenState extends State<ReportScreen> {
     {"id": '3', "image": "assets/banks/bankislam.png", "name": "Others"},
   ];
 
-
-Widget stateSelection(){
-  return Center(
-        child: Container(
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.grey),
-              borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: DropdownButtonHideUnderline(
-                  child: ButtonTheme(
-                    alignedDropdown: true,
-                    child: DropdownButton<String>(
-                      isDense: true,
-                      hint: new Text("Select State"),
-                      value: _selected,
-                      onChanged: (String newValue) {
-                          setState(() {
-                            _selected = newValue;
-                          });
-
-                          print(_selected);
-                      },
-                      items: _myJson.map((Map map) {
-                          return new DropdownMenuItem<String>(
-                            value: map["id"].toString(),
-                            // value: _mySelection,
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    child: Text(map["name"])),
-                              ],
-                            ),
-                          );
-                      }).toList(),
-                    ),
+  Widget stateSelection() {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+            border: Border.all(width: 1, color: Colors.grey),
+            borderRadius: BorderRadius.circular(10)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: DropdownButtonHideUnderline(
+                child: ButtonTheme(
+                  alignedDropdown: true,
+                  child: DropdownButton<String>(
+                    isDense: true,
+                    hint: new Text("Select State"),
+                    value: _selected,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        _selected = newValue;
+                      });
+                    },
+                    items: _myJson.map((Map map) {
+                      return new DropdownMenuItem<String>(
+                        value: map["id"].toString(),
+                        // value: _mySelection,
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                                margin: EdgeInsets.only(left: 10),
+                                child: Text(map["name"])),
+                          ],
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-}
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
     final logo = Hero(
       tag: 'hero',
@@ -105,9 +102,8 @@ Widget stateSelection(){
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
       controller: _email,
-        maxLines: 8,
-      
-                
+      maxLines: 8,
+
       //  validator: Validator.validateEmail,
       decoration: InputDecoration(
         prefixIcon: Padding(
@@ -117,7 +113,7 @@ Widget stateSelection(){
             color: Colors.grey,
           ), // icon is 48px widget.
         ), // icon is 48px widget.
-        hintText: _enabled ? 'Enter your reason here' : '${_email.text}', 
+        hintText: _enabled ? 'Enter your reason here' : '${_email.text}',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(2.0)),
       ),
@@ -138,10 +134,9 @@ Widget stateSelection(){
       ),
     );
 
-
     return Scaffold(
       // backgroundColor: Colors.white,
-        appBar: AppBar(
+      appBar: AppBar(
         title: Text("Report"),
         centerTitle: true,
       ),
@@ -160,14 +155,12 @@ Widget stateSelection(){
                       // logo,
                       SizedBox(height: 10.0),
                       stateSelection(),
-                       SizedBox(height: 12.0),
-                       _enabled ?
-           email :
-          new FocusScope(
-            node: new FocusScopeNode(),
-            child: email
-          ),
-                      
+                      SizedBox(height: 12.0),
+                      _enabled
+                          ? email
+                          : new FocusScope(
+                              node: new FocusScopeNode(), child: email),
+
                       SizedBox(height: 12.0),
                       ReportSubmitButton,
                     ],
@@ -190,22 +183,24 @@ Widget stateSelection(){
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     if (_formKey.currentState.validate()) {
       try {
-        await _changeLoadingVisible(); 
-        await Auth.addReportData(widget.uId, widget.chatId, _selected, _email.text);
+        await _changeLoadingVisible();
+        await Auth.addReportData(
+            widget.uId, widget.chatId, _selected, _email.text);
         {
           setState(() {
             _enabled = !_enabled;
           });
         }
         await _changeLoadingVisible();
-         Auth.showBasicsFlash(context:  context, duration: Duration(seconds: 4), messageText : 'Reported Successfully');
-        
+        Auth.showBasicsFlash(
+            context: context,
+            duration: Duration(seconds: 4),
+            messageText: 'Reported Successfully');
       } catch (e) {
         _changeLoadingVisible();
-        print("Reported Successfully: $e");
+
         String exception = Auth.getExceptionText(e);
-          Fluttertoast.showToast(
-        msg: "Reported Successfully ${exception}");
+        Fluttertoast.showToast(msg: "Reported Successfully ${exception}");
         // Flushbar(
         //   title: "Forgot Password Error",
         //   message: exception,
