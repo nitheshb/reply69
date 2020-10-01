@@ -5,7 +5,7 @@ import 'package:notification/widgets/loading.dart';
 import 'package:flutter/material.dart';
 // import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();

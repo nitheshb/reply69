@@ -5,7 +5,7 @@ import 'package:notification/widgets/loading.dart';
 import 'package:flutter/material.dart';
 // import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 
 class ReportScreen extends StatefulWidget {
   ReportScreen({
@@ -200,7 +200,7 @@ class _ReportScreenState extends State<ReportScreen> {
         _changeLoadingVisible();
 
         String exception = Auth.getExceptionText(e);
-        Fluttertoast.showToast(msg: "Reported Successfully ${exception}");
+        // Fluttertoast.showToast(msg: "Reported Successfully ${exception}");
         // Flushbar(
         //   title: "Forgot Password Error",
         //   message: exception,
