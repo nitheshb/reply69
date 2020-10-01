@@ -19,7 +19,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:r_upgrade/r_upgrade.dart';
 
-
 // import 'package:test_app_1/pages/homeNavScreen1.dart';
 // import 'package:test_app_1/ui/screens/homeNew.dart';
 // import 'package:url_launcher/url_launcher.dart';
@@ -49,17 +48,10 @@ import 'package:r_upgrade/r_upgrade.dart';
 // import 'package:test_app_1/pages/Admin/add_matches_P.dart';
 // import 'package:test_app_1/services/authentication.dart';
 
-
-
-
-
-
 const APP_STORE_URL =
-'https://firebasestorage.googleapis.com/v0/b/teamplayers-f3b25.appspot.com/o/build%2Fapp-release.apk?alt=media&token=6af161a4-2467-4b1f-8161-34e6a412ad76';
+    'https://firebasestorage.googleapis.com/v0/b/teamplayers-f3b25.appspot.com/o/build%2Fapp-release.apk?alt=media&token=6af161a4-2467-4b1f-8161-34e6a412ad76';
 const PLAY_STORE_URL =
-'https://firebasestorage.googleapis.com/v0/b/teamplayers-f3b25.appspot.com/o/build%2Fapp-release.apk?alt=media&token=6af161a4-2467-4b1f-8161-34e6a412ad76';
-
-
+    'https://firebasestorage.googleapis.com/v0/b/teamplayers-f3b25.appspot.com/o/build%2Fapp-release.apk?alt=media&token=6af161a4-2467-4b1f-8161-34e6a412ad76';
 
 class MyApp extends StatefulWidget {
   MyApp() {
@@ -69,7 +61,8 @@ class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
-Future<dynamic> myBackgroundHandler(Map<String, dynamic> message){
+
+Future<dynamic> myBackgroundHandler(Map<String, dynamic> message) {
   return _MyAppState()._showNotification(message);
 }
 
@@ -78,24 +71,22 @@ class _MyAppState extends State<MyApp> {
 
   List followingGroup;
 
-  
+  Future _showNotification(Map<String, dynamic> message) async {
+    if (message['notification']['title'] == 'Accepted Prime Group') {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
 
-     Future _showNotification(Map<String, dynamic> message) async {
-
-if(message['notification']['title'] == 'Accepted Prime Group'){
-  print(' i was inside');
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
- var approvedPrimeGroups = await prefs.getStringList('approvedPrimeGroups');
- followingGroup = await prefs.getStringList('followingGroups');
-  approvedPrimeGroups.add(message['data']['chatId']);
-  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
-}else if(message['notification']['action'] == 'expired membership'){
-  SharedPreferences prefs = await SharedPreferences.getInstance();
- var approvedPrimeGroups = await prefs.getStringList('approvedPrimeGroups');
-  approvedPrimeGroups.remove(message['data']['chatId']);
-  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
-}
+      var approvedPrimeGroups =
+          await prefs.getStringList('approvedPrimeGroups');
+      followingGroup = await prefs.getStringList('followingGroups');
+      approvedPrimeGroups.add(message['data']['chatId']);
+      await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+    } else if (message['notification']['action'] == 'expired membership') {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var approvedPrimeGroups =
+          await prefs.getStringList('approvedPrimeGroups');
+      approvedPrimeGroups.remove(message['data']['chatId']);
+      await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
+    }
 
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       'channel id',
@@ -104,9 +95,9 @@ if(message['notification']['title'] == 'Accepted Prime Group'){
       importance: Importance.Max,
       priority: Priority.High,
     );
- 
-    var platformChannelSpecifics = new NotificationDetails(
-        androidPlatformChannelSpecifics, null);
+
+    var platformChannelSpecifics =
+        new NotificationDetails(androidPlatformChannelSpecifics, null);
     // await flutterLocalNotificationsPlugin.show(
     //     0,
     //   'new message arived',
@@ -115,321 +106,312 @@ if(message['notification']['title'] == 'Accepted Prime Group'){
     //   payload: 'Default_Sound',
     // );
   }
- 
 
   getTokenz() async {
-     print('i was called at getTokenz');
     String token = await _firebaseMessaging.getToken();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     prefs.setString('FCMToken', token);
-
-    print('token is : ${token}');
+    prefs.setString('FCMToken', token);
   }
 
-  Future selectNotification(String payload)async{
+  Future selectNotification(String payload) async {
     await flutterLocalNotificationsPlugin.cancelAll();
   }
 
-
-
-@override
+  @override
   void initState() {
     // themeBloc.changeTheme(Themes.gameOrganizer);
 
-    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
-var initializationSettings = InitializationSettings(
-    initializationSettingsAndroid, null);
- flutterLocalNotificationsPlugin.initialize(initializationSettings,
-    onSelectNotification: selectNotification);
+    var initializationSettings =
+        InitializationSettings(initializationSettingsAndroid, null);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
     super.initState();
 
     _firebaseMessaging.configure(
-      onBackgroundMessage: myBackgroundHandler,
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage4: $message");
-        print('msgcheck ${message['notification']['title']}');
-        // update local storage
-        //  filter if message type is "removal"
- SharedPreferences prefs = await SharedPreferences.getInstance();
+        onBackgroundMessage: myBackgroundHandler,
+        onMessage: (Map<String, dynamic> message) async {
+          // update local storage
+          //  filter if message type is "removal"
+          SharedPreferences prefs = await SharedPreferences.getInstance();
 
- var approvedPrimeGroups = await prefs.getStringList('approvedPrimeGroups');
+          var approvedPrimeGroups =
+              await prefs.getStringList('approvedPrimeGroups');
 
+          if (message['notification']['title'] == 'Accepted Prime Group') {
+            approvedPrimeGroups.add(message['data']['chatId']);
+            await prefs.setStringList(
+                'approvedPrimeGroups', approvedPrimeGroups);
 
-if(message['notification']['title'] == 'Accepted Prime Group'){
-  print(' i was inside');
-  approvedPrimeGroups.add(message['data']['chatId']);
-  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
-
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Congrulations..!'),
-                content: Text('Now you are Prime group member of ${message['data']['chatTitle']} :-)'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Ok'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            });
-}else if(message['notification']['action'] == 'expired membership'){
-  approvedPrimeGroups.remove(message['data']['chatId']);
-  await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
-   showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Membership Expired..!'),
-                content: Text('Your Prime Group Membership is expired for ${message['data']['chatTitle']}'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Ok'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            });
-}
-else if(message['notification']['action'] == 'Membership Rejected'){
-  
-   showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Membership Rejected..!'),
-                content: Text('Your membership request to group ${message['data']['chatTitle']} is rejected'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Ok'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            });
-}
-      }
-    );
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Congrulations..!'),
+                    content: Text(
+                        'Now you are Prime group member of ${message['data']['chatTitle']} :-)'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('Ok'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                });
+          } else if (message['notification']['action'] ==
+              'expired membership') {
+            approvedPrimeGroups.remove(message['data']['chatId']);
+            await prefs.setStringList(
+                'approvedPrimeGroups', approvedPrimeGroups);
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Membership Expired..!'),
+                    content: Text(
+                        'Your Prime Group Membership is expired for ${message['data']['chatTitle']}'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('Ok'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                });
+          } else if (message['notification']['action'] ==
+              'Membership Rejected') {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Membership Rejected..!'),
+                    content: Text(
+                        'Your membership request to group ${message['data']['chatTitle']} is rejected'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('Ok'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                });
+          }
+        });
 
     getTokenz();
 
+    try {
+      versionCheck(context);
+    } catch (e) {
+      print(e);
+    }
+    super.initState();
+  }
 
-      try {
-    versionCheck(context);
-      } catch (e) {
-        print(e);
-      }
-       super.initState();
-      }
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-      @override
-      Widget build(BuildContext context) {
-         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Platform.isAndroid ? Brightness.dark : Brightness.light,
+      statusBarBrightness:
+          Platform.isAndroid ? Brightness.dark : Brightness.light,
       systemNavigationBarColor: Colors.white,
       systemNavigationBarDividerColor: Colors.grey,
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
-        return MaterialApp(
-          title: 'MyApp Title',
-         
-          //onGenerateRoute: Navigation.router.generator,
-          debugShowCheckedModeBanner: false,
-          theme: Constants.lightTheme,
-          darkTheme: Constants.darkTheme,
-          home:   FutureBuilder<FirebaseUser>(
-            future: FirebaseAuth.instance.currentUser(),
-            builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot){
-                       if (snapshot.hasData){
-                           // this is your user instance
-                           /// is because there is user already logged
-                           return MainScreen(followingGroupsLocal: followingGroup,);
-                        }
-                         /// other way there is no user logged.
-                         return MySignInScreenHome();
-             }
-          ),
-          
-          routes: {
-            '/boot':(context) => MainScreen(),
-            '/signin': (context) => MySignInScreenHome(),
-            '/signup': (context) => SignupPage(),
-            '/forgot-password': (context) => ForgotPasswordScreen(),
-            '/SignInAnim': (context)=> MySignInScreenHome(), 
-          },
-        );
-      }
+    return MaterialApp(
+      title: 'MyApp Title',
 
-      versionCheck(BuildContext context) async {
-  //Get Current installed version of app
-  final PackageInfo info = await PackageInfo.fromPlatform();
-  double currentVersion = double.parse(info.version.trim().replaceAll(".", ""));
+      //onGenerateRoute: Navigation.router.generator,
+      debugShowCheckedModeBanner: false,
+      theme: Constants.lightTheme,
+      darkTheme: Constants.darkTheme,
+      home: FutureBuilder<FirebaseUser>(
+          future: FirebaseAuth.instance.currentUser(),
+          builder:
+              (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+            if (snapshot.hasData) {
+              // this is your user instance
+              /// is because there is user already logged
+              return MainScreen(
+                followingGroupsLocal: followingGroup,
+              );
+            }
 
-  print('curr version is $currentVersion');
+            /// other way there is no user logged.
+            return MySignInScreenHome();
+          }),
 
-  //Get Latest version info from firebase config
-  final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  try {
-    // Using default duration to force fetching from remote server.
-    await remoteConfig.fetch(expiration: const Duration(seconds: 0));
-    await remoteConfig.activateFetched();
-    remoteConfig.getString('force_update_current_version');
-    double newVersion = double.parse(remoteConfig
-        .getString('force_update_current_version')
-        .trim()
-        .replaceAll(".", ""));
-        print('version details $newVersion old currentv $currentVersion');
-    if (newVersion > currentVersion) {
-      // Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-      _showVersionDialog(context);
-          }
-        } on FetchThrottledException catch (exception) {
-          // Fetch throttled.
-          print(exception);
-        } catch (exception) {
-          print('Unable to fetch remote config. Cached or default values will be '
-              'used');
-        }
-      }
-      void upgrade() async {
-        print('inside version upgrader');
-        await RUpgrade.upgradeFromAndroidStore(AndroidStore.GOOGLE_PLAY);
-      //    bool isSuccess =await RUpgrade.upgradeFromUrl(
-      //               PLAY_STORE_URL,
-      //             );
-      //   print('check for upgrade ${isSuccess}');
-       
-      // int id = await RUpgrade.upgrade(
-      //            PLAY_STORE_URL,
-      //            fileName: 'app-release.apk',
-      //            isAutoRequestInstall: true,
-      //             useDownloadManager: false
-      //            );
-
-
-                //  Navigator.pop(context);
-         await _showFreezer(context);
-
-          // print('app upgrade id is $id');
-    }
-
-        _showVersionDialog(context) async {
-  await showDialog<String>(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      String title = "New Update Available";
-      String message =
-          "There is a newer version of app available please download it.";
-      String btnLabel = "Update Now";
-      String btnLabelCancel = "Later";
-      return Platform.isIOS
-          ? new CupertinoAlertDialog(
-              title: Text(title),
-              content: Text(message),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(btnLabel),
-                   onPressed: () => _launchURL(APP_STORE_URL),
-                ),
-                // FlatButton(
-                //   child: Text(btnLabelCancel),
-                //   onPressed: () => Navigator.pop(context),
-                // ),
-              ],
-            )
-          : new AlertDialog(
-              title: Text(title),
-              content: Text(message),
-              // actions: <Widget>[
-                // FlatButton(
-                  // child: Text(btnLabel),
-                  // onPressed: (){},
-                  // onPressed: () => upgrade(),
-                  // onPressed: () => _launchURL(PLAY_STORE_URL),
-                // ),
-                // FlatButton(
-                //   child: Text(btnLabelCancel),
-                //   onPressed: () => Navigator.pop(context),
-                // ),
-              // ],
-            );
-    },
-  );
-}
-
-     _showFreezer(context) async {
-       Navigator.pop(context);
-  await showDialog<String>(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      String title = "Downloading";
-      String message =
-          "New version is downloading, verify";
-      String btnLabel = "Update Now";
-      String btnLabelCancel = "Later";
-
-      return Platform.isIOS
-          ? new CupertinoAlertDialog(
-              title: Text(title),
-              content: Text(message),          
-            )
-          : new AlertDialog(
-              title: Text(title),
-              content: Text(message),
-              actions: <Widget>[
-                // FlatButton(
-                //   child: Text(btnLabel),
-                //   onPressed: upgrade,
-                //   // onPressed: () => _launchURL(PLAY_STORE_URL),
-                // ),
-                // FlatButton(
-                //   child: Text(btnLabelCancel),
-                //   onPressed: () => Navigator.pop(context),
-                // ),
-              ],
-            );
-    },
-  );
-}
-
-_launchURL(String url) async {
- 
-  if (await canLaunch(url)) {
-    await launch(url);
-    
-  } else {
-    throw 'Could not launch $url';
+      routes: {
+        '/boot': (context) => MainScreen(),
+        '/signin': (context) => MySignInScreenHome(),
+        '/signup': (context) => SignupPage(),
+        '/forgot-password': (context) => ForgotPasswordScreen(),
+        '/SignInAnim': (context) => MySignInScreenHome(),
+      },
+    );
   }
-}
+
+  versionCheck(BuildContext context) async {
+    //Get Current installed version of app
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    double currentVersion =
+        double.parse(info.version.trim().replaceAll(".", ""));
+
+    //Get Latest version info from firebase config
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    try {
+      // Using default duration to force fetching from remote server.
+      await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+      await remoteConfig.activateFetched();
+      remoteConfig.getString('force_update_current_version');
+      double newVersion = double.parse(remoteConfig
+          .getString('force_update_current_version')
+          .trim()
+          .replaceAll(".", ""));
+
+      if (newVersion > currentVersion) {
+        // Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+        _showVersionDialog(context);
+      }
+    } on FetchThrottledException catch (exception) {
+      // Fetch throttled.
+
+    } catch (exception) {}
+  }
+
+  void upgrade() async {
+    await RUpgrade.upgradeFromAndroidStore(AndroidStore.GOOGLE_PLAY);
+    //    bool isSuccess =await RUpgrade.upgradeFromUrl(
+    //               PLAY_STORE_URL,
+    //             );
+    //   print('check for upgrade ${isSuccess}');
+
+    // int id = await RUpgrade.upgrade(
+    //            PLAY_STORE_URL,
+    //            fileName: 'app-release.apk',
+    //            isAutoRequestInstall: true,
+    //             useDownloadManager: false
+    //            );
+
+    //  Navigator.pop(context);
+    await _showFreezer(context);
+
+    // print('app upgrade id is $id');
+  }
+
+  _showVersionDialog(context) async {
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        String title = "New Update Available";
+        String message =
+            "There is a newer version of app available please download it.";
+        String btnLabel = "Update Now";
+        String btnLabelCancel = "Later";
+        return Platform.isIOS
+            ? new CupertinoAlertDialog(
+                title: Text(title),
+                content: Text(message),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(btnLabel),
+                    onPressed: () => _launchURL(APP_STORE_URL),
+                  ),
+                  // FlatButton(
+                  //   child: Text(btnLabelCancel),
+                  //   onPressed: () => Navigator.pop(context),
+                  // ),
+                ],
+              )
+            : new AlertDialog(
+                title: Text(title),
+                content: Text(message),
+                // actions: <Widget>[
+                // FlatButton(
+                // child: Text(btnLabel),
+                // onPressed: (){},
+                // onPressed: () => upgrade(),
+                // onPressed: () => _launchURL(PLAY_STORE_URL),
+                // ),
+                // FlatButton(
+                //   child: Text(btnLabelCancel),
+                //   onPressed: () => Navigator.pop(context),
+                // ),
+                // ],
+              );
+      },
+    );
+  }
+
+  _showFreezer(context) async {
+    Navigator.pop(context);
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        String title = "Downloading";
+        String message = "New version is downloading, verify";
+        String btnLabel = "Update Now";
+        String btnLabelCancel = "Later";
+
+        return Platform.isIOS
+            ? new CupertinoAlertDialog(
+                title: Text(title),
+                content: Text(message),
+              )
+            : new AlertDialog(
+                title: Text(title),
+                content: Text(message),
+                actions: <Widget>[
+                  // FlatButton(
+                  //   child: Text(btnLabel),
+                  //   onPressed: upgrade,
+                  //   // onPressed: () => _launchURL(PLAY_STORE_URL),
+                  // ),
+                  // FlatButton(
+                  //   child: Text(btnLabelCancel),
+                  //   onPressed: () => Navigator.pop(context),
+                  // ),
+                ],
+              );
+      },
+    );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }
 
 void main() {
-    WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
   StateWidget stateWidget = new StateWidget(
     child: new MyApp(),
   );
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(statusBarColor: Colors.transparent)
-  );
-  
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-    .then((_) {
-      runApp(new MaterialApp(home: stateWidget));
-    });
+      .then((_) {
+    runApp(new MaterialApp(home: stateWidget));
+  });
 }
 
 class HexColor extends Color {

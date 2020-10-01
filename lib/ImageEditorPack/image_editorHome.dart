@@ -43,11 +43,16 @@ class MyImageEditorPro extends StatefulWidget {
   final String groupLogo, userId, chatId, deliveryMode;
   final bool premiumMode;
   var msgFullCount, msgFullPmCount;
-  MyImageEditorPro({this.appBarColor, 
-  this.premiumMode,this.bottomBarColor, 
-  this.groupLogo, this.userId, this.chatId,
-  this.msgFullCount, this.msgFullPmCount,
-  this.deliveryMode});
+  MyImageEditorPro(
+      {this.appBarColor,
+      this.premiumMode,
+      this.bottomBarColor,
+      this.groupLogo,
+      this.userId,
+      this.chatId,
+      this.msgFullCount,
+      this.msgFullPmCount,
+      this.deliveryMode});
 
   @override
   _MyImageEditorProState createState() => _MyImageEditorProState();
@@ -89,7 +94,8 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
       timeprediction = tim;
     });
   }
-    void setopenbottomsheet() {
+
+  void setopenbottomsheet() {
     Timer.periodic(Duration(milliseconds: 10), (tim) {
       setState(() {});
       openbottomsheet = true;
@@ -112,12 +118,12 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
     offsets.clear();
     multiwidget.clear();
     howmuchwidgetis = 0;
-    
+
     // TODO: implement initState
     super.initState();
   }
 
-   Future<void> _changeLoadingVisible() async {
+  Future<void> _changeLoadingVisible() async {
     setState(() {
       _loadingVisible = !_loadingVisible;
     });
@@ -131,7 +137,6 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
         appBar: new AppBar(
           backgroundColor: Colors.white,
           actions: <Widget>[
-    
             new IconButton(
                 icon: Icon(Icons.clear),
                 onPressed: () {
@@ -140,28 +145,29 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                 }),
             new IconButton(
                 icon: Icon(FontAwesomeIcons.images, color: Colors.redAccent),
-                onPressed: () async{
-                  var image = await ImagePicker.pickImage(
-                                        source: ImageSource.gallery);
-                                    var decodedImage =
-                                        await decodeImageFromList(
-                                            image.readAsBytesSync());
+                onPressed: () async {
+                  var image =
+                      await ImagePicker.pickImage(source: ImageSource.gallery);
+                  var decodedImage =
+                      await decodeImageFromList(image.readAsBytesSync());
 
-                                    setState(() {
-                                      height = decodedImage.height;
-                                      width = decodedImage.width;
-                                      _image = image;
-                                    });
-                                    setState(() => _controller.clear());
+                  setState(() {
+                    height = decodedImage.height;
+                    width = decodedImage.width;
+                    _image = image;
+                  });
+                  setState(() => _controller.clear());
                   // bottomsheets();
                 }),
             new FlatButton(
                 child: new Text("Upload"),
                 textColor: Colors.black,
-                onPressed: ()async {
-                  if(_image == null){
-                    print('i was inside');
-                    _showBasicsFlash(context:  context, duration: Duration(seconds: 2), messageText : 'Please upload any pic to proceed ...!');
+                onPressed: () async {
+                  if (_image == null) {
+                    _showBasicsFlash(
+                        context: context,
+                        duration: Duration(seconds: 2),
+                        messageText: 'Please upload any pic to proceed ...!');
                     return;
                   }
                   await _changeLoadingVisible();
@@ -181,26 +187,41 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                         DateTime.now().millisecondsSinceEpoch.toString() +
                         '.png');
 
-
-
 // save the pic to db
 
-     DateTime now = new DateTime.now();
-      
-    final StorageReference firebaseStorageRef = await FirebaseStorage.instance.ref().child('${widget.chatId}${now.millisecondsSinceEpoch}.jpg');
-    final StorageUploadTask uploadTask = await firebaseStorageRef.putFile(image);
-     var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-    String url = dowurl.toString();
-    print('uploaded url is $url');
-        try {
-                        var body ={ "imageUrl":url, "date": now,"author": widget.userId, "type": "Image", "premium": widget.premiumMode, "messageMode": widget.deliveryMode };
-                      await  FirebaseController.instanace.sendChatImage(widget.chatId, body, widget.msgFullCount, widget.msgFullPmCount, widget.deliveryMode);
-                     image = null;
-                      } catch (e) {
-                        print('error was catched ${e}');
-                      }
-         // _image = null;
-          setState(() {});
+                    DateTime now = new DateTime.now();
+
+                    final StorageReference firebaseStorageRef =
+                        await FirebaseStorage.instance.ref().child(
+                            '${widget.chatId}${now.millisecondsSinceEpoch}.jpg');
+                    final StorageUploadTask uploadTask =
+                        await firebaseStorageRef.putFile(image);
+                    var dowurl = await (await uploadTask.onComplete)
+                        .ref
+                        .getDownloadURL();
+                    String url = dowurl.toString();
+
+                    try {
+                      var body = {
+                        "imageUrl": url,
+                        "date": now,
+                        "author": widget.userId,
+                        "type": "Image",
+                        "premium": widget.premiumMode,
+                        "messageMode": widget.deliveryMode
+                      };
+                      await FirebaseController.instanace.sendChatImage(
+                          widget.chatId,
+                          body,
+                          widget.msgFullCount,
+                          widget.msgFullPmCount,
+                          widget.deliveryMode);
+                      image = null;
+                    } catch (e) {
+                      print('error was catched ${e}');
+                    }
+                    // _image = null;
+                    setState(() {});
 
                     Navigator.pop(context, image);
                   }).catchError((onError) {
@@ -211,127 +232,134 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
           ],
         ),
         body: Center(
-          child: 
-          LoadingScreen(
-         inAsyncCall: _loadingVisible,
-         child: Screenshot(
-            controller: screenshotController,
-            child: Container(
-              margin: EdgeInsets.all(20),
-              color: Colors.white,
-              width: width.toDouble(),
-              height: height.toDouble(),
-              child: RepaintBoundary(
-                  key: globalKey,
-                  child: Stack(
-                    children: <Widget>[
-                      _image != null
-                          ? Image.file(
-                              _image,
-                              height: height.toDouble(),
-                              width: width.toDouble(),
-                              fit: BoxFit.cover,
-                            )
-                          : Container(
-                            child:    
-                     Align(
-                       alignment: Alignment.center,
-                     child: Column(
-                       children: <Widget>[
-                         SizedBox(height: MediaQuery.of(context).size.height/4.5),
-                         
-                         new Container(
-              height: MediaQuery.of(context).size.height / 3,
-              child: SvgPicture.asset('assets/emptyBox.svg'),
-            
-            ),
-
-            new Text('Upload Image', style: TextStyle(color: Colors.black, fontSize: 20),),
-                         
-                       ],
-                     )
-                     )
-                          ),
-                      Container(
-                        child: GestureDetector(
-                            onPanUpdate: (DragUpdateDetails details) {
-                              setState(() {
-                                RenderBox object = context.findRenderObject();
-                                Offset _localPosition = object
-                                    .globalToLocal(details.globalPosition);
-                                _points = new List.from(_points)
-                                  ..add(_localPosition);
-                              });
-                            },
-                            onPanEnd: (DragEndDetails details) {
-                              _points.add(null);
-                            },
-                            child: Signat()),
-                      ),
-                      Stack(
-                        children: multiwidget.asMap().entries.map((f) {
-                          return type[f.key] == 1
-                              ? EmojiView(
-                                  left: offsets[f.key].dx,
-                                  top: offsets[f.key].dy,
-                                  ontap: () {
-                                    scaf.currentState
-                                        .showBottomSheet((context) {
-                                      return Sliders(
-                                        size: f.key,
-                                        sizevalue: fontsize[f.key].toDouble(),
-                                      );
-                                    });
-                                  },
-                                  onpanupdate: (details) {
-                                    setState(() {
-                                      offsets[f.key] = Offset(
-                                          offsets[f.key].dx + details.delta.dx,
-                                          offsets[f.key].dy + details.delta.dy);
-                                    });
-                                  },
-                                  // value: f.value.toString(),
-                                  // value : "assets/background.png",
-                                  // value: "assets/background.png",
-                                 value: widget.groupLogo,
-                                  fontsize: fontsize[f.key].toDouble(),
-                                  align: TextAlign.center,
-                                )
-                              : type[f.key] == 2
-                                  ? TextView(
-                                      left: offsets[f.key].dx,
-                                      top: offsets[f.key].dy,
-                                      ontap: () {
-                                        scaf.currentState
-                                            .showBottomSheet((context) {
-                                          return Sliders(
-                                            size: f.key,
-                                            sizevalue:
-                                                fontsize[f.key].toDouble(),
-                                          );
-                                        });
-                                      },
-                                      onpanupdate: (details) {
-                                        setState(() {
-                                          offsets[f.key] = Offset(
-                                              offsets[f.key].dx +
-                                                  details.delta.dx,
-                                              offsets[f.key].dy +
-                                                  details.delta.dy);
-                                        });
-                                      },
-                                      value: f.value.toString(),
-                                      fontsize: fontsize[f.key].toDouble(),
-                                      align: TextAlign.center,
-                                    )
-                                  : new Container();
-                        }).toList(),
-                      )
-                    ],
-                  )),
+          child: LoadingScreen(
+            inAsyncCall: _loadingVisible,
+            child: Screenshot(
+              controller: screenshotController,
+              child: Container(
+                margin: EdgeInsets.all(20),
+                color: Colors.white,
+                width: width.toDouble(),
+                height: height.toDouble(),
+                child: RepaintBoundary(
+                    key: globalKey,
+                    child: Stack(
+                      children: <Widget>[
+                        _image != null
+                            ? Image.file(
+                                _image,
+                                height: height.toDouble(),
+                                width: width.toDouble(),
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      children: <Widget>[
+                                        SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                4.5),
+                                        new Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              3,
+                                          child: SvgPicture.asset(
+                                              'assets/emptyBox.svg'),
+                                        ),
+                                        new Text(
+                                          'Upload Image',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20),
+                                        ),
+                                      ],
+                                    ))),
+                        Container(
+                          child: GestureDetector(
+                              onPanUpdate: (DragUpdateDetails details) {
+                                setState(() {
+                                  RenderBox object = context.findRenderObject();
+                                  Offset _localPosition = object
+                                      .globalToLocal(details.globalPosition);
+                                  _points = new List.from(_points)
+                                    ..add(_localPosition);
+                                });
+                              },
+                              onPanEnd: (DragEndDetails details) {
+                                _points.add(null);
+                              },
+                              child: Signat()),
+                        ),
+                        Stack(
+                          children: multiwidget.asMap().entries.map((f) {
+                            return type[f.key] == 1
+                                ? EmojiView(
+                                    left: offsets[f.key].dx,
+                                    top: offsets[f.key].dy,
+                                    ontap: () {
+                                      scaf.currentState
+                                          .showBottomSheet((context) {
+                                        return Sliders(
+                                          size: f.key,
+                                          sizevalue: fontsize[f.key].toDouble(),
+                                        );
+                                      });
+                                    },
+                                    onpanupdate: (details) {
+                                      setState(() {
+                                        offsets[f.key] = Offset(
+                                            offsets[f.key].dx +
+                                                details.delta.dx,
+                                            offsets[f.key].dy +
+                                                details.delta.dy);
+                                      });
+                                    },
+                                    // value: f.value.toString(),
+                                    // value : "assets/background.png",
+                                    // value: "assets/background.png",
+                                    value: widget.groupLogo,
+                                    fontsize: fontsize[f.key].toDouble(),
+                                    align: TextAlign.center,
+                                  )
+                                : type[f.key] == 2
+                                    ? TextView(
+                                        left: offsets[f.key].dx,
+                                        top: offsets[f.key].dy,
+                                        ontap: () {
+                                          scaf.currentState
+                                              .showBottomSheet((context) {
+                                            return Sliders(
+                                              size: f.key,
+                                              sizevalue:
+                                                  fontsize[f.key].toDouble(),
+                                            );
+                                          });
+                                        },
+                                        onpanupdate: (details) {
+                                          setState(() {
+                                            offsets[f.key] = Offset(
+                                                offsets[f.key].dx +
+                                                    details.delta.dx,
+                                                offsets[f.key].dy +
+                                                    details.delta.dy);
+                                          });
+                                        },
+                                        value: f.value.toString(),
+                                        fontsize: fontsize[f.key].toDouble(),
+                                        align: TextAlign.center,
+                                      )
+                                    : new Container();
+                          }).toList(),
+                        )
+                      ],
+                    )),
+              ),
             ),
           ),
-        ),
         ),
         bottomNavigationBar: openbottomsheet
             ? new Container()
@@ -343,14 +371,14 @@ class _MyImageEditorProState extends State<MyImageEditorPro> {
                 child: new ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
-                            BottomBarContainer(
+                    BottomBarContainer(
                       icons: FontAwesomeIcons.smile,
                       ontap: () {
-type.add(1);
-                            fontsize.add(20);
-                            offsets.add(Offset.zero);
-                            multiwidget.add("😂");
-                            howmuchwidgetis++;
+                        type.add(1);
+                        fontsize.add(20);
+                        offsets.add(Offset.zero);
+                        multiwidget.add("😂");
+                        howmuchwidgetis++;
 
                         // Future getemojis = showModalBottomSheet(
                         //     context: context,
@@ -408,7 +436,6 @@ type.add(1);
                             MaterialPageRoute(
                                 builder: (context) => TextEditor()));
                         if (value.toString().isEmpty) {
-                          print("true");
                         } else {
                           type.add(2);
                           fontsize.add(20);
@@ -446,10 +473,10 @@ type.add(1);
                       icons: FontAwesomeIcons.smile,
                       ontap: () async {
                         type.add(1);
-                          fontsize.add(20);
-                          offsets.add(Offset.zero);
-                          multiwidget.add("wowddx");
-                          howmuchwidgetis++;
+                        fontsize.add(20);
+                        offsets.add(Offset.zero);
+                        multiwidget.add("wowddx");
+                        howmuchwidgetis++;
                         // final value = await Navigator.push(
                         //     context,
                         //     MaterialPageRoute(
@@ -498,9 +525,12 @@ type.add(1);
                 ),
               ));
   }
- void _showBasicsFlash({
+
+  void _showBasicsFlash({
     Duration duration,
-    flashStyle = FlashStyle.floating,BuildContext context, String messageText,
+    flashStyle = FlashStyle.floating,
+    BuildContext context,
+    String messageText,
   }) {
     showFlash(
       context: context,
@@ -518,8 +548,6 @@ type.add(1);
       },
     );
   }
-
- 
 }
 
 class Signat extends StatefulWidget {
@@ -591,7 +619,7 @@ class _SlidersState extends State<Sliders> {
                 onChanged: (v) {
                   setState(() {
                     slider = v;
-                    print(v.toInt());
+
                     fontsize[widget.size] = v.toInt();
                   });
                 }),

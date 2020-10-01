@@ -5,9 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/screens/conversation.dart';
 
-
 class ChatItem extends StatefulWidget {
-
   final String dp;
   final String name;
   final String time;
@@ -76,26 +74,24 @@ class _ChatItemState extends State<ChatItem> {
             //     ),
             //   ),
             // ),
-
           ],
         ),
-
         title: Text(
           "${widget.name}",
           maxLines: 1,
           style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w600,
-                ),
+            fontSize: 14,
+            color: Color(0xff3A4276),
+            fontWeight: FontWeight.w600,
+          ),
         ),
         subtitle: Text(
           "${widget.msg}",
           style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w300,
-                ),
+            fontSize: 12,
+            color: Color(0xff3A4276),
+            fontWeight: FontWeight.w300,
+          ),
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
         ),
@@ -110,62 +106,60 @@ class _ChatItemState extends State<ChatItem> {
                 fontSize: 11,
               ),
             ),
-
             SizedBox(height: 5),
             widget.counter == 0
-                ?SizedBox()
-                :InkWell(
-                  onTap: () async {
+                ? SizedBox()
+                : InkWell(
+                    onTap: () async {
+                      var userId = widget.fullUserJson['userId'];
+                      var modifiedDate = widget.fullUserJson['expiresOn'];
+                      var kycDocId = widget.fullUserJson['kycDocId'];
+                      var period = widget.fullUserJson['membershipDuration'];
+                      var joinedTime = widget.fullUserJson['joinedId'];
+                      var expiredTime = widget.fullUserJson['expiresOn'];
 
-                    
-
-
-                    
-                    var userId = widget.fullUserJson['userId'];
-                    var modifiedDate = widget.fullUserJson['expiresOn'];
-                    var kycDocId = widget.fullUserJson['kycDocId'];
-                    var period = widget.fullUserJson['membershipDuration'];
-                    var joinedTime = widget.fullUserJson['joinedId'];
-                    var expiredTime = widget.fullUserJson['expiresOn'];
-             
-                  FirebaseController.instanace.removeMemberOnExpiry(userId, joinedTime, expiredTime, kycDocId, period, widget.chatId, widget.fullUserJson);
-                   try {
-          var response = await dio.get("https://asia-south1-royalpro.cloudfunctions.net/onMemberRemove?id=${userId}&chatId=${widget.chatId}&groupName=${widget.groupTitle}");
-                  
-                  print('remove was clicked  ${response}');
-      } catch (e) {
-        print('error is ${e}');
-      }
-                
-                  },
-                  child:Container(
-              padding: EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              constraints: BoxConstraints(
-                minWidth: 11,
-                minHeight: 11,
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(top: 0, left: 5, right: 5, bottom: 2),
-                child:Text(
-                  "${widget.counter}",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
+                      FirebaseController.instanace.removeMemberOnExpiry(
+                          userId,
+                          joinedTime,
+                          expiredTime,
+                          kycDocId,
+                          period,
+                          widget.chatId,
+                          widget.fullUserJson);
+                      try {
+                        var response = await dio.get(
+                            "https://asia-south1-royalpro.cloudfunctions.net/onMemberRemove?id=${userId}&chatId=${widget.chatId}&groupName=${widget.groupTitle}");
+                      } catch (e) {
+                        print('error is ${e}');
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 11,
+                        minHeight: 11,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            top: 0, left: 5, right: 5, bottom: 2),
+                        child: Text(
+                          "${widget.counter}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-                ),
           ],
         ),
-        onTap: (){
-         
-        },
+        onTap: () {},
       ),
     );
   }

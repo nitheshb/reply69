@@ -30,29 +30,34 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                     onChanged: (val) {
                       setState(() {
                         // this.phoneNo = '+918555974390';
-                       // this.phoneNo = '+919849000525';
-                       this.phoneNo = val;
+                        // this.phoneNo = '+919849000525';
+                        this.phoneNo = val;
                       });
                     },
                   )),
-                  codeSent ? Padding(
-                  padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                  child: TextFormField(
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(hintText: 'Enter OTP'),
-                    onChanged: (val) {
-                      setState(() {
-                        this.smsCode = val;
-                      });
-                    },
-                  )) : Container(),
+              codeSent
+                  ? Padding(
+                      padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                      child: TextFormField(
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(hintText: 'Enter OTP'),
+                        onChanged: (val) {
+                          setState(() {
+                            this.smsCode = val;
+                          });
+                        },
+                      ))
+                  : Container(),
               Padding(
                   padding: EdgeInsets.only(left: 25.0, right: 25.0),
                   child: RaisedButton(
-                      child: Center(child: codeSent ? Text('Login'):Text('Verify')),
+                      child: Center(
+                          child: codeSent ? Text('Login') : Text('Verify')),
                       onPressed: () {
-                        print('login was pressed ${smsCode} ${verificationId}');
-                        codeSent ? PhoneAuthService().signInWithOTP(smsCode, verificationId):verifyPhone(phoneNo);
+                        codeSent
+                            ? PhoneAuthService()
+                                .signInWithOTP(smsCode, verificationId)
+                            : verifyPhone(phoneNo);
                       }))
             ],
           )),
@@ -65,9 +70,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
     };
 
     final PhoneVerificationFailed verificationfailed =
-        (AuthException authException) {
-      print('${authException.message}');
-    };
+        (AuthException authException) {};
 
     final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
       this.verificationId = verId;
@@ -90,9 +93,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   }
 }
 
-
 //  not rajayogan
-
 
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter/material.dart';
@@ -208,7 +209,6 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
 //                   ),
 
 //                   SizedBox(height: 16,),
-
 
 //                   Container(
 //                     width: double.infinity,
