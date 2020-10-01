@@ -18,7 +18,6 @@ import 'package:notification/util/state_widget.dart';
 import 'package:notification/widgets/displayChatsMenuItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-<<<<<<< HEAD
 
 Color color1 = Colors.grey[600];
 
@@ -31,8 +30,6 @@ final style1 = GoogleFonts.nunito(
 final style3 = GoogleFonts.nunito(
     color: Colors.black, fontSize: 16, fontWeight: FontWeight.w800);
 
-=======
->>>>>>> ddc4446e8990b69da9af45a6b5a5f5abd0ccefc5
 class DisplayMatches extends StatefulWidget {
   DisplayMatches({
     Key key,
@@ -61,19 +58,13 @@ class _DisplayMatchesState extends State<DisplayMatches>
     'nQ4T04slkEdANneRb4k68',
     'btl5r2JUwn5imaTToPKq'
   ];
-<<<<<<< HEAD
 
-=======
->>>>>>> ddc4446e8990b69da9af45a6b5a5f5abd0ccefc5
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 4);
-<<<<<<< HEAD
     print('iwas called');
-=======
->>>>>>> ddc4446e8990b69da9af45a6b5a5f5abd0ccefc5
   }
 
   // void dispose() {
@@ -104,11 +95,8 @@ class _DisplayMatchesState extends State<DisplayMatches>
     //followingGroups =  ['nQ4T04slkEdANneRb4k62'];
     appState = StateWidget.of(context).state;
     // getUserData(userId);
-<<<<<<< HEAD
     print('check ${followingGroups}');
-=======
 
->>>>>>> ddc4446e8990b69da9af45a6b5a5f5abd0ccefc5
     return Scaffold(
       appBar: AppBar(
         title: TabBar(
@@ -188,7 +176,6 @@ class _DisplayMatchesState extends State<DisplayMatches>
               }
               if (snapshot.hasData && snapshot.data.documents.length > 0) {
                 // return Text("snapshot ${snapshot.data.documents.length}");
-<<<<<<< HEAD
                 return InkWell(
                   child: ListView.separated(
                     padding: EdgeInsets.all(10),
@@ -421,7 +408,7 @@ void _settingModalBottomSheet(context) {
 
 
   showModalBottomSheet<dynamic>(
-      barrierColor: Colors.black.withOpacity(0.7),
+      // barrierColor: Colors.black.withOpacity(0.7),
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       context: context,
@@ -728,100 +715,4 @@ void _settingModalBottomSheet(context) {
         );
       });
   //#00A155 #00C37A
-=======
-                return ListView.separated(
-                  padding: EdgeInsets.all(10),
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        height: 0.5,
-                        // width: MediaQuery.of(context).size.width / 1.3,
-                        child: Divider(
-                          color: Colors.grey,
-                        ),
-                      ),
-                    );
-                  },
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Map friend = friends[index];
-                    DocumentSnapshot ds = snapshot.data.documents[index];
-                    var matchDetails = ds['matchDetails'] ?? {};
-                    var format = DateFormat('d-MMMM HH:mm a');
-
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    matchDetails['team_1_pic'],
-                                  ),
-                                  radius: 25,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text("${matchDetails['team-1']}",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 15,
-                                        color: Color(0xff3A4276),
-                                        fontWeight: FontWeight.w800,
-                                      )),
-                                )
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Text("${matchDetails['type']}",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      color: Color(0xff3A4276),
-                                      fontWeight: FontWeight.w700,
-                                    )),
-                                SizedBox(height: 30),
-                                Text(
-                                    "${format.format(DateTime.fromMicrosecondsSinceEpoch(int.parse(ds['startTime']) * 1000))}",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      color: Color(0xff3A4276),
-                                      fontWeight: FontWeight.w500,
-                                    )),
-                              ],
-                            ),
-                            Column(
-                              children: <Widget>[
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    matchDetails['team_2_pic'],
-                                  ),
-                                  radius: 25,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text("${matchDetails['team-2']}",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 15,
-                                        color: Color(0xff3A4276),
-                                        fontWeight: FontWeight.w800,
-                                      )),
-                                )
-                              ],
-                            ),
-                          ])),
-                    );
-                  },
-                );
-              }
-              return Text("Loading...");
-            }));
-  }
-
-  @override
-  bool get wantKeepAlive => true;
->>>>>>> ddc4446e8990b69da9af45a6b5a5f5abd0ccefc5
 }
