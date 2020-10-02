@@ -453,11 +453,10 @@ class FirebaseController {
         .document("${check1.documentID}")
         .updateData(documentId);
     await Firestore.instance.collection('IAM').document(userId).updateData({
-      'followingGroups0': FieldValue.arrayUnion(['${check1.documentID}'])
-    });
-    await Firestore.instance.collection('IAM').document(userId).updateData({
+      'followingGroups0': FieldValue.arrayUnion(['${check1.documentID}']),
       'myOwnGroups': FieldValue.arrayUnion(['${check1.documentID}'])
     });
+
     body['chatId'] = check1.documentID;
     searchGroupBody['chatId'] = check1.documentID;
     await Firestore.instance
