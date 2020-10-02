@@ -66,7 +66,7 @@ class _MainScreenState extends State<MainScreen> {
           // ChatsOld(),
           // Home(),
           DisplayMatches(uId: userId, uEmailId: email),
-          Chats(
+          GroupsLandingScreen(
               uId: userId,
               uEmailId: email,
               followingGroupsLocal: widget.followingGroupsLocal,

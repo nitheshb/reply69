@@ -1,225 +1,227 @@
-import 'dart:async';
-import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/pages/imageFullView.dart';
 
 class ChatBubble extends StatefulWidget {
+  final String dp;
+  final String name;
+  final String time;
+  final String img;
+  final String message;
+  final String type;
+  final String messageMode;
+  final String selMessageMode;
+  final String uxId;
+  final premium;
 
-
-  final String message, time, username, type, replyText, replyName;
-  final bool isMe, isGroup, isReply;
-
-  ChatBubble({
-    @required this.message,
-    @required this.time,
-    @required this.isMe,
-    @required this.isGroup,
-    @required this.username,
-    @required this.type,
-    @required this.replyText,
-    @required this.isReply,
-    @required this.replyName});
-
-
+  ChatBubble(
+      {Key key,
+      @required this.dp,
+      @required this.name,
+      @required this.time,
+      @required this.img,
+      @required this.message,
+      @required this.messageMode,
+      @required this.selMessageMode,
+      this.uxId,
+      this.premium,
+      this.type})
+      : super(key: key);
   @override
   _ChatBubbleState createState() => _ChatBubbleState();
 }
 
-
 class _ChatBubbleState extends State<ChatBubble> {
-
-
-  List colors = Colors.primaries;
-  static Random random = Random();
-  int rNum = random.nextInt(18);
-
-
-  Color chatBubbleColor(){
-    if(widget.isMe){
-      return Theme.of(context).accentColor;
-    }else{
-      if(Theme.of(context).brightness == Brightness.dark){
-        return Colors.grey[800];
-      }else{
-        return Colors.grey[200];
-      }
-    }
-  }
-
-  Color chatBubbleReplyColor(){
-    if(Theme.of(context).brightness == Brightness.dark){
-      return Colors.grey[600];
-    }else{
-      return Colors.grey[50];
-    }
-  }
-    void onTapProfileChatItem(BuildContext context, chat) {
+  void onTapProfileChatItem(BuildContext context, chat) {
     Dialog profileDialog = DialogHelpers.getProfileDialog(
-        context: context,
-        id: 123,
-        imageUrl: chat,
-        name: "",
-        );
+      context: context,
+      id: 123,
+      imageUrl: chat,
+      name: "",
+    );
     showDialog(
         context: context, builder: (BuildContext context) => profileDialog);
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final align = widget.isMe ? CrossAxisAlignment.end: CrossAxisAlignment.start;
-    final radius = widget.isMe
-        ? BorderRadius.only(
-      topLeft: Radius.circular(5.0),
-      bottomLeft: Radius.circular(5.0),
-      bottomRight: Radius.circular(10.0),
-    )
-        : BorderRadius.only(
-      topRight: Radius.circular(5.0),
-      bottomLeft: Radius.circular(10.0),
-      bottomRight: Radius.circular(5.0),
-    );
-    return Column(
-      crossAxisAlignment: align,
-      children: <Widget>[
-        Container(
-          margin: const EdgeInsets.all(3.0),
-          padding: const EdgeInsets.all(5.0),
-          decoration: BoxDecoration(
-            color: chatBubbleColor(),
-            borderRadius: radius,
-          ),
-          constraints: BoxConstraints(
-            maxWidth:  MediaQuery.of(context).size.width/1.3,
-            minWidth: 20.0,
-          ),
+    var colorBg;
+    if (widget.selMessageMode == 'All') {
+      colorBg = Color(0xfff8471a);
+    } else if (widget.selMessageMode == 'Prime') {
+      colorBg = Color(0xff3ce262);
+    } else {
+      colorBg = Color(0xff2c87ff);
+    }
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade100,
+              blurRadius: widget.messageMode == 'paymentAccept' ? 0 : 6,
+              spreadRadius: widget.messageMode == 'paymentAccept' ? 0 : 10,
+            )
+          ],
+        ),
+        child: InkWell(
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              widget.isMe?SizedBox():
-              widget.isGroup?Padding(
-                padding: EdgeInsets.only(right: 48.0),
-                child: Container(
-                  child: Text(
-                    widget.username,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: colors[rNum],
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                  alignment: Alignment.centerLeft,
-                ),
-              )
-                  :SizedBox(),
-              widget.isGroup?widget.isMe?SizedBox():SizedBox(height: 5):SizedBox(),
-
-
-              widget.isReply?Container(
-                decoration: BoxDecoration(
-                  color: chatBubbleReplyColor(),
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                ),
-                constraints: BoxConstraints(
-                  minHeight: 25,
-                  maxHeight: 100,
-                  minWidth: 80,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-
-                      Container(
+              widget.type == 'text'
+                  ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: colorBg,
+                        borderRadius: BorderRadius.circular(6),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade100,
+                            blurRadius:
+                                widget.messageMode == 'paymentAccept' ? 0 : 6,
+                            spreadRadius:
+                                widget.messageMode == 'paymentAccept' ? 0 : 10,
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          widget.isMe?"You":widget.replyName,
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                          widget.message == ""
+                              ? "Empty Message"
+                              : widget.message,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
                           ),
-                          maxLines: 1,
-                          textAlign: TextAlign.left,
                         ),
-                        alignment: Alignment.centerLeft,
-                      ),
-
-                      SizedBox(height: 2),
-                      Container(
-                        child:Text(
-                          widget.replyText,
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.title.color,
-                            fontSize: 10,
-                          ),
-                          maxLines: 2,
+                      ))
+                  : InkWell(
+                      onTap: () {
+                        onTapProfileChatItem(context, widget.img);
+                      },
+                      child: Image(
+                        image: CachedNetworkImageProvider(widget.img),
+                        height: MediaQuery.of(context).size.width,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.fill,
+                      )),
+              // Image.network(
+              //   "${widget.img}",
+              //   // "https://firebasestorage.googleapis.com/v0/b/teamplayers-f3b25.appspot.com/o/myimage1.jpg?alt=media&token=8b2069b9-aeb0-4c1d-a861-b7e9ab1e1dd6",
+              //   height: 250,
+              //   width: MediaQuery.of(context).size.width,
+              //   fit: BoxFit.cover,
+              // ),
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          // this is for only the user screenshot approval view
+                          child: Visibility(
+                              visible: widget.messageMode == 'paymentAccept',
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    "${widget.name}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 6.0, top: 4.0),
+                                    child: Text(
+                                      "${widget.uxId}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
                         ),
-                        alignment: Alignment.centerLeft,
-                      ),
-
-                    ],
+                        Row(
+                          children: <Widget>[
+                            Visibility(
+                              visible: widget.messageMode == 'Prime',
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 8.0, bottom: 2),
+                                child: Icon(
+                                  FontAwesomeIcons.crown,
+                                  color: Colors.blue,
+                                  size: 8,
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: widget.messageMode == 'All',
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 8.0, bottom: 2),
+                                child: Icon(
+                                  FontAwesomeIcons.users,
+                                  color: Colors.blue,
+                                  size: 8,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "${widget.time}",
+                              style: GoogleFonts.poppins(
+                                fontSize: 10,
+                                color: Color(0xff3A4276),
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ):SizedBox(width: 2),
-
-              widget.isReply?SizedBox(height: 5):SizedBox(),
-              Padding(
-                padding: EdgeInsets.all(widget.type == "text" ? 5:0),
-                child: widget.type == "text"? !widget.isReply
-                    ?Text(
-                  widget.message,
-                  style:  TextStyle(
-                    color: widget.isMe
-                        ? Colors.white
-                        : Theme.of(context).textTheme.title.color,
-                  ),
-                )
-                    :Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    widget.message,
-                    style:  TextStyle(
-                      color: widget.isMe
-                          ? Colors.white
-                          : Theme.of(context).textTheme.title.color,
-                    ),
-                  ),
-                ):    GestureDetector(
-                  onTap: (){ onTapProfileChatItem(context, widget.message);},
-                  child: Container(
-      height: 220.0,
-      width: 220.0,
-       decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(widget.message),
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius: BorderRadius.circular(20.0),
-                  )
-    ),
-                )
               ),
+
+//  ListTile(
+              // leading: CircleAvatar(
+              //   backgroundImage: AssetImage(
+              //     "${widget.dp}",
+              //   ),
+              // ),
+
+              // contentPadding: EdgeInsets.all(0),
+              // title: Text(
+              //   "${widget.name}",
+              //   style: TextStyle(
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+              // trailing: Text(
+              //   "${widget.time}",
+              //   style: TextStyle(
+              //     fontWeight: FontWeight.w300,
+              //     fontSize: 11,
+              //   ),
+              // ),
+              // ),
             ],
           ),
+          onTap: () {},
         ),
-
-        Padding(
-          padding: widget.isMe
-              ? EdgeInsets.only(right: 10, bottom: 10.0,)
-              :EdgeInsets.only(left: 10, bottom: 10.0,),
-          child: Text(
-            widget.time,
-            style: TextStyle(
-              color: Theme.of(context).textTheme.title.color,
-              fontSize: 10.0,
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

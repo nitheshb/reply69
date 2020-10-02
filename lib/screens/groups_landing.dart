@@ -22,8 +22,8 @@ import 'package:notification/widgets/displayChatsMenuItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
-class Chats extends StatefulWidget {
-  Chats(
+class GroupsLandingScreen extends StatefulWidget {
+  GroupsLandingScreen(
       {Key key,
       this.uId,
       this.uEmailId,
@@ -33,10 +33,10 @@ class Chats extends StatefulWidget {
   final String uId, uEmailId;
   List followingGroupsLocal, followingGroupsReadCountLocal;
   @override
-  _ChatsState createState() => _ChatsState();
+  _GroupsLandingScreenState createState() => _GroupsLandingScreenState();
 }
 
-class _ChatsState extends State<Chats>
+class _GroupsLandingScreenState extends State<GroupsLandingScreen>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TabController _tabController;
   StateModel appState;
