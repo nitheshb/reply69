@@ -145,6 +145,7 @@ class Auth {
   static Future<String> storeUserLocal(User user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> approvedGroupsList = [];
+    List<String> myOwnGroupsList = [];
     String storeUser = userToJson(user);
     await prefs.setString('user', storeUser);
 
@@ -165,6 +166,7 @@ class Auth {
       });
     }
     await prefs.setStringList('approvedPrimeGroups', approvedGroupsList);
+    await prefs.setStringList('myOwnGroups', myOwnGroupsList);
 
     List<String> followingGroupsLocal = [];
 

@@ -6,17 +6,16 @@ import 'package:notification/screens/profile.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'groups_landing.dart';
 
 class MainScreen extends StatefulWidget {
-  MainScreen(
-      {Key key,
-      this.userId,
-      this.followingGroupsLocal,
-      this.launchKey,
-      this.followingGroupsReadCountLocal})
-      : super(key: key);
+    MainScreen({
+    Key key,
+    this.userId,
+    this.followingGroupsLocal,
+    this.launchKey,
+    this.followingGroupsReadCountLocal
+  }) : super(key: key);
   final String userId;
   List followingGroupsLocal, followingGroupsReadCountLocal;
   int launchKey;
@@ -26,9 +25,10 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   PageController _pageController;
-  StateModel appState;
+  StateModel appState;  
   int _page = 1;
-  List localDataFollowingGroups = [];
+  List localDataFollowingGroups =[];
+
 
 // loadingData()async{
 //   print(' iwas here');
@@ -39,23 +39,32 @@ class _MainScreenState extends State<MainScreen> {
 //      localDataFollowingGroups = check;
 //    });
 // }
-  getUserData(userId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var followingGroups = await prefs.getStringList('followingGroups');
+
+
+getUserData(userId)async {
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+     var followingGroups = await prefs.getStringList('followingGroups');
     // return followingGroups;
 
-    localDataFollowingGroups = followingGroups ?? [];
-  }
+
+print('wowow check this  ${followingGroups}');
+   localDataFollowingGroups = followingGroups ?? [];
+}
 
   @override
   Widget build(BuildContext context) {
-    appState = StateWidget.of(context).state;
+            appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
     // final localFollowingGroups = appState.user;
-    final approvedGroups = appState?.user?.approvedGroups;
+       final approvedGroups = appState?.user?.approvedGroups;
 
+    print('approvedGroups==> ${approvedGroups}');
+    print('checking groups 2 ${localDataFollowingGroups}');
     // loadingData();
+    print('it should show up here ${widget.followingGroupsReadCountLocal}');
+  
+    
 
     return Scaffold(
       body: PageView(
@@ -65,27 +74,25 @@ class _MainScreenState extends State<MainScreen> {
         children: <Widget>[
           // ChatsOld(),
           // Home(),
-          DisplayMatches(uId: userId, uEmailId: email),
-          Chats(
-              uId: userId,
-              uEmailId: email,
-              followingGroupsLocal: widget.followingGroupsLocal,
-              followingGroupsReadCountLocal:
-                  widget.followingGroupsReadCountLocal),
+           DisplayMatches(uId: userId, uEmailId: email),
+          Chats(uId: userId, uEmailId: email, followingGroupsLocal: widget.followingGroupsLocal, followingGroupsReadCountLocal: widget.followingGroupsReadCountLocal ),
           // Notifications(),
           // Home(),
           Profile(),
         ],
       ),
+
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           // sets the background color of the `BottomNavigationBar`
           canvasColor: Theme.of(context).primaryColor,
           // sets the active color of the `BottomNavigationBar` if `Brightness` is light
           primaryColor: Theme.of(context).accentColor,
-          textTheme: Theme.of(context).textTheme.copyWith(
-                caption: TextStyle(color: Colors.grey[500]),
-              ),
+          textTheme: Theme
+              .of(context)
+              .textTheme
+              .copyWith(caption: TextStyle(color: Colors.grey[500]),
+          ),
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -96,37 +103,37 @@ class _MainScreenState extends State<MainScreen> {
             //   ),
             //   title: Container(height: 0.0),
             // ),
-
+            
             // BottomNavigationBarItem(
             //   icon: Icon(
             //     Icons.home,
             //   ),
             //   title: Container(height: 0.0),
             // ),
-
+        
             BottomNavigationBarItem(
               icon: Icon(
                 FontAwesomeIcons.calendarAlt,
               ),
-              title: Text("Schedule",
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w500,
-                  )),
+              title: Text("Schedule", style:GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
             ),
 
+           
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.message,
               ),
-              title: Text("Chats",
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w500,
-                  )),
+              title: Text("Chats", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
             ),
+            
 
             // BottomNavigationBarItem(
             //   icon: IconBadge(
@@ -139,12 +146,11 @@ class _MainScreenState extends State<MainScreen> {
               icon: Icon(
                 Icons.settings,
               ),
-              title: Text("Profile",
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w500,
-                  )),
+              title: Text("Profile", style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w500,
+                )),
             ),
           ],
           onTap: navigationTapped,
@@ -162,8 +168,8 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 1);
-    getUserData(widget.userId);
-    // loadingData();
+     getUserData(widget.userId);
+   // loadingData();
   }
 
   @override

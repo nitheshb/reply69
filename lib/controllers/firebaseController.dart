@@ -455,6 +455,9 @@ class FirebaseController {
     await Firestore.instance.collection('IAM').document(userId).updateData({
       'followingGroups0': FieldValue.arrayUnion(['${check1.documentID}'])
     });
+    await Firestore.instance.collection('IAM').document(userId).updateData({
+      'myOwnGroups': FieldValue.arrayUnion(['${check1.documentID}'])
+    });
     body['chatId'] = check1.documentID;
     searchGroupBody['chatId'] = check1.documentID;
     await Firestore.instance
@@ -585,6 +588,13 @@ class FirebaseController {
     return Firestore.instance
         .collection('groups')
         .where('chatId', whereIn: followingGroupsLocal)
+        .snapshots();
+  }
+
+  fetchMyGroupsList(userId) {
+    return Firestore.instance
+        .collection('groups')
+        .where('createdBy', isEqualTo: userId)
         .snapshots();
   }
 
