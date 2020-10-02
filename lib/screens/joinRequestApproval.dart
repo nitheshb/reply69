@@ -7,7 +7,8 @@ import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
-import 'package:notification/widgets/post_item.dart';
+import 'package:notification/widgets/chat_bubble.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import '../bid365_app_theme.dart';
 
@@ -130,7 +131,7 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>
                                   ),
                                   child: Column(
                                     children: <Widget>[
-                                      PostItem(
+                                      ChatBubble(
                                         img: ds['pancardDocUrl'],
                                         name: ds['firstName'],
                                         uxId: ds['uxId'],

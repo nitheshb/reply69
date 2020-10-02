@@ -7,7 +7,7 @@ import 'package:notification/util/screen_size.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:notification/widgets/linearPercentIndicator.dart';
-import 'package:notification/widgets/post_item.dart';
+
 
 class PowerFeedbacker extends StatefulWidget {
   PowerFeedbacker(
