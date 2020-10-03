@@ -145,6 +145,7 @@ class Auth {
   static Future<String> storeUserLocal(User user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> approvedGroupsList = [];
+    List<String> myOwnGroupsList = [];
     String storeUser = userToJson(user);
     await prefs.setString('user', storeUser);
 
@@ -164,7 +165,24 @@ class Auth {
 //  await followingGroupsReadCountLocal.add(NotifySnap['c'].toString());
       });
     }
+ print('outlook look for myOwnGroups ${user.myOwnGroups} ${storeUser}');
+    if(user.myOwnGroups!= null) {
+       print('look for myOwnGroups ${user.myOwnGroups}');
+    await   user.myOwnGroups.forEach((data) async {
+        // search for the rc count and update it
+        await myOwnGroupsList.add(data);
+       
+       });
+      await prefs.setStringList('myOwnGroups_pref', myOwnGroupsList);
+      var local = await prefs.getStringList('myOwnGroups_pref');
+      print('look for myOwnGroups ${local}');
+        //     await user.approvedGroups.forEach((data) async {
+        // // search for the rc count and update it
+        // await approvedGroupsList.add(data);
+        //     }
+    }
     await prefs.setStringList('approvedPrimeGroups', approvedGroupsList);
+    await prefs.setStringList('myOwnGroups', myOwnGroupsList);
 
     List<String> followingGroupsLocal = [];
 
