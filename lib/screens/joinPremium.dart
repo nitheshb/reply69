@@ -272,13 +272,9 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
                 lockModify = !lockModify;
                 followCountModify.remove(widget.userId);
                 widget.followingGroupsLocal.remove(widget.chatId);
-
-                StateWidget.of(context).setFollowingGroupState(
-                    widget.followingGroupsLocal, widget.chatId, 'remove');
+                prefs.setStringList('followingGroups_pref', widget.followingGroupsLocal);
               });
               appState = StateWidget.of(context).state;
-              final userId = appState?.firebaseUserAuth?.uid ?? '';
-              final followingGroups = await appState.followingGroups;
               await Navigator.of(context).pushAndRemoveUntil(
                   new MaterialPageRoute(
                     builder: (BuildContext context) => MainScreen(
@@ -313,6 +309,12 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
                 if (widget.followingGroupsLocal.length < 9) {
                   FirebaseController.instanace
                       .followGroup(widget.chatId, widget.userId, userToken);
+                      setState(() {
+                lockModify = !lockModify;
+                followCountModify.add(widget.userId);
+                widget.followingGroupsLocal.add(widget.chatId);
+                prefs.setStringList('followingGroups_pref', widget.followingGroupsLocal);
+              });
                   return;
                 } else {
                   _showBasicsFlash(

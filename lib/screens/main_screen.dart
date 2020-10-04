@@ -33,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
 // loadingData()async{
 //   print(' iwas here');
 //   SharedPreferences prefs = await SharedPreferences.getInstance();
-//    var check = await prefs.getStringList('followingGroups');
+//    var check = await prefs.getStringList('followingGroups_pref');
 //     print('checking groups 2 check ${check}');
 //    setState(() {
 //      localDataFollowingGroups = check;
@@ -41,9 +41,12 @@ class _MainScreenState extends State<MainScreen> {
 // }
   getUserData(userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var followingGroups = await prefs.getStringList('followingGroups');
+    var followingGroups = await prefs.getStringList('followingGroups_pref');
     // return followingGroups;
 
+
+var myOwnGroups = prefs.getStringList('myOwnGroups_pref');
+print("===> my owngroups ${myOwnGroups}");
     localDataFollowingGroups = followingGroups ?? [];
   }
 

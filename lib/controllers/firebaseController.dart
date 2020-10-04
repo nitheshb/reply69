@@ -426,7 +426,7 @@ class FirebaseController {
         .snapshots();
   }
 
-// groupPROFILE PAGE  (Follow and Unfollow)
+// create a new group PAGE 
   createGroup(
       body,
       userId,
@@ -453,7 +453,7 @@ class FirebaseController {
         .document("${check1.documentID}")
         .updateData(documentId);
     await Firestore.instance.collection('IAM').document(userId).updateData({
-      'followingGroups0': FieldValue.arrayUnion(['${check1.documentID}'])
+      'myOwnGroups': FieldValue.arrayUnion(['${check1.documentID}'])
     });
     body['chatId'] = check1.documentID;
     searchGroupBody['chatId'] = check1.documentID;

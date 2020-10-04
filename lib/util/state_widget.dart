@@ -78,28 +78,7 @@ class _StateWidgetState extends State<StateWidget> {
     });
   }
 
-  Future<void> setFollowingGroupState(oldData, value, action) async {
-    //  await initUserLocation(location, locationId);
-    appState = StateWidget.of(context).state;
-    state.followingGroups = oldData;
 
-    var x;
-    setState(() {
-      if (action == "remove") {
-        oldData.remove(value);
-        x = oldData;
-        // print('var x is ${oldData}$x');
-        appState.followingGroups = oldData;
-      } else if (action == "add") {
-        oldData.add(value);
-        appState.followingGroups = oldData;
-
-        //  x= oldData.add(value);
-        // state.followingGroups = x;
-      }
-    });
-    await initUser();
-  }
 
   Future<void> userLocation(
       location, locationId, soId, soName, hoId, hoName) async {
