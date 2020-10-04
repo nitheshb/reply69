@@ -158,16 +158,13 @@ class Auth {
       await user.approvedGroups.forEach((data) async {
         // search for the rc count and update it
         await approvedGroupsList.add(data);
-        // var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
+ await prefs.setStringList('approvedGroups_pref', myOwnGroupsList);
 
-// print('i was here with data %% ${NotifySnap['c']}');
-        // followingGroupsLocal = data.cast<String>();
-//  await followingGroupsReadCountLocal.add(NotifySnap['c'].toString());
       });
     }
- print('outlook look for myOwnGroups ${user.myOwnGroups} ${storeUser}');
+
     if(user.myOwnGroups!= null) {
-       print('look for myOwnGroups ${user.myOwnGroups}');
+
     await   user.myOwnGroups.forEach((data) async {
         // search for the rc count and update it
         await myOwnGroupsList.add(data);
@@ -175,14 +172,11 @@ class Auth {
        });
       await prefs.setStringList('myOwnGroups_pref', myOwnGroupsList);
       var local = await prefs.getStringList('myOwnGroups_pref');
-      print('look for myOwnGroups ${local}');
-        //     await user.approvedGroups.forEach((data) async {
-        // // search for the rc count and update it
-        // await approvedGroupsList.add(data);
+  
         //     }
     }
     await prefs.setStringList('approvedPrimeGroups', approvedGroupsList);
-    await prefs.setStringList('myOwnGroups', myOwnGroupsList);
+
 
     List<String> followingGroupsLocal = [];
 
@@ -191,18 +185,15 @@ class Auth {
       await user.followingGroups.forEach((data) async {
         // search for the rc count and update it
         await followingGroupsLocal.add(data);
-        // var NotifySnap = await FirebaseController.instanace.getMessagesCount(data);
 
-// print('i was here with data %% ${NotifySnap['c']}');
-        // followingGroupsLocal = data.cast<String>();
-//  await followingGroupsReadCountLocal.add(NotifySnap['c'].toString());
       });
     }
 
-    await prefs.setStringList('followingGroups', followingGroupsLocal);
+    // await prefs.setStringList('followingGroups', followingGroupsLocal);
+    await prefs.setStringList('followingGroups_pref', followingGroupsLocal);
     await prefs.setStringList(
         'followingGroupsReadCountLocal', followingGroupsReadCountLocal);
-    var check = await prefs.getStringList('followingGroups');
+    var check = await prefs.getStringList('followingGroups_pref');
 
     var followingGroupsReadCountLocal1 =
         await prefs.getStringList('followingGroupsReadCountLocal');
@@ -228,7 +219,7 @@ class Auth {
 
   static getFollowingGroups() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List followingGroups = await prefs.getStringList('followingGroups');
+    List followingGroups = await prefs.getStringList('followingGroups_pref');
     return followingGroups;
   }
 

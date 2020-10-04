@@ -149,8 +149,7 @@ class _Profile3State extends State<Profile3> {
                 lockModify = !lockModify;
                 followCountModify.remove(widget.userId);
                 widget.followingGroupsLocal.remove(widget.chatId);
-                StateWidget.of(context).setFollowingGroupState(
-                    widget.followingGroupsLocal, widget.chatId, 'remove');
+                   prefs.setStringList('followingGroups_pref', widget.followingGroupsLocal);
               });
               await Navigator.of(context).pushAndRemoveUntil(
                   new MaterialPageRoute(
@@ -179,26 +178,19 @@ class _Profile3State extends State<Profile3> {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 String userToken = prefs.get('FCMToken');
 
-                //  var followingGroups1 = q1.data['followingGroups1'] ?? [];
-                //  var followingGroups2 = q1.data['followingGroups2'] ?? [];
-                //  var followingGroup3 = q1.data['followingGroups3'] ?? [];
+
 
                 if (widget.followingGroupsLocal.length < 9) {
                   FirebaseController.instanace
                       .followGroup(widget.chatId, widget.userId, userToken);
-
-                  var notifySnap = FirebaseController.instanace
-                      .getMessagesCount(widget.chatId);
+          
 
                   setState(() {
                     lockModify = !lockModify;
                     followCountModify.add(widget.userId);
                     widget.followingGroupsLocal.add(widget.chatId);
                     //  make a call and get read count
-
-                    //  widget.followingGruppsReadCount.add(notifySnap);
-                    StateWidget.of(context).setFollowingGroupState(
-                        widget.followingGroupsLocal, widget.chatId, 'add');
+                  prefs.setStringList('followingGroups_pref', widget.followingGroupsLocal);
                   });
                   await Navigator.of(context).pushAndRemoveUntil(
                       new MaterialPageRoute(

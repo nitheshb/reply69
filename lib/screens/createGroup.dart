@@ -1,17 +1,15 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
 import 'package:notification/controllers/firebaseController.dart';
-import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:notification/widgets/loading.dart';
@@ -43,7 +41,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
   final TextEditingController _groupCategory = new TextEditingController();
   final TextEditingController _paymentScreenshotPhoneNo =
       new TextEditingController();
-  final TextEditingController _premium = new TextEditingController();
+
   final TextEditingController _premiumPrice1 = new TextEditingController();
 
   // we are not using below two lines controllers
@@ -51,8 +49,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
   //final TextEditingController _premiumPrice3 = new TextEditingController();
 
   final TextEditingController _premiumDays1 = new TextEditingController();
-  final TextEditingController _premiumDays2 = new TextEditingController();
-  final TextEditingController _premiumDays3 = new TextEditingController();
+
 
   File _image;
   bool _autoValidate = false;
@@ -169,55 +166,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
     );
   }
 
-  void _showBottomFlash(
-      {bool persistent = true,
-      EdgeInsets margin = EdgeInsets.zero,
-      BuildContext context}) {
-    showFlash(
-      context: context,
-      persistent: persistent,
-      builder: (_, controller) {
-        return Flash(
-          controller: controller,
-          margin: margin,
-          borderRadius: BorderRadius.circular(8.0),
-          borderColor: Colors.blue,
-          boxShadows: kElevationToShadow[8],
-          backgroundGradient: RadialGradient(
-            colors: [Colors.amber, Colors.black87],
-            center: Alignment.topLeft,
-            radius: 2,
-          ),
-          onTap: () => controller.dismiss(),
-          forwardAnimationCurve: Curves.easeInCirc,
-          reverseAnimationCurve: Curves.bounceIn,
-          child: DefaultTextStyle(
-            style: TextStyle(color: Colors.white),
-            child: FlashBar(
-              title: Text('Hello Flash'),
-              message: Text('You can put any message of any length here.'),
-              leftBarIndicatorColor: Colors.red,
-              icon: Icon(Icons.info_outline),
-              primaryAction: FlatButton(
-                onPressed: () => controller.dismiss(),
-                child: Text('DISMISS'),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                    onPressed: () => controller.dismiss('Yes, I do!'),
-                    child: Text('YES')),
-                FlatButton(
-                    onPressed: () => controller.dismiss('No, I do not!'),
-                    child: Text('NO')),
-              ],
-            ),
-          ),
-        );
-      },
-    ).then((_) {
-      return;
-    });
-  }
+ 
 
   setSearchParam(String caseNumber) {
     List<String> caseSearchList = List();
@@ -232,11 +181,8 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
 
   @override
   Widget build(BuildContext context) {
-    double dh = MediaQuery.of(context).size.height;
-    double dw = MediaQuery.of(context).size.width;
     appState = StateWidget.of(context).state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
-    final email = appState?.firebaseUserAuth?.email ?? '';
     final firstName = appState.user?.firstName ?? '';
     return Scaffold(
       backgroundColor: Colors.white,
@@ -247,18 +193,9 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           child: Container(
             width: MediaQuery.of(context).size.width,
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                // SizedBox(height: 60),
 
-                // Text(
-                //   '${email}',
-                //   style: TextStyle(
-                //     fontWeight: FontWeight.bold,
-                //     fontSize: 22,
-                //   ),
-                // ),
+              children: <Widget>[
+            
                 SizedBox(height: 80),
                 Text(
                   "Are you a fantasy sports expert ?",
@@ -353,13 +290,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                                       "Phone pe or Google Pay Number",
                                                   obscureText: false)),
 
-                                          // Row(
-                                          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          //   children: <Widget>[
-                                          //     FadeAnimation(1.2, makePremiumPrice(label: "Premium Price", obscureText: false, controlValue: _premiumPrice1),),
-                                          //      FadeAnimation(1.2, makePremiumDays(label: "Days", obscureText: false, controlValue: _premiumDays1),),
-                                          //   ],
-                                          // ),
+                                      
                                           FadeAnimation(1.3, stateSelection()),
                                         ],
                                       ),
@@ -411,12 +342,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                               duration: Duration(seconds: 3),
                                               messageText:
                                                   'Please upload group DP ...!');
-                                          // _showBottomFlash(context:  context);
-                                          //  Flushbar(
-                                          //             title:  "Hey Ninja",
-                                          //             message:  "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-                                          //             duration:  Duration(seconds: 3),
-                                          //           )..show(context);
+                                     
                                           return;
                                         }
 
@@ -430,8 +356,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                             await _changeLoadingVisible();
                                             _formKey.currentState.save();
 
-                                            String fileName =
-                                                basename(_image.path);
+                                        
                                             DateTime now = new DateTime.now();
                                             StorageReference
                                                 firebaseStorageRef =
@@ -458,8 +383,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                                 await SharedPreferences
                                                     .getInstance();
 
-                                            String userToken =
-                                                prefs.get('FCMToken');
+                                           
                                             //TODO: Implement sign out
                                             var body = {
                                               "title": groupTitle,
@@ -527,28 +451,17 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                                       _premiumPrice1.text,
                                                       _premiumDays1.text);
 
-                                              await widget.followingGroupsLocal
-                                                  .add(check1.documentID);
-                                              await StateWidget.of(context)
-                                                  .setFollowingGroupState(
-                                                      widget
-                                                          .followingGroupsLocal,
-                                                      check1.documentID,
-                                                      'add');
-                                              await Navigator.of(context)
-                                                  .pushAndRemoveUntil(
-                                                      new MaterialPageRoute(
-                                                        builder: (BuildContext
-                                                                context) =>
-                                                            MainScreen(
-                                                                userId: userId,
-                                                                followingGroupsLocal:
-                                                                    widget
-                                                                        .followingGroupsLocal),
-                                                      ),
-                                                      (Route<dynamic> route) =>
-                                                          false);
+                                             
 
+                                              print('widget.followingGroupsLocal ${widget.followingGroupsLocal}');
+                                              // add it to shared PREF AND FORCE RESTART
+
+                                              var local = await prefs.getStringList('myOwnGroups_pref');
+                                              local.add(check1.documentID);
+                                               await prefs.setStringList('myOwnGroups_pref', local);
+
+                                               print('i was dded as ${local}  ${check1.documentID}');
+                                               Phoenix.rebirth(context);
                                               return;
                                             } else {
                                               _showBasicsFlash(

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:notification/screens/forget_password.dart';
 
 import 'package:notification/screens/main_screen.dart';
@@ -77,7 +78,7 @@ class _MyAppState extends State<MyApp> {
 
       var approvedPrimeGroups =
           await prefs.getStringList('approvedPrimeGroups');
-      followingGroup = await prefs.getStringList('followingGroups');
+      followingGroup = await prefs.getStringList('followingGroups_pref');
       approvedPrimeGroups.add(message['data']['chatId']);
       await prefs.setStringList('approvedPrimeGroups', approvedPrimeGroups);
     } else if (message['notification']['action'] == 'expired membership') {
@@ -410,7 +411,7 @@ void main() {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(new MaterialApp(home: stateWidget));
+    runApp(Phoenix(child: new MaterialApp(home: stateWidget)));
   });
 }
 

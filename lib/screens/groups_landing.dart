@@ -33,30 +33,19 @@ class GroupsLandingScreen extends StatefulWidget {
   final String uId, uEmailId;
   List followingGroupsLocal, followingGroupsReadCountLocal;
   @override
-  _ChatsState createState() => _ChatsState();
+  _GroupsLandingScreenState createState() => _GroupsLandingScreenState();
 }
 
-class _ChatsState extends State<GroupsLandingScreen>
+class _GroupsLandingScreenState extends State<GroupsLandingScreen>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TabController _tabController;
   StateModel appState;
   List waitingGroups = [],
       approvedGroups = [],
-      myOwnGroups = [],
+      myOwnGroups = [], followingGroupsP = [],
       followingGroups = [],
       primeGroups = [];
-  List chatIdGroups = [
-    'nQ4T04slkEdANneRb4k6',
-    'nQ4T04slkEdANneRb4k61',
-    'nQ4T04slkEdANneRb4k62',
-    'nQ4T04slkEdANneRb4k63',
-    'nQ4T04slkEdANneRb4k64',
-    'nQ4T04slkEdANneRb4k65',
-    'nQ4T04slkEdANneRb4k66',
-    'nQ4T04slkEdANneRb4k67',
-    'nQ4T04slkEdANneRb4k68',
-    'btl5r2JUwn5imaTToPKq'
-  ];
+
   String _searchTerm;
   bool allowGroupCreation = true;
   List widgetCountCheck = [];
@@ -74,39 +63,10 @@ class _ChatsState extends State<GroupsLandingScreen>
     getlocalPrime_OwnGroups();
     selTabIndex = 0;
 
-    //   loadData().then((_) {
-    //   getBizList();
-    // });
 
-    // DatabaseReference postsRef =FirebaseDatabase.instance.reference().child("Notify");
-    // postsRef.once().then((DataSnapshot snap){
-    //   print('wow iwas here');
-    //     var keys = snap.value.keys;
-    //     var data = snap.value;
-    //     NotifyData.clear();
-
-    // print(' wow i have snap ${snap.value}');
-    //     for(var individualKeys in keys){
-    //       NotifyList notify = new NotifyList(
-    //           data[individualKeys]['c'],
-    //           data[individualKeys]['m'],
-    //           data[individualKeys]['t'],
-    //       );
-    //       NotifyData.add(notify);
-    //     }
-    //     setState(() {
-    //       print('length ${NotifyData}');
-    //     });
+    // new Future.delayed(Duration.zero, () {
+    //   loopFollowingGroup(followingGroupsP);
     // });
-    //  realTime ('kAUE9NsXpQyn4cseIpPt');
-    //  realTime ('om4c5QKsa5mk1pUG897z');
-    // widget.followingGroupsLocal.forEach((data){
-    //   realTime(data);
-    //   print('data@@1 ${data}');
-    // });
-    new Future.delayed(Duration.zero, () {
-      loopFollowingGroup(widget.followingGroupsLocal);
-    });
   }
 
   void _toggleTab() {
@@ -117,18 +77,23 @@ class _ChatsState extends State<GroupsLandingScreen>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     approvedGroups = await prefs.getStringList('approvedPrimeGroups');
        myOwnGroups = await prefs.getStringList('myOwnGroups_pref');
+       followingGroupsP = await prefs.getStringList('followingGroups_pref');
+
        if(myOwnGroups == null){
          myOwnGroups = [];
          
        }
 
-    print('local true by swetan ${myOwnGroups}');
+       List addFollowMyOwnGroups =[...followingGroupsP, ...myOwnGroups];
+
+ await loopFollowingGroup(addFollowMyOwnGroups);
+    print('local true by swetan1 ${addFollowMyOwnGroups}');
   }
 
 
   void updateInformation(String information) {}
   loopFollowingGroup(dataArray) {
-    widget.followingGroupsLocal.forEach((data) {
+    dataArray.forEach((data) {
       realTime(data);
     });
   }
@@ -155,20 +120,12 @@ class _ChatsState extends State<GroupsLandingScreen>
         NotifyData.removeWhere((item) => item['t'] == '${data['t']}');
         SharedPreferences prefs = await SharedPreferences.getInstance();
         var msgReadCountvar = prefs.getInt("${"qoX1aNeMcKgl69UCntgq"}");
-        // var msgReadCountvar = 0;
-        // try {
-        //  msgReadCountvar =  prefs.getInt("${"qoX1aNeMcKgl69UCntgq"}");
-        // } catch (e) {
-        // }
-
-//  NotifyList notify = new NotifyList(
-//               data.c,
-//               data.m,
-//               data.t,
-//           );
+    
         data['chatId'] = id;
         data['readCount'] = msgReadCountvar ?? 0;
         NotifyData.add(data);
+
+        print("notify is ${NotifyData}");
       } else {
         //code for shimmer effect
 
@@ -224,15 +181,7 @@ class _ChatsState extends State<GroupsLandingScreen>
           },
         );
       }
-      // print(' wow i have snap ${snap.value}');
-      //     for(var individualKeys in keys){
-      //       NotifyList notify = new NotifyList(
-      //           data[individualKeys]['c'],
-      //           data[individualKeys]['m'],
-      //           data[individualKeys]['t'],
-      //       );
-      //       NotifyData.add(notify);
-      //     }
+  
       setState(() {});
     });
   }
@@ -301,7 +250,7 @@ Widget messagesTabDisplay(context, userId){
                           ),
                         ),
          ),
-        widget.followingGroupsLocal.length == 0
+        followingGroupsP.length == 0
         ? noGroupsFolllowed()
         :  ListView.builder(
               itemCount: NotifyData.length,
@@ -309,47 +258,258 @@ Widget messagesTabDisplay(context, userId){
               padding: EdgeInsets.only(top: 8),
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index){
-                 var searchGroupForReadCount = widgetCountCheck.firstWhere(
+var searchGroupForReadCount;
+                try {
+                    searchGroupForReadCount = widgetCountCheck.firstWhere(
                   (data) => data['chatId'] == NotifyData[index]['chatId']);
+                } catch (e) {
+                  print('error is ${e}');
+                  searchGroupForReadCount ={'readCount': 0};
+                }
+                
                 return
-                !(myOwnGroups.contains(NotifyData[index]['chatId'])) ?
+                (followingGroupsP.contains(NotifyData[index]['chatId'])) ?
                  recentChatDetailsCard(NotifyData[index],userId,searchGroupForReadCount['readCount'] ?? 0,):Container();
               },
             )
             ]),
           );
 }
-  Widget chatViewListRealtimeDb(context, userId) {
-    appState = StateWidget.of(context).state;
-    // final localFollowingGroups = appState.user;
-    //  final approvedGroups = appState?.user?.approvedGroups;
-    //  print('grops fro local fetch ${approvedGroups}');
 
-    if (widget.followingGroupsLocal.length > 8) {
-      allowGroupCreation = false;
-    }
-    return widget.followingGroupsLocal.length == 0
-        ? noGroupsFolllowed()
-        : ListView.separated(
-            padding: EdgeInsets.all(10),
-            separatorBuilder: (BuildContext context, int index) {
-              return Align(
-                alignment: Alignment.centerRight,
+Widget followGroupsTabDisplay(context, userId){
+  return   SingleChildScrollView(
+            child: Column(children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  height: 0.5,
-                  width: MediaQuery.of(context).size.width / 1.3,
-                  child: Divider(),
+                  child: Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Win more under guidance of Experts ",
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Follow to receive expert messages",
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              );
-            },
-            itemCount: NotifyData.length,
-            itemBuilder: (BuildContext context, int index) {
-              var searchGroupForReadCount = widgetCountCheck.firstWhere(
-                  (data) => data['chatId'] == NotifyData[index]['chatId']);
-              //  print('searchGroup ${searchGroupForReadCount['count'] ?? 0}');
-              return recentChatDetailsCard(NotifyData[index],userId,searchGroupForReadCount['readCount'],);
-            });
-  }
+              ),
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                      onChanged: (val) {
+                        setState(() {
+                          _searchTerm = val;
+                          print('search term ${_searchTerm}');
+                        });
+                      },
+                      style: new TextStyle(color: Colors.black, fontSize: 20),
+                      decoration: new InputDecoration(
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.grey[400], width: 2)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.grey[400], width: 2)),
+                          // border: InputBorder.none,
+                          hintText: 'Search Group Name....',
+                          hintStyle: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          prefixIcon: const Icon(Icons.search, color: Colors.black))),
+                ),
+              ),
+
+            
+              // Display results as per search string mentioned in above text field
+              StreamBuilder(
+                stream: searchGroupsQuery(_searchTerm),
+                builder: (context, snapshot) {
+                  // display default img/ placeholder when no results are available
+                  if (!snapshot.hasData)  {
+                    return Column(
+                      children: <Widget>[
+                        SizedBox(height: 30),
+                        Align(
+                          alignment: Alignment.center,
+                          child: new Container(
+                            height: 160,
+                            width: 160,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage('assets/searchFind.png'),
+                                    fit: BoxFit.fill)),
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: new Container(
+                            height: 160,
+                            // width: 160,
+                            child: Column(
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text("Use above search bar to find",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        color: Color(0xff3A4276),
+                                        fontWeight: FontWeight.w500,
+                                      )),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  } else if (snapshot.hasData) {
+                 return   snapshot.data['payload'].length  == 0
+        ? Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(height: 60),
+                          new Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage('assets/searchFind.png'),
+                                    fit: BoxFit.cover)),
+                          ),
+                          new Text('No Matched Data Found'),
+                        ],
+                      ),
+                  )
+        :  ListView.builder(
+              itemCount: snapshot.data['payload'].length,
+              shrinkWrap: true,
+              padding: EdgeInsets.only(top: 8),
+              physics: BouncingScrollPhysics(),
+              itemBuilder: (context, index){
+                DocumentSnapshot ds = snapshot.data;
+                // Todo:  check y this followersA was declared 
+              var followersA = [];
+                return
+                InkWell(
+
+                  // This is card Widget
+                  child:  buildApplication(
+                                          ds['payload'][index]['logo'],
+                                          ds['payload'][index]['title'],
+                                          ds['payload'][index]['ownerName'],
+                                          ds['payload'][index]['category'],
+                                          followingGroupsP.contains(ds['payload'][index]['chatId']),
+                                          ds['payload'][index]['chatId'],
+                                          userId
+                                      ),
+                  onTap:(){
+                                        Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) => Profile3(
+                                              title: ds['payload'][index]['title'],
+                                              avatarUrl: ds['payload'][index]['logo'],
+                                              categories: ds['payload'][index]['category'],
+                                              following: followersA.contains(widget.uId),
+                                              chatId: ds['payload'][index]['chatId'],
+                                              userId: userId,
+                                              followers: ds['payload'][index]['followers'] ?? [],
+                                              groupOwnerName: ds['payload'][index]['ownerName'] ?? '',
+                                              feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
+                                              seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
+                                              thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
+                                              lastWeekRating: ds['payload'][index]['lastWeekRating'] ?? 'NA',
+                                              followingGroupsLocal: followingGroupsP)),
+                                      );
+                  },
+                  
+                );
+               
+ 
+              },
+            );
+            
+
+            // 
+                    // return CustomScrollView(
+                    //   shrinkWrap: true,
+                    //   slivers: <Widget>[
+                    //     SliverList(
+                    //       delegate: SliverChildBuilderDelegate((context, index) {
+                    //         DocumentSnapshot ds = snapshot.data;
+                    //         var followersA = [];
+                    //         return Container(
+                    //             child: InkWell(
+                    //                 onTap: () {
+                    //                   Navigator.push(context,
+                    //                       MaterialPageRoute(builder: (context) => Profile3(
+                    //                           title: ds['payload'][index]['title'],
+                    //                           avatarUrl: ds['payload'][index]['logo'],
+                    //                           categories: ds['payload'][index]['category'],
+                    //                           following: followersA.contains(widget.uId),
+                    //                           chatId: ds['payload'][index]['chatId'],
+                    //                           userId: userId,
+                    //                           followers: ds['payload'][index]['followers'] ?? [],
+                    //                           groupOwnerName: ds['payload'][index]['ownerName'] ?? '',
+                    //                           feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
+                    //                           seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
+                    //                           thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
+                    //                           lastWeekRating: ds['payload'][index]['lastWeekRating'] ?? 'NA',
+                    //                           followingGroupsLocal: followingGroupsP)),
+                    //                   );
+                    //                   },
+                    //                 child: Padding(
+                    //                   padding: const EdgeInsets.only(
+                    //                       left: 8.0, right: 8.0),
+                    //                   child: buildApplication(
+                    //                       ds['payload'][index]['logo'],
+                    //                       ds['payload'][index]['title'],
+                    //                       ds['payload'][index]['ownerName'],
+                    //                       ds['payload'][index]['category'],
+                    //                       followingGroupsP.contains(ds['payload'][index]['chatId']),
+                    //                       ds['payload'][index]['chatId'],
+                    //                       userId
+                    //                   ),
+                    //                 ),
+                    //             ),
+                    //         );
+                    //         },
+                    //         childCount: snapshot.data['payload'].length ?? 0,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // );
+                  }
+                  
+                },
+              ),
+            ]),
+          );
+}
 
   Widget recentChatDetailsCard(NotifyData, userId, alreadyReadCount){
 return InkWell(
@@ -361,7 +521,7 @@ return InkWell(
                   final information = await Navigator.push(
                     context, MaterialPageRoute(
                       builder: (context) => Conversation(
-                          followingGroupsLocal: widget.followingGroupsLocal,
+                          followingGroupsLocal: followingGroupsP,
                           groupFullDetails: [],
                           chatId: chatId,
                           groupSportCategory: [],
@@ -509,181 +669,10 @@ return InkWell(
         });
   }
 
-  Widget chatViewList(context, userId, email, followingGroupss, data, followGroupState) {
-    final followGroupState1 = appState.followingGroups;
+ 
 
-    var value;
 
-    if (widget.followingGroupsLocal.length > 8) {
-      allowGroupCreation = false;
-    }
-    return StreamBuilder(
-        stream: FirebaseController.instanace
-            .fetchChatGroupsList(widget.followingGroupsLocal),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error ${snapshot.error}');
-          }
-          if (snapshot.hasData && snapshot.data.documents.length > 0) {
-            // return Text('value is ');
-            return ListView.separated(
-              padding: EdgeInsets.all(10),
-              separatorBuilder: (BuildContext context, int index) {
-                return Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    height: 0.5,
-                    width: MediaQuery.of(context).size.width / 1.3,
-                    child: Divider(),
-                  ),
-                );
-              },
-              itemCount: snapshot.data.documents.length,
-              itemBuilder: (BuildContext context, int index) {
-                DocumentSnapshot ds = snapshot.data.documents[index];
-                var dataSnapshot = snapshot.data.documents[index].data;
-                var lastMessagesIs = dataSnapshot['lastMessageDetails'] ??
-                    {"lastMsg": "No msg", "lastMsgTime": ""};
-                int x;
-                //  saveLocal(index,ds['messages'] ?? [], ds.documentID).then((data) {
-                //       x = data;
-                //  });
 
-                Map chat = chats[index];
-
-                return InkWell(
-                  onTap: () async {
-                    //  print('i was at approved list click ${ds.data['approvedGroupsJson'].length}');
-
-                    if (ds.data['approvedGroupsJson'] != null) {
-                      for (final data in ds.data['approvedGroupsJson']) {
-                        //
-
-                        approvedGroups.add(data['userId']);
-                      }
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Conversation(
-                              followingGroupsLocal: widget.followingGroupsLocal,
-                              groupFullDetails: ds.data,
-                              chatId: ds.documentID,
-                              groupSportCategory: ds.data['category'],
-                              chatOwnerId: ds.data['createdBy'],
-                              groupTitle: ds.data['title'] ?? "",
-                              groupLogo: ds.data['logo'] ?? null,
-                              followers: ds.data['followers'] ?? [],
-                              approvedGroupsJson: ds.data['approvedGroupsJson'],
-                              userId: userId,
-                              senderMailId: email,
-                              chatType: "",
-                              waitingGroups: waitingGroups,
-                              approvedGroups: approvedGroups
-                          ),
-                        ),
-                      );
-                    } else {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Conversation(
-                              followingGroupsLocal: widget.followingGroupsLocal,
-                              groupFullDetails: ds.data,
-                              chatId: ds.documentID,
-                              groupSportCategory: ds.data['category'],
-                              chatOwnerId: ds.data['createdBy'],
-                              groupTitle: ds.data['title'] ?? "",
-                              groupLogo: ds.data['logo'] ?? null,
-                              followers: ds.data['followers'] ?? [],
-                              approvedGroupsJson: ds.data['approvedGroupsJson'],
-                              userId: userId,
-                              senderMailId: email,
-                              chatType: "",
-                              waitingGroups: waitingGroups,
-                              approvedGroups: []),
-                        ),
-                      );
-                    }
-                  },
-                  child: ChatMenuIcon(
-                    dp: ds['logo'],
-                    groupName: ds['title'],
-                    isOnline: ds.data['createdBy'] == userId,
-                    counter: 0,
-                    msg: lastMessagesIs['lastMsg'],
-                    time: lastMessagesIs['lastMsgTime'] == ""
-                        ? ""
-                        : Jiffy(lastMessagesIs['lastMsgTime'].toDate())
-                            .fromNow()
-                            .toString(),
-                  ),
-                );
-              },
-            );
-          }
-          return Align(
-              alignment: Alignment.center,
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: MediaQuery.of(context).size.height / 4.5),
-                  new Container(
-                    height: MediaQuery.of(context).size.height / 3,
-                    child: Image(
-                      image: AssetImage('assets/emptyMsgs.png'),
-                    ),
-                  ),
-                  new Text(
-                    'Loading or No added Groups',
-                    style: TextStyle(color: Colors.black, fontSize: 20),
-                  ),
-                ],
-              ));
-        });
-  }
-
-  Widget popularSearchTextContainer(searchText) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomRight,
-              stops: [0.1, 1],
-              colors: [
-                Color(0xFF8C68EC),
-                Color(0xFF3E8DF3),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          // color: Colors.blueGrey,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              searchText,
-              style: TextStyle(color: Colors.white, fontSize: 12),
-            ),
-          )),
-    );
-  }
-
-  saveLocal(index, lastMessagesIs, chatDocId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    var body = {'chatId': index, 'lastMessage': lastMessagesIs.length};
-    // new chat id means no reads
-
-    if (chatDocId == null) {
-      prefs.setInt('$chatDocId', lastMessagesIs.length);
-      return lastMessagesIs.length;
-    } else {
-      var chatDataIs = await prefs.getInt('$chatDocId');
-
-      return (lastMessagesIs.length - chatDataIs);
-    }
-    //  print('chat data is ${chatDataIs}');
-  }
 
   void _showBasicsFlash({
     Duration duration,
@@ -755,7 +744,7 @@ return InkWell(
     SharedPreferences prefs = await SharedPreferences.getInstance();
     widgetCountCheck = [];
 
-    widget.followingGroupsLocal.forEach((chatId) {
+    followingGroupsP.forEach((chatId) {
       var readCountLocal = prefs.getInt("${chatId}");
       var payload = {'chatId': chatId, 'readCount': readCountLocal ?? 0};
       widgetCountCheck.add(payload);
@@ -775,7 +764,7 @@ return InkWell(
     final phoneNumber = appState.user.phoneNumber;
     var data = Auth.getFollowingGroups;
 
-    readCountLooper(widget.followingGroupsLocal);
+    readCountLooper(followingGroupsP);
 
     if (widget.followingGroupsReadCountLocal == null) {
       widget.followingGroupsReadCountLocal = [];
@@ -783,11 +772,11 @@ return InkWell(
 
     // getUserData(userId);
 
-    if (widget.followingGroupsLocal == null) {
-      widget.followingGroupsLocal = followGroupState;
+    if (followingGroupsP == null) {
+      followingGroupsP = followGroupState;
     }
 
-    // widget.followingGroupsLocal.forEach((data){
+    // followingGroupsP.forEach((data){
     //   realTime(data);
     //     print('data@@ ${data}');
     //   });
@@ -826,210 +815,13 @@ return InkWell(
 
           // first tab
         messagesTabDisplay(context,userId),
-//            Stack(
-//                 children: <Widget>[
-//                   Positioned(
- 
-//   child: Container(
-//     color: Colors.pink,
 
-//     child: Text("Recent Moments")
-//   ),
-// ),
-// Positioned(
-
-//   top: 40.0,
-//   child: Container(
-
-//     height: MediaQuery.of(context).size.height,
-//     width: MediaQuery.of(context).size.width,
-//     child: chatViewListRealtimeDb(context, userId),
-//   ),
-// )             
-//                 ],
-//               ),
-          
 
           // second tab
-          SingleChildScrollView(
-            child: Column(children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Win more under guidance of Experts ",
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            color: Color(0xff3A4276),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 6),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Follow to receive expert messages",
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            color: Color(0xff3A4276),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                      onChanged: (val) {
-                        setState(() {
-                          _searchTerm = val;
-                          print('search term ${_searchTerm}');
-                        });
-                      },
-                      style: new TextStyle(color: Colors.black, fontSize: 20),
-                      decoration: new InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.grey[400], width: 2)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black)),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.grey[400], width: 2)),
-                          // border: InputBorder.none,
-                          hintText: 'Search Group Name....',
-                          hintStyle: GoogleFonts.poppins(
-                            fontSize: 13,
-                            color: Color(0xff3A4276),
-                            fontWeight: FontWeight.w500,
-                          ),
-                          prefixIcon: const Icon(Icons.search, color: Colors.black))),
-                ),
-              ),
-              StreamBuilder(
-                stream: searchGroupsQuery(_searchTerm),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData)  {
-                    return Column(
-                      children: <Widget>[
-                        SizedBox(height: 30),
-                        Align(
-                          alignment: Alignment.center,
-                          child: new Container(
-                            height: 160,
-                            width: 160,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage('assets/searchFind.png'),
-                                    fit: BoxFit.fill)),
-                          ),
-                        ),
-                        SizedBox(height: 30),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: new Container(
-                            height: 160,
-                            // width: 160,
-                            child: Column(
-                              children: <Widget>[
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Text("Use above search bar to find",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 15,
-                                        color: Color(0xff3A4276),
-                                        fontWeight: FontWeight.w500,
-                                      )),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    );
-                  } else if (snapshot.hasData) {
-                    return CustomScrollView(
-                      shrinkWrap: true,
-                      slivers: <Widget>[
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate((context, index) {
-                            DocumentSnapshot ds = snapshot.data;
-                            var followersA = [];
-                            return Container(
-                                child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) => Profile3(
-                                              title: ds['payload'][index]['title'],
-                                              avatarUrl: ds['payload'][index]['logo'],
-                                              categories: ds['payload'][index]['category'],
-                                              following: followersA.contains(widget.uId),
-                                              chatId: ds['payload'][index]['chatId'],
-                                              userId: userId,
-                                              followers: ds['payload'][index]['followers'] ?? [],
-                                              groupOwnerName: ds['payload'][index]['ownerName'] ?? '',
-                                              feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
-                                              seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
-                                              thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
-                                              lastWeekRating: ds['payload'][index]['lastWeekRating'] ?? 'NA',
-                                              followingGroupsLocal: widget.followingGroupsLocal)),
-                                      );
-                                      },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8.0, right: 8.0),
-                                      child: buildApplication(
-                                          ds['payload'][index]['logo'],
-                                          ds['payload'][index]['title'],
-                                          ds['payload'][index]['ownerName'],
-                                          ds['payload'][index]['category'],
-                                          widget.followingGroupsLocal.contains(ds['payload'][index]['chatId']),
-                                          ds['payload'][index]['chatId'],
-                                          userId
-                                      ),
-                                    ),
-                                ),
-                            );
-                            },
-                            childCount: snapshot.data['payload'].length ?? 0,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(height: 60),
-                          new Container(
-                            height: MediaQuery.of(context).size.height / 3,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage('assets/searchFind.png'),
-                                    fit: BoxFit.cover)),
-                          ),
-                          new Text('No Matched Data Found'),
-                        ],
-                      ),
-                  );
-                },
-              ),
-            ]),
-          ),
+        followGroupsTabDisplay(context,userId)
         ]),
         floatingActionButton: Visibility(
+          // this floating button should be visiable only in Follow Experts Tab
          visible: selTabIndex == 1,
           child: FloatingActionButton(
             child: Container(
@@ -1039,7 +831,6 @@ return InkWell(
               ),
             ),
             onPressed: () async {
-              String token = await _firebaseMessaging.getToken();
 
               if (allowGroupCreation) {
                 //
@@ -1048,7 +839,7 @@ return InkWell(
                   MaterialPageRoute(
                     builder: (context) => CreateGroupProfile(
                         primaryButtonRoute: "/home",
-                        followingGroupsLocal: widget.followingGroupsLocal),
+                        followingGroupsLocal: followingGroupsP),
                   ),
                 );
               } else {
@@ -1066,23 +857,18 @@ return InkWell(
   unFollowFun(chatId, userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userToken = prefs.get('FCMToken');
-    await FirebaseController.instanace.unfollowGroup(chatId, userId, userToken);
 
-    // Auth.setFollowingGroups(followingGroup_real,ds['chatId'], 'remove' );
-    // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'remove' );
     setState(() {
-      // followingGroup_real.remove(ds['chatId']);
-      widget.followingGroupsLocal.remove(chatId);
-      prefs.setStringList('followingGroups', widget.followingGroupsLocal);
-      StateWidget.of(context).setFollowingGroupState(
-          widget.followingGroupsLocal, chatId, 'remove');
+      followingGroupsP.remove(chatId);
+      prefs.setStringList('followingGroups_pref', followingGroupsP);
+
     });
 
     await Navigator.of(context).pushAndRemoveUntil(
         new MaterialPageRoute(
           builder: (BuildContext context) => MainScreen(
               userId: userId,
-              followingGroupsLocal: widget.followingGroupsLocal),
+              followingGroupsLocal: followingGroupsP),
         ),
         (Route<dynamic> route) => false);
   }
@@ -1097,24 +883,18 @@ return InkWell(
 
       prefs.setInt("${chatId}", 00000);
 
-      if (widget.followingGroupsLocal.length < 9) {
+      if (followingGroupsP.length < 9) {
         FirebaseController.instanace.followGroup(chatId, userId, userToken);
 
-        // Auth.setFollowingGroups(widget.followingGroupsLocal,ds['chatId'], 'add' );
-        // StateWidget.of(context).setFollowingGroupState(widget.followingGroupsLocal,ds['chatId'], 'add' );
         setState(() {
-          // followingGroup_real.add(ds['chatId']);
-          widget.followingGroupsLocal.add(chatId);
-          prefs.setStringList('followingGroups', widget.followingGroupsLocal);
-
-          StateWidget.of(context).setFollowingGroupState(
-              widget.followingGroupsLocal, chatId, 'add');
+          followingGroupsP.add(chatId);
+          prefs.setStringList('followingGroups_pref', followingGroupsP);
         });
         await Navigator.of(context).pushAndRemoveUntil(
             new MaterialPageRoute(
               builder: (BuildContext context) => MainScreen(
                   userId: userId,
-                  followingGroupsLocal: widget.followingGroupsLocal),
+                  followingGroupsLocal: followingGroupsP),
             ),
             (Route<dynamic> route) => false);
       } else {
