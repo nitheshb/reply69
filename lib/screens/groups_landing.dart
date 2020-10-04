@@ -197,7 +197,7 @@ Widget messagesTabDisplay(context, userId){
             child: Column(children: <Widget>[
               Visibility(
                 visible: myOwnGroups.length> 0,
-                child: 
+                child:
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0,0,0),
                 child: Container(
@@ -221,8 +221,8 @@ Widget messagesTabDisplay(context, userId){
               padding: EdgeInsets.only(top: 8, bottom: 8),
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index){
-               
-                return 
+
+                return
                 myOwnGroups.contains(NotifyData[index]['chatId']) ?
                 recentChatDetailsCard(NotifyData[index],userId,0,) :
                 Container();
@@ -233,9 +233,9 @@ Widget messagesTabDisplay(context, userId){
                 ),
               ),
               ),
-        
-            
-            
+
+
+
          Padding(
            padding: const EdgeInsets.only(left:8.0, top: 8),
            child: Align(
@@ -266,7 +266,7 @@ var searchGroupForReadCount;
                   print('error is ${e}');
                   searchGroupForReadCount ={'readCount': 0};
                 }
-                
+
                 return
                 (followingGroupsP.contains(NotifyData[index]['chatId'])) ?
                  recentChatDetailsCard(NotifyData[index],userId,searchGroupForReadCount['readCount'] ?? 0,):Container();
@@ -277,238 +277,250 @@ var searchGroupForReadCount;
 }
 
 Widget followGroupsTabDisplay(context, userId){
-  return   SingleChildScrollView(
-            child: Column(children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Win more under guidance of Experts ",
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            color: Color(0xff3A4276),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 6),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Follow to receive expert messages",
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            color: Color(0xff3A4276),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                child: Padding(
+  return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(132),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            //height: 140,
+            //width: double.infinity,
+            child: Column(
+              children: <Widget>[
+                Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                      onChanged: (val) {
-                        setState(() {
-                          _searchTerm = val;
-                          print('search term ${_searchTerm}');
-                        });
-                      },
-                      style: new TextStyle(color: Colors.black, fontSize: 20),
-                      decoration: new InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.grey[400], width: 2)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black)),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.grey[400], width: 2)),
-                          // border: InputBorder.none,
-                          hintText: 'Search Group Name....',
-                          hintStyle: GoogleFonts.poppins(
-                            fontSize: 13,
-                            color: Color(0xff3A4276),
-                            fontWeight: FontWeight.w500,
-                          ),
-                          prefixIcon: const Icon(Icons.search, color: Colors.black))),
-                ),
-              ),
-
-            
-              // Display results as per search string mentioned in above text field
-              StreamBuilder(
-                stream: searchGroupsQuery(_searchTerm),
-                builder: (context, snapshot) {
-                  // display default img/ placeholder when no results are available
-                  if (!snapshot.hasData)  {
-                    return Column(
+                  child: Container(
+                    child: Column(
                       children: <Widget>[
-                        SizedBox(height: 30),
-                        Align(
-                          alignment: Alignment.center,
-                          child: new Container(
-                            height: 160,
-                            width: 160,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage('assets/searchFind.png'),
-                                    fit: BoxFit.fill)),
-                          ),
-                        ),
-                        SizedBox(height: 30),
                         Align(
                           alignment: Alignment.topLeft,
-                          child: new Container(
-                            height: 160,
-                            // width: 160,
-                            child: Column(
-                              children: <Widget>[
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Text("Use above search bar to find",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 15,
-                                        color: Color(0xff3A4276),
-                                        fontWeight: FontWeight.w500,
-                                      )),
-                                )
-                              ],
+                          child: Text(
+                            "Win more under guidance of Experts ",
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              color: Color(0xff3A4276),
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                        )
+                        ),
+                        SizedBox(height: 6),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            "Follow to receive expert messages",
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              color: Color(0xff3A4276),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
                       ],
-                    );
-                  } else if (snapshot.hasData) {
-                 return   snapshot.data['payload'].length  == 0
-        ? Align(
-                      alignment: Alignment.center,
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                        onChanged: (val) {
+                          setState(() {
+                            _searchTerm = val;
+                            print('search term ${_searchTerm}');
+                          });
+                        },
+                        style: new TextStyle(color: Colors.black, fontSize: 20),
+                        decoration: new InputDecoration(
+                            contentPadding:
+                            EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey[400], width: 2)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey[400], width: 2)),
+                            // border: InputBorder.none,
+                            hintText: 'Search Group Name....',
+                            hintStyle: GoogleFonts.poppins(
+                              fontSize: 13,
+                              color: Color(0xff3A4276),
+                              fontWeight: FontWeight.w500,
+                            ),
+                            prefixIcon: const Icon(Icons.search, color: Colors.black))),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body:SingleChildScrollView(
+        child: StreamBuilder(
+          stream: searchGroupsQuery(_searchTerm),
+          builder: (context, snapshot) {
+            // display default img/ placeholder when no results are available
+            if (!snapshot.hasData)  {
+              return Column(
+                children: <Widget>[
+                  SizedBox(height: 30),
+                  Align(
+                    alignment: Alignment.center,
+                    child: new Container(
+                      height: 160,
+                      width: 160,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage('assets/searchFind.png'),
+                              fit: BoxFit.fill)),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: new Container(
+                      height: 160,
+                      // width: 160,
                       child: Column(
                         children: <Widget>[
-                          SizedBox(height: 60),
-                          new Container(
-                            height: MediaQuery.of(context).size.height / 3,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage('assets/searchFind.png'),
-                                    fit: BoxFit.cover)),
-                          ),
-                          new Text('No Matched Data Found'),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text("Use above search bar to find",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  color: Color(0xff3A4276),
+                                  fontWeight: FontWeight.w500,
+                                )),
+                          )
                         ],
                       ),
+                    ),
                   )
-        :  ListView.builder(
-              itemCount: snapshot.data['payload'].length,
-              shrinkWrap: true,
-              padding: EdgeInsets.only(top: 8),
-              physics: BouncingScrollPhysics(),
-              itemBuilder: (context, index){
-                DocumentSnapshot ds = snapshot.data;
-                // Todo:  check y this followersA was declared 
-              var followersA = [];
-                return
-                InkWell(
+                ],
+              );
+            } else if (snapshot.hasData) {
+              return   snapshot.data['payload'].length  == 0
+                  ? Align(
+                alignment: Alignment.center,
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 60),
+                    new Container(
+                      height: MediaQuery.of(context).size.height / 3,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage('assets/searchFind.png'),
+                              fit: BoxFit.cover)),
+                    ),
+                    new Text('No Matched Data Found'),
+                  ],
+                ),
+              )
+                  :  ListView.builder(
+                itemCount: snapshot.data['payload'].length,
+                shrinkWrap: true,
+                padding: EdgeInsets.only(top: 8),
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (context, index){
+                  DocumentSnapshot ds = snapshot.data;
+                  // Todo:  check y this followersA was declared
+                  var followersA = [];
+                  return
+                    InkWell(
 
-                  // This is card Widget
-                  child:  buildApplication(
-                                          ds['payload'][index]['logo'],
-                                          ds['payload'][index]['title'],
-                                          ds['payload'][index]['ownerName'],
-                                          ds['payload'][index]['category'],
-                                          followingGroupsP.contains(ds['payload'][index]['chatId']),
-                                          ds['payload'][index]['chatId'],
-                                          userId
-                                      ),
-                  onTap:(){
-                                        Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) => Profile3(
-                                              title: ds['payload'][index]['title'],
-                                              avatarUrl: ds['payload'][index]['logo'],
-                                              categories: ds['payload'][index]['category'],
-                                              following: followersA.contains(widget.uId),
-                                              chatId: ds['payload'][index]['chatId'],
-                                              userId: userId,
-                                              followers: ds['payload'][index]['followers'] ?? [],
-                                              groupOwnerName: ds['payload'][index]['ownerName'] ?? '',
-                                              feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
-                                              seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
-                                              thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
-                                              lastWeekRating: ds['payload'][index]['lastWeekRating'] ?? 'NA',
-                                              followingGroupsLocal: followingGroupsP)),
-                                      );
-                  },
-                  
-                );
-               
- 
-              },
-            );
-            
+                      // This is card Widget
+                      child:  buildApplication(
+                          ds['payload'][index]['logo'],
+                          ds['payload'][index]['title'],
+                          ds['payload'][index]['ownerName'],
+                          ds['payload'][index]['category'],
+                          followingGroupsP.contains(ds['payload'][index]['chatId']),
+                          ds['payload'][index]['chatId'],
+                          userId
+                      ),
+                      onTap:(){
+                        Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Profile3(
+                              title: ds['payload'][index]['title'],
+                              avatarUrl: ds['payload'][index]['logo'],
+                              categories: ds['payload'][index]['category'],
+                              following: followersA.contains(widget.uId),
+                              chatId: ds['payload'][index]['chatId'],
+                              userId: userId,
+                              followers: ds['payload'][index]['followers'] ?? [],
+                              groupOwnerName: ds['payload'][index]['ownerName'] ?? '',
+                              feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
+                              seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
+                              thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
+                              lastWeekRating: ds['payload'][index]['lastWeekRating'] ?? 'NA',
+                              followingGroupsLocal: followingGroupsP)),
+                        );
+                      },
 
-            // 
-                    // return CustomScrollView(
-                    //   shrinkWrap: true,
-                    //   slivers: <Widget>[
-                    //     SliverList(
-                    //       delegate: SliverChildBuilderDelegate((context, index) {
-                    //         DocumentSnapshot ds = snapshot.data;
-                    //         var followersA = [];
-                    //         return Container(
-                    //             child: InkWell(
-                    //                 onTap: () {
-                    //                   Navigator.push(context,
-                    //                       MaterialPageRoute(builder: (context) => Profile3(
-                    //                           title: ds['payload'][index]['title'],
-                    //                           avatarUrl: ds['payload'][index]['logo'],
-                    //                           categories: ds['payload'][index]['category'],
-                    //                           following: followersA.contains(widget.uId),
-                    //                           chatId: ds['payload'][index]['chatId'],
-                    //                           userId: userId,
-                    //                           followers: ds['payload'][index]['followers'] ?? [],
-                    //                           groupOwnerName: ds['payload'][index]['ownerName'] ?? '',
-                    //                           feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
-                    //                           seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
-                    //                           thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
-                    //                           lastWeekRating: ds['payload'][index]['lastWeekRating'] ?? 'NA',
-                    //                           followingGroupsLocal: followingGroupsP)),
-                    //                   );
-                    //                   },
-                    //                 child: Padding(
-                    //                   padding: const EdgeInsets.only(
-                    //                       left: 8.0, right: 8.0),
-                    //                   child: buildApplication(
-                    //                       ds['payload'][index]['logo'],
-                    //                       ds['payload'][index]['title'],
-                    //                       ds['payload'][index]['ownerName'],
-                    //                       ds['payload'][index]['category'],
-                    //                       followingGroupsP.contains(ds['payload'][index]['chatId']),
-                    //                       ds['payload'][index]['chatId'],
-                    //                       userId
-                    //                   ),
-                    //                 ),
-                    //             ),
-                    //         );
-                    //         },
-                    //         childCount: snapshot.data['payload'].length ?? 0,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // );
-                  }
-                  
+                    );
+
+
                 },
-              ),
-            ]),
-          );
+              );
+
+
+              //
+              // return CustomScrollView(
+              //   shrinkWrap: true,
+              //   slivers: <Widget>[
+              //     SliverList(
+              //       delegate: SliverChildBuilderDelegate((context, index) {
+              //         DocumentSnapshot ds = snapshot.data;
+              //         var followersA = [];
+              //         return Container(
+              //             child: InkWell(
+              //                 onTap: () {
+              //                   Navigator.push(context,
+              //                       MaterialPageRoute(builder: (context) => Profile3(
+              //                           title: ds['payload'][index]['title'],
+              //                           avatarUrl: ds['payload'][index]['logo'],
+              //                           categories: ds['payload'][index]['category'],
+              //                           following: followersA.contains(widget.uId),
+              //                           chatId: ds['payload'][index]['chatId'],
+              //                           userId: userId,
+              //                           followers: ds['payload'][index]['followers'] ?? [],
+              //                           groupOwnerName: ds['payload'][index]['ownerName'] ?? '',
+              //                           feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
+              //                           seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
+              //                           thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
+              //                           lastWeekRating: ds['payload'][index]['lastWeekRating'] ?? 'NA',
+              //                           followingGroupsLocal: followingGroupsP)),
+              //                   );
+              //                   },
+              //                 child: Padding(
+              //                   padding: const EdgeInsets.only(
+              //                       left: 8.0, right: 8.0),
+              //                   child: buildApplication(
+              //                       ds['payload'][index]['logo'],
+              //                       ds['payload'][index]['title'],
+              //                       ds['payload'][index]['ownerName'],
+              //                       ds['payload'][index]['category'],
+              //                       followingGroupsP.contains(ds['payload'][index]['chatId']),
+              //                       ds['payload'][index]['chatId'],
+              //                       userId
+              //                   ),
+              //                 ),
+              //             ),
+              //         );
+              //         },
+              //         childCount: snapshot.data['payload'].length ?? 0,
+              //       ),
+              //     ),
+              //   ],
+              // );
+            }
+
+          },
+        ),
+      )
+  );
+
 }
 
   Widget recentChatDetailsCard(NotifyData, userId, alreadyReadCount){
