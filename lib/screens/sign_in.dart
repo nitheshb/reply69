@@ -46,178 +46,180 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
               key: _formKey,
               autovalidate: _autoValidate,
               child: SingleChildScrollView(
-                child: Container(
-                  height: MediaQuery.of(context).size.height - 100,
-                  width: double.infinity,
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                SizedBox(height: 30),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: new Container(
-                                    // color: Colors.red,
-                                    height:
-                                        MediaQuery.of(context).size.height / 5,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Image(
-                                        image: AssetImage('assets/13.png')),
-                                  ),
-                                  //  child: Container(
-                                  //   width: 160,
-                                  //     child: Row(
-                                  //       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  //       // crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  //       children: <Widget>[
-                                  //         FadeAnimation(1, Text("Chat", style: TextStyle(
-                                  //           fontSize: 30,
-                                  //           fontWeight: FontWeight.bold
-                                  //         ),)),
-                                  //         FadeAnimation(1, Text("O", style: TextStyle(
-                                  //           fontSize: 30,
-                                  //           fontWeight: FontWeight.bold
-                                  //         ),)),
-                                  //         FadeAnimation(1, Text("gram", style: TextStyle(
-                                  //           fontSize: 30,
-                                  //           fontWeight: FontWeight.bold
-                                  //         ),)),
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                ),
-                                // SizedBox(height: 20,),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 40),
-                              child: Column(
+                child: SafeArea(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height - 100,
+                    width: double.infinity,
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Column(
                                 children: <Widget>[
-                                  FadeAnimation(
-                                      1.2,
-                                      Text(
-                                        "Login",
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 20,
-                                          color: Color(0xff3A4276),
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      )),
-                                  SizedBox(height: 15),
-                                  FadeAnimation(
-                                    1.2,
-                                    makeUserNameField(
-                                        label: "Email", obscureText: false),
+                                  SizedBox(height: 30),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: new Container(
+                                      // color: Colors.red,
+                                      height:
+                                          MediaQuery.of(context).size.height / 5,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Image(
+                                          image: AssetImage('assets/13.png')),
+                                    ),
+                                    //  child: Container(
+                                    //   width: 160,
+                                    //     child: Row(
+                                    //       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    //       // crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    //       children: <Widget>[
+                                    //         FadeAnimation(1, Text("Chat", style: TextStyle(
+                                    //           fontSize: 30,
+                                    //           fontWeight: FontWeight.bold
+                                    //         ),)),
+                                    //         FadeAnimation(1, Text("O", style: TextStyle(
+                                    //           fontSize: 30,
+                                    //           fontWeight: FontWeight.bold
+                                    //         ),)),
+                                    //         FadeAnimation(1, Text("gram", style: TextStyle(
+                                    //           fontSize: 30,
+                                    //           fontWeight: FontWeight.bold
+                                    //         ),)),
+                                    //       ],
+                                    //     ),
+                                    //   ),
                                   ),
-                                  FadeAnimation(
-                                      1.3,
-                                      makePasswordField(
-                                          label: "Password",
-                                          obscureText: true)),
+                                  // SizedBox(height: 20,),
                                 ],
                               ),
-                            ),
-                            FadeAnimation(
-                                1.4,
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 40),
-                                  child: Container(
-                                    padding: EdgeInsets.only(top: 3, left: 3),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        border: Border(
-                                          bottom:
-                                              BorderSide(color: Colors.black),
-                                          top: BorderSide(color: Colors.black),
-                                          left: BorderSide(color: Colors.black),
-                                          right:
-                                              BorderSide(color: Colors.black),
-                                        )),
-                                    child: MaterialButton(
-                                      minWidth: double.infinity,
-                                      height: dh * 0.08,
-                                      onPressed: () {
-                                        _emailLogin(
-                                            email: _email.text,
-                                            password: _password.text,
-                                            context: context);
-                                      },
-                                      color: Colors.greenAccent,
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50)),
-                                      child: Text(
-                                        "Login",
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                )),
-                            FadeAnimation(
-                                1.5,
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed('/signup');
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 40.0, right: 40.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Container(
-                                          alignment: Alignment(1.0, 0.0),
-                                          // padding: EdgeInsets.only(top: 15.0, left: 20.0,right:18),
-                                          child: InkWell(
-                                            onTap: () {
-                                              //  Navigator.pushNamed(context, '/forgot-password');
-
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ForgotPasswordScreen(),
-                                                  ));
-
-                                              //  StateWidget.of(context).resetPassword('nithe.nithesh@gmail.com');
-                                            },
-                                            child: Text(
-                                              'Forgot Password',
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 12,
-                                                color: Color(0xff3A4276),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 40),
+                                child: Column(
+                                  children: <Widget>[
+                                    FadeAnimation(
+                                        1.2,
                                         Text(
-                                          "Sign up",
+                                          "Login",
                                           style: GoogleFonts.poppins(
-                                            fontSize: 16,
+                                            fontSize: 20,
                                             color: Color(0xff3A4276),
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        )),
+                                    SizedBox(height: 15),
+                                    FadeAnimation(
+                                      1.2,
+                                      makeUserNameField(
+                                          label: "Email", obscureText: false),
+                                    ),
+                                    FadeAnimation(
+                                        1.3,
+                                        makePasswordField(
+                                            label: "Password",
+                                            obscureText: true)),
+                                  ],
+                                ),
+                              ),
+                              FadeAnimation(
+                                  1.4,
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 40),
+                                    child: Container(
+                                      padding: EdgeInsets.only(top: 3, left: 3),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(50),
+                                          border: Border(
+                                            bottom:
+                                                BorderSide(color: Colors.black),
+                                            top: BorderSide(color: Colors.black),
+                                            left: BorderSide(color: Colors.black),
+                                            right:
+                                                BorderSide(color: Colors.black),
+                                          )),
+                                      child: MaterialButton(
+                                        minWidth: double.infinity,
+                                        height: dh * 0.08,
+                                        onPressed: () {
+                                          _emailLogin(
+                                              email: _email.text,
+                                              password: _password.text,
+                                              context: context);
+                                        },
+                                        color: Colors.greenAccent,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(50)),
+                                        child: Text(
+                                          "Login",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 18,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ))
-                          ],
+                                  )),
+                              FadeAnimation(
+                                  1.5,
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pushNamed('/signup');
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 40.0, right: 40.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            alignment: Alignment(1.0, 0.0),
+                                            // padding: EdgeInsets.only(top: 15.0, left: 20.0,right:18),
+                                            child: InkWell(
+                                              onTap: () {
+                                                //  Navigator.pushNamed(context, '/forgot-password');
+
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ForgotPasswordScreen(),
+                                                    ));
+
+                                                //  StateWidget.of(context).resetPassword('nithe.nithesh@gmail.com');
+                                              },
+                                              child: Text(
+                                                'Forgot Password',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  color: Color(0xff3A4276),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            "Sign up",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 16,
+                                              color: Color(0xff3A4276),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ))
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

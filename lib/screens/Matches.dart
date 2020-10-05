@@ -193,7 +193,7 @@ class _DisplayMatchesState extends State<DisplayMatches>
                     },
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (BuildContext context, int index) {
-                      Map friend = friends[index];
+                     // Map friend = friends[index];
                       DocumentSnapshot ds = snapshot.data.documents[index];
                       var matchDetails = ds['matchDetails'] ?? {};
                       var format = DateFormat('d-MMMM HH:mm a');

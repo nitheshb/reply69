@@ -62,6 +62,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
   List selCategoryValue = [];
   String groupNameAlreadyExists;
   String str_validatefess, str_validatedays, str_validate_phoneno;
+  //var wt= MediaQuery.of(context).size.width*0.98;
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -238,6 +239,9 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
     final firstName = appState.user?.firstName ?? '';
+    var ht, wt;// height width global variables
+    ht= MediaQuery.of(context).size.height;
+    wt= MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       body: LoadingScreen(
@@ -245,6 +249,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Container(
+            //height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.center,
@@ -360,12 +365,12 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                           //      FadeAnimation(1.2, makePremiumDays(label: "Days", obscureText: false, controlValue: _premiumDays1),),
                                           //   ],
                                           // ),
-                                          FadeAnimation(1.3, stateSelection()),
+                                          FadeAnimation(1.3, stateSelection(context)),
                                         ],
                                       ),
                                     ),
 
-                                    SizedBox(height: 30),
+                                    SizedBox(height: MediaQuery.of(context).size.height*0.025),
 
                                     InkWell(
                                       onTap: () async {
@@ -725,54 +730,58 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
     );
   }
 
-  Widget stateSelection() {
+  Widget stateSelection(BuildContext ctx) {
+
     return Center(
-      child: Container(
-        padding: EdgeInsets.all(15),
-        decoration: BoxDecoration(
-            border: Border.all(width: 1, color: Colors.grey),
-            borderRadius: BorderRadius.circular(10)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: DropdownButtonHideUnderline(
-                child: ButtonTheme(
-                  alignedDropdown: true,
-                  child: DropdownButton<String>(
-                    isDense: true,
-                    hint: new Text(
-                      "Select State",
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        color: Color(0xff3A4276),
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    value: _selected,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        _selected = newValue;
-                      });
-                    },
-                    items: _myJson.map((Map map) {
-                      return new DropdownMenuItem<String>(
-                        value: map["id"].toString(),
-                        // value: _mySelection,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                margin: EdgeInsets.only(left: 10),
-                                child: Text(map["name"])),
-                          ],
+      child: SafeArea(
+        child: Container(
+          width:MediaQuery.of(ctx).size.width,
+          padding: EdgeInsets.all(13),
+          decoration: BoxDecoration(
+              border: Border.all(width: 1, color: Colors.grey),
+              borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: DropdownButtonHideUnderline(
+                  child: ButtonTheme(
+                    alignedDropdown: true,
+                    child: DropdownButton<String>(
+                      isDense: true,
+                      hint: new Text(
+                        "Select State",
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: Color(0xff3A4276),
+                          fontWeight: FontWeight.w700,
                         ),
-                      );
-                    }).toList(),
+                      ),
+                      value: _selected,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          _selected = newValue;
+                        });
+                      },
+                      items: _myJson.map((Map map) {
+                        return new DropdownMenuItem<String>(
+                          value: map["id"].toString(),
+                          // value: _mySelection,
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  child: Text(map["name"])),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

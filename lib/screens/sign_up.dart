@@ -68,146 +68,148 @@ class _SignupPageState extends State<SignupPage> {
               key: _formKey,
               autovalidate: _autoValidate,
               child: SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 40),
-                  height: MediaQuery.of(context).size.height - 50,
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          FadeAnimation(
-                              1,
-                              Text(
-                                "Sign up",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 30,
-                                  color: Color(0xff3A4276),
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              )),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          FadeAnimation(
-                              1.2,
-                              Text(
-                                "Create an account, It's free",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Color(0xff3A4276),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )),
-                        ],
-                      ),
-                      Column(
-                        children: <Widget>[
-                          FadeAnimation(1.2, makeEmailInput(label: "Email")),
-                          FadeAnimation(
-                              1.2, makeUserNameInput(label: "Pick User Name")),
-                          FadeAnimation(
-                              1.2,
-                              makePasswordInput(
-                                  label: "Choose Password", obscureText: true)),
-                          FadeAnimation(
-                              1.2, makePhoneNumberInput(label: "Phone Number")),
-                          // FadeAnimation(1.4, makeReferralCodeInput(label: "Confirm Password", obscureText: true)),
-                        ],
-                      ),
-                      FadeAnimation(
-                          1.5,
-                          Container(
-                            padding: EdgeInsets.only(top: 3, left: 3),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                border: Border(
-                                  bottom: BorderSide(color: Colors.black),
-                                  top: BorderSide(color: Colors.black),
-                                  left: BorderSide(color: Colors.black),
-                                  right: BorderSide(color: Colors.black),
-                                )),
-                            child: MaterialButton(
-                              minWidth: double.infinity,
-                              height: 60,
-                              onPressed: () async {
-                                Pattern pattern = r'^.{1,}$';
-                                RegExp regex = new RegExp(pattern);
-                                if (!regex.hasMatch(_userName.text))
-                                  setState(() {
-                                    this.groupNameAlreadyExists =
-                                        'Please enter a name.';
-                                  });
-                                else {
-                                  QuerySnapshot userNameData =
-                                      await FirebaseController.instanace
-                                          .lookForExistingUserName(
-                                              _userName.text);
-                                  setState(() {
-                                    this.groupNameAlreadyExists =
-                                        userNameData.documents.length > 0
-                                            ? 'User Name Already Taken'
-                                            : null;
-                                  });
-                                  if (_formKey.currentState.validate()) {
-                                    try {
-                                      _emailSignUp(
-                                          firstName: _userName.text,
-                                          phoneNumber: _phoneNumber.text,
-                                          email: _email.text,
-                                          password: _password.text,
-                                          referralCode: _referralCode.text,
-                                          region:
-                                              "searchTextField.textField.controller.text",
-                                          context: context);
-                                    } catch (e) {
-                                      _changeLoadingVisible();
-
-                                      _scaffoldKey.currentState
-                                          .showSnackBar(SnackBar(
-                                        content: Text("Sign Up Error ${e}"),
-                                      ));
-                                    }
-                                  }
-                                }
-                              },
-                              color: Colors.greenAccent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50)),
-                              child: Text(
-                                "Sign up",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  color: Color(0xff3A4276),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          )),
-                      FadeAnimation(
-                          1.6,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text("Already have an account?",
+                child: SafeArea(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    height: MediaQuery.of(context).size.height - 50,
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            FadeAnimation(
+                                1,
+                                Text(
+                                  "Sign up",
                                   style: GoogleFonts.poppins(
-                                    fontSize: 12,
+                                    fontSize: 30,
+                                    color: Color(0xff3A4276),
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                )),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            FadeAnimation(
+                                1.2,
+                                Text(
+                                  "Create an account, It's free",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
                                     color: Color(0xff3A4276),
                                     fontWeight: FontWeight.w500,
+                                  ),
+                                )),
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            FadeAnimation(1.2, makeEmailInput(label: "Email")),
+                            FadeAnimation(
+                                1.2, makeUserNameInput(label: "Pick User Name")),
+                            FadeAnimation(
+                                1.2,
+                                makePasswordInput(
+                                    label: "Choose Password", obscureText: true)),
+                            FadeAnimation(
+                                1.2, makePhoneNumberInput(label: "Phone Number")),
+                            // FadeAnimation(1.4, makeReferralCodeInput(label: "Confirm Password", obscureText: true)),
+                          ],
+                        ),
+                        FadeAnimation(
+                            1.5,
+                            Container(
+                              padding: EdgeInsets.only(top: 3, left: 3),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  border: Border(
+                                    bottom: BorderSide(color: Colors.black),
+                                    top: BorderSide(color: Colors.black),
+                                    left: BorderSide(color: Colors.black),
+                                    right: BorderSide(color: Colors.black),
                                   )),
-                              Text(
-                                " Login",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  color: Color(0xff3A4276),
-                                  fontWeight: FontWeight.w600,
+                              child: MaterialButton(
+                                minWidth: double.infinity,
+                                height: 60,
+                                onPressed: () async {
+                                  Pattern pattern = r'^.{1,}$';
+                                  RegExp regex = new RegExp(pattern);
+                                  if (!regex.hasMatch(_userName.text))
+                                    setState(() {
+                                      this.groupNameAlreadyExists =
+                                          'Please enter a name.';
+                                    });
+                                  else {
+                                    QuerySnapshot userNameData =
+                                        await FirebaseController.instanace
+                                            .lookForExistingUserName(
+                                                _userName.text);
+                                    setState(() {
+                                      this.groupNameAlreadyExists =
+                                          userNameData.documents.length > 0
+                                              ? 'User Name Already Taken'
+                                              : null;
+                                    });
+                                    if (_formKey.currentState.validate()) {
+                                      try {
+                                        _emailSignUp(
+                                            firstName: _userName.text,
+                                            phoneNumber: _phoneNumber.text,
+                                            email: _email.text,
+                                            password: _password.text,
+                                            referralCode: _referralCode.text,
+                                            region:
+                                                "searchTextField.textField.controller.text",
+                                            context: context);
+                                      } catch (e) {
+                                        _changeLoadingVisible();
+
+                                        _scaffoldKey.currentState
+                                            .showSnackBar(SnackBar(
+                                          content: Text("Sign Up Error ${e}"),
+                                        ));
+                                      }
+                                    }
+                                  }
+                                },
+                                color: Colors.greenAccent,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50)),
+                                child: Text(
+                                  "Sign up",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    color: Color(0xff3A4276),
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ],
-                          )),
-                    ],
+                            )),
+                        FadeAnimation(
+                            1.6,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text("Already have an account?",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      color: Color(0xff3A4276),
+                                      fontWeight: FontWeight.w500,
+                                    )),
+                                Text(
+                                  " Login",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    color: Color(0xff3A4276),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            )),
+                      ],
+                    ),
                   ),
                 ),
               ),
