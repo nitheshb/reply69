@@ -80,7 +80,7 @@ class _ConversationState extends State<Conversation> {
   ScrollController _scrollController = new ScrollController();
 
   File _image;
-  int selectedRadio = 2;
+  int selectedRadio = 0;
   String msgDeliveryMode = "All";
   List votingBalletHeapData;
   List groupCategoriesArray = [];
@@ -95,11 +95,9 @@ class _ConversationState extends State<Conversation> {
     setState(() {
       selectedRadio = val;
       if (val == 2) {
-        scrollToBottomFun();
         msgDeliveryMode = "Prime";
       } else if (val == 1) {
         msgDeliveryMode = "All";
-        scrollToBottomFun();
       } else if (val == 3) {
         msgDeliveryMode = "Non-Prime";
       }
@@ -282,20 +280,20 @@ class _ConversationState extends State<Conversation> {
   Widget build(BuildContext context) {
     double dw = MediaQuery.of(context).size.width;
     // getFeeDeatils();
-    int setScrollDelay = widget.chatId.contains('PGrp') ? 1 : 0;
-    Timer(
-    Duration(seconds: setScrollDelay),
-    () => {
-      if(_scrollController.hasClients) {
-    _scrollController.animateTo(
-  _scrollController.position.maxScrollExtent,
-  duration: Duration(seconds: 1),
-  curve: Curves.fastOutSlowIn,
+//     int setScrollDelay = widget.chatId.contains('PGrp') ? 1 : 0;
+//     Timer(
+//     Duration(seconds: setScrollDelay),
+//     () => {
+//       if(_scrollController.hasClients) {
+//     _scrollController.animateTo(
+//   _scrollController.position.maxScrollExtent,
+//   duration: Duration(seconds: 1),
+//   curve: Curves.fastOutSlowIn,
       
-),
-      }
-      }
-  );
+// ),
+//       }
+//       }
+//   );
     return WillPopScope(
       onWillPop: _onBackPress,
       child: Scaffold(
@@ -336,7 +334,7 @@ class _ConversationState extends State<Conversation> {
                               itemBuilder: (BuildContext context, int index) {
                                 DocumentSnapshot ds = snapshot.data;
                                 var indexVal = index;
-                                //  scrollToBottomFun();
+                                 scrollToBottomFun();
                                 // var datestamp = new DateFormat("dd-MM'T'HH:mm");
                                 var datestamp = new DateFormat("HH:mm");
                                    return ChatBubble(
@@ -367,7 +365,9 @@ class _ConversationState extends State<Conversation> {
                               },
                             );
                           }
-                        }
+                        }else{
+                             messageCount = 0;
+                          }
                         return Align(
                             alignment: Alignment.center,
                             child: Column(
@@ -982,6 +982,9 @@ scrollToBottomFun();
                                     () => _scrollController.jumpTo(
                                         _scrollController
                                             .position.maxScrollExtent));
-                              } catch (e) {}
+                              } catch (e) {
+
+                                print('error at sending message ${e}');
+                              }
   } 
 }

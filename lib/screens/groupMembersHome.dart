@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +12,7 @@ import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/widgets/chat_item.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:dio/dio.dart';
 
 class GroupMembersHome extends StatefulWidget {
   // GroupMembersJson
@@ -20,7 +22,7 @@ class GroupMembersHome extends StatefulWidget {
       this.chatId,
       this.ownerMailId,
       this.groupTitle});
-  List groupMembersJson;
+  List groupMembersJson, expiredDataJson;
   final String chatId, ownerMailId, groupTitle;
   @override
   _GroupMembersHomeState createState() => _GroupMembersHomeState();
@@ -28,11 +30,15 @@ class GroupMembersHome extends StatefulWidget {
 
 class _GroupMembersHomeState extends State<GroupMembersHome>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+      Dio dio = new Dio();
   TabController _tabController;
   List filteredData;
   String filePath;
   String currentProcess;
   bool isProcessing = false;
+
+  List removedUserdLocal = [];
+
 
   Future<String> get _localPath async {
     final directory = await getApplicationSupportDirectory();
@@ -136,8 +142,12 @@ class _GroupMembersHomeState extends State<GroupMembersHome>
   Widget build(BuildContext context) {
     super.build(context);
 
-    // var expiredDataJson = widget.groupMembersJson.removeWhere((m) => m['expiresOn'].toDate().isAfter(new DateTime.now()));
-    ;
+    // am i coming here
+    print('am i coming here');
+     widget.expiredDataJson = widget.groupMembersJson.where((m) => (m['expiresOn'].toDate().isBefore(new DateTime.now()) && !(removedUserdLocal.contains(m['kycDocId'])))).toList();
+    
+
+    
 // searchResults(widget.groupMembersJson);
 
     return Form(
@@ -225,6 +235,7 @@ class _GroupMembersHomeState extends State<GroupMembersHome>
           body: TabBarView(
             controller: _tabController,
             children: <Widget>[
+              // first tab
               FutureBuilder(
                   future: FirebaseController.instanace
                       .getPrimeGroupsContent(widget.chatId),
@@ -275,49 +286,125 @@ class _GroupMembersHomeState extends State<GroupMembersHome>
                     }
                     return Container(width: 0.0, height: 0.0);
                   }),
-              ListView.separated(
-                padding: EdgeInsets.all(10),
-                separatorBuilder: (BuildContext context, int index) {
-                  return Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      height: 0.0,
-                      width: MediaQuery.of(context).size.width / 1.3,
-                      child: Divider(),
-                    ),
-                  );
-                },
-                itemCount: widget.groupMembersJson.length,
-                itemBuilder: (BuildContext context, int index) {
-                  var member = widget.groupMembersJson[index];
-                  if (member['expiresOn']
-                      .toDate()
-                      .isBefore(new DateTime.now())) {
-                    Map chat = chats[2];
-                    return ChatItem(
-                      dp: chat['dp'],
-                      name: member['userId'],
-                      isOnline: chat['isOnline'],
-                      counter: "Remove",
-                      msg: "The last rocket🚀",
-                      time: Jiffy(member['expiresOn'].toDate())
-                          .fromNow()
-                          .toString(),
-                      fullUserJson: member,
-                      chatId: widget.chatId,
-                      groupTitle: widget.groupTitle,
+                // second tab
+                  Stack(
+                    children: <Widget>[
+                      Visibility(
+                visible: widget.expiredDataJson.length ==0,
+                child: Container(
+                              child: Text("No Expired Members",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    color: Color(0xff3A4276),
+                                    fontWeight: FontWeight.w500,
+                                  )))
+                ),
+                    
+                Visibility(
+                visible: widget.expiredDataJson.length > 0,
+                child: ListView.separated(
+                  padding: EdgeInsets.all(10),
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 0.0,
+                        width: MediaQuery.of(context).size.width / 1.3,
+                        child: Divider(),
+                      ),
                     );
-                  } else {
-                    return Container(
-                        child: Text("No Expired Members",
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w500,
-                            )));
-                  }
-                },
+                  },
+                  itemCount: widget.expiredDataJson.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    print('expired data is  ${widget.expiredDataJson.length}${widget.expiredDataJson}');
+                    
+                    var member = widget.expiredDataJson[index];
+                     Map chat = chats[2];
+                       return 
+                       InkWell(
+                         onTap: (){
+                          print('am i here');
+                          showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Expired Member'),
+                    content: Text(
+                        'Remove user?'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('Canel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: Text('Ok'),
+                        onPressed: () async {
+                          print('insidet this');
+
+                           widget.groupMembersJson =  widget.groupMembersJson.where((m) => (member['kycDocId'] != m['kycDocId'] )).toList();
+                          setState(() {
+                             
+                            widget.expiredDataJson = widget.groupMembersJson;
+                            // expiredDataJson = [];
+                            // widget.groupMembersJson = expiredDataJson;
+                            Navigator.of(context).pop();
+                          });
+                          
+                      //        var userId = member['userId'];
+                      // var modifiedDate = member['expiresOn'];
+                      // var kycDocId = member['kycDocId'];
+                      // var period = member['membershipDuration'];
+                      // var joinedTime = member['joinedId'];
+                      // var expiredTime = member['expiresOn'];
+
+                      // FirebaseController.instanace.removeMemberOnExpiry(
+                      //     userId,
+                      //     joinedTime,
+                      //     expiredTime,
+                      //     kycDocId,
+                      //     period,
+                      //     widget.chatId,
+                      //     member);
+               
+                      // try {
+                      //   var response = await dio.get(
+                      //       "https://asia-south1-royalpro.cloudfunctions.net/onMemberRemove?id=${userId}&chatId=${widget.chatId}&groupName=${widget.groupTitle}");
+                      // } catch (e) {
+                      //   print('error is ${e}');
+                      // }
+
+                    widget.groupMembersJson =  widget.groupMembersJson.where((m) => (member['kycDocId'] != m['kycDocId'] )).toList();
+                      removedUserdLocal.add(member['kycDocId']);
+                        },
+                      ),
+                    ],
+                  );
+                });
+                         },
+                       
+                        //  child: Text('test')
+                        child: ChatItem(
+                        dp: chat['dp'],
+                        name: member['firstName'] ?? 'User ${index + 1}',
+                        isOnline: chat['isOnline'],
+                        counter: "Remove",
+                        msg: "The last rocket🚀",
+                        time: Jiffy(member['expiresOn'].toDate())
+                            .fromNow()
+                            .toString(),
+                        fullUserJson: member,
+                        chatId: widget.chatId,
+                        groupTitle: widget.groupTitle,
+                      )
+                       
+                       );
+                  },
+                ),
               ),
+              ],
+                  ),
             ],
           ),
         ));

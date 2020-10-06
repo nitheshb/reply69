@@ -113,9 +113,9 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
       // NotifyData.clear();
       if (data != null) {
         //code for disabaling shiimmer effect
-        setState(() {
-          shimmer = false;
-        });
+        // setState(() {
+        //   shimmer = false;
+        // });
 
         NotifyData.removeWhere((item) => item['t'] == '${data['t']}');
         SharedPreferences prefs = await SharedPreferences.getInstance();
