@@ -280,7 +280,15 @@ class _DisplayMatchesState extends State<DisplayMatches>
                                     Text('Join your 1st Contest',style: style2.copyWith(fontSize: 11,fontWeight: FontWeight.bold)),
                                     GestureDetector(
                                       onTap: (){
-                                      _settingModalBottomSheet(context);
+
+                                        Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                             MatchDetails()));
+
+                                      //_settingModalBottomSheet(context);// i think this function is used for match details info
+                                        // but now we dont need this
                                       },
                                       child: Text('Pre Match Analysis',style:style2.copyWith(fontSize: 11,color: Colors.green,fontWeight: FontWeight.w800)
                                       ),

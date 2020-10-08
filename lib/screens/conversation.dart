@@ -21,12 +21,15 @@ import 'package:notification/screens/groupEarnings.dart';
 import 'package:notification/util/admob_service.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/widgets/chat_bubble.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 import 'groupMembersHome.dart';
 import 'joinPremium.dart';
 import 'joinRequestApproval.dart';
+
+import 'package:toast/toast.dart';
 
 class Conversation extends StatefulWidget {
   Conversation(
@@ -51,6 +54,7 @@ class Conversation extends StatefulWidget {
       this.AllDeviceTokens,
       this.FDeviceTokens,
       this.followersCount});
+
   var chatId,
       userId,
       chatType,
@@ -90,6 +94,68 @@ class _ConversationState extends State<Conversation> {
   List nonPrimeMessageContent;
   var groupGrade;
 
+
+  //code for razor pay payment integration
+  Razorpay razorpay;
+  int amt=0;
+//  @override
+//  void initState() {
+//    super.initState();
+//
+//    razorpay = new Razorpay();
+//
+//    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlerPaymentSuccess);
+//    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlerErrorFailure);
+//    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handlerExternalWallet);
+//  }
+
+//  @override
+//  void dispose() {
+//    // TODO: implement dispose
+//    super.dispose();
+//    razorpay.clear();
+//  }
+  void openCheckout(){
+    var options = {
+      "key" : "[rzp_test_1DP5mmOlF5G5ag]",
+      "amount" : amt*100,
+      "name" : "Sample App",
+      "description" : "Payment for the some random product",
+      "prefill" : {
+        "contact" : "2323232323",
+        "email" : "shdjsdh@gmail.com"
+      },
+      "external" : {
+        "wallets" : ["paytm"]
+      }
+    };
+
+    try{
+      razorpay.open(options);
+
+    }catch(e){
+      print(e.toString());
+    }
+
+  }
+
+  void handlerPaymentSuccess(){
+    print("Pament success");
+    Toast.show("Pament success", context);
+  }
+
+  void handlerErrorFailure(){
+    print("Pament error");
+    Toast.show("Pament error", context);
+  }
+
+  void handlerExternalWallet(){
+    print("External Wallet");
+    Toast.show("External Wallet", context);
+  }
+
+  //end of razorpay code integration
+
   // Changes the selected value on 'onChanged' click on each radio button
   setSelectedRadio(int val) {
     setState(() {
@@ -115,8 +181,6 @@ class _ConversationState extends State<Conversation> {
       );
     });
   }
-
- 
 
   static Random random = Random();
   String name = names[random.nextInt(10)];
@@ -155,14 +219,19 @@ class _ConversationState extends State<Conversation> {
   void initState() {
     // TODO: implement initState
     super.initState();
-     Admob.initialize(ams.getAdMobAppId());
+    razorpay = new Razorpay();
+
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlerPaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlerErrorFailure);
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handlerExternalWallet);
+    Admob.initialize(ams.getAdMobAppId());
 
     loadGrade();
 
     upadateFeeDetails([
       {'fee': 0, 'days': 0}
     ]);
-    
+
     if ((widget.approvedGroups.contains(widget.userId))) {
       //  prime group
       selectedRadio = 2;
@@ -185,9 +254,11 @@ class _ConversationState extends State<Conversation> {
     }
     setReadCountToClear();
   }
-   @override
+
+  @override
   void dispose() {
     super.dispose();
+    razorpay.clear();
   }
 
   setReadCountToClear() async {
@@ -284,18 +355,17 @@ class _ConversationState extends State<Conversation> {
     // getFeeDeatils();
     int setScrollDelay = widget.chatId.contains('PGrp') ? 1 : 0;
     Timer(
-    Duration(seconds: setScrollDelay),
-    () => {
-      if(_scrollController.hasClients) {
-    _scrollController.animateTo(
-  _scrollController.position.maxScrollExtent,
-  duration: Duration(seconds: 1),
-  curve: Curves.fastOutSlowIn,
-      
-),
-      }
-      }
-  );
+        Duration(seconds: setScrollDelay),
+        () => {
+              if (_scrollController.hasClients)
+                {
+                  _scrollController.animateTo(
+                    _scrollController.position.maxScrollExtent,
+                    duration: Duration(seconds: 1),
+                    curve: Curves.fastOutSlowIn,
+                  ),
+                }
+            });
     return WillPopScope(
       onWillPop: _onBackPress,
       child: Scaffold(
@@ -305,7 +375,6 @@ class _ConversationState extends State<Conversation> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Column(
             children: <Widget>[
-              
               Container(
                 height: 10,
               ),
@@ -339,29 +408,30 @@ class _ConversationState extends State<Conversation> {
                                 //  scrollToBottomFun();
                                 // var datestamp = new DateFormat("dd-MM'T'HH:mm");
                                 var datestamp = new DateFormat("HH:mm");
-                                   return ChatBubble(
-                                      message: snapshot.data['messages'][indexVal]['type'] == "text"
-                                          ? snapshot.data['messages'][indexVal]
-                                              ['messageBody']
-                                          : snapshot.data['messages'][indexVal]
-                                              ['imageUrl'],
-                                      premium: snapshot.data['messages']
-                                          [indexVal]['premium'],
-                                      type: snapshot.data['messages'][indexVal]
-                                          ['type'],
-                                      img: snapshot.data['messages'][indexVal]
-                                          ['imageUrl'],
-                                      name: snapshot.data['messages'][indexVal]
-                                          ['type'],
-                                      dp: snapshot.data['messages'][indexVal]
-                                          ['imageUrl'],
-                                      messageMode: snapshot.data['messages']
-                                          [indexVal]['messageMode'],
-                                      time: datestamp
-                                          .format(snapshot.data['messages'][indexVal]['date'].toDate())
-                                          .toString(),
-                                      selMessageMode: msgDeliveryMode);
-                              
+                                return ChatBubble(
+                                    message: snapshot.data['messages'][indexVal]
+                                                ['type'] ==
+                                            "text"
+                                        ? snapshot.data['messages'][indexVal]
+                                            ['messageBody']
+                                        : snapshot.data['messages'][indexVal]
+                                            ['imageUrl'],
+                                    premium: snapshot.data['messages'][indexVal]
+                                        ['premium'],
+                                    type: snapshot.data['messages'][indexVal]
+                                        ['type'],
+                                    img: snapshot.data['messages'][indexVal]
+                                        ['imageUrl'],
+                                    name: snapshot.data['messages'][indexVal]
+                                        ['type'],
+                                    dp: snapshot.data['messages'][indexVal]
+                                        ['imageUrl'],
+                                    messageMode: snapshot.data['messages']
+                                        [indexVal]['messageMode'],
+                                    time: datestamp
+                                        .format(snapshot.data['messages'][indexVal]['date'].toDate())
+                                        .toString(),
+                                    selMessageMode: msgDeliveryMode);
 
                                 // fresh start check
                               },
@@ -520,7 +590,7 @@ class _ConversationState extends State<Conversation> {
                               SizedBox(width: 13),
                               Align(
                                 alignment: Alignment.center,
-                                child: Column(
+                                child: Row(
                                   children: <Widget>[
                                     SizedBox(height: 13),
                                     Text(
@@ -532,6 +602,23 @@ class _ConversationState extends State<Conversation> {
                                           color: Colors.white,
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.w400),
+                                    ),
+                                    VerticalDivider(
+                                      width: 3,
+                                      color: Colors.white,
+                                      thickness: 2,
+                                    ),
+                                    FlatButton(
+                                      child: Text(
+                                        'Applause',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      onPressed: () {
+                                        showdialog();
+                                      },
                                     ),
                                   ],
                                 ),
@@ -558,7 +645,6 @@ class _ConversationState extends State<Conversation> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                        
                           IconButton(
                             icon: Icon(
                               Icons.image,
@@ -593,7 +679,6 @@ class _ConversationState extends State<Conversation> {
                               //  );
                             },
                           ),
-
                           Flexible(
                             child: TextField(
 //                                                     onTap: () {
@@ -629,7 +714,7 @@ class _ConversationState extends State<Conversation> {
                             ),
                             onPressed: () {
                               // TODO: show error to user when message is not delivered
-                             sendMessageFun();
+                              sendMessageFun();
                             },
                           )
                         ],
@@ -681,92 +766,184 @@ class _ConversationState extends State<Conversation> {
     );
   }
 
-Widget appBarWid(){
-  return AppBar(
-          automaticallyImplyLeading: false,
-          iconTheme: IconThemeData(color: Colors.blueAccent, size: 10.0),
-          elevation: 3,
-          titleSpacing: 0,
-          title: InkWell(
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      "${widget.groupLogo}",
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            "${widget.groupTitle.toString().toUpperCase()}",
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 1.0),
-                            child: Text(
-                              "${NumberFormat.compact().format(widget.followersCount) ?? '0'} Followers ",
-                              style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                color: Color(0xff171822),
+  //code for applouse dialog
+  void showdialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 150,
+              width: 50,//MediaQuery.of(context).size.width*0.80,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: <Widget>[
+                        // code for first applause img AND button
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Text('applause'),
+                            RaisedButton(
+                              onPressed: () {
+                                setState(() {
+                                  amt= 10;
+                                  openCheckout();
+                                });
+                              },
+                              child: Text(
+                                "10",
+                                style: TextStyle(color: Colors.white),
                               ),
+                              color: const Color(0xFF1BC0C5),
                             ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Text('applause'),
+                            RaisedButton(
+                              onPressed: () {
+                                setState(() {
+                                  amt= 50;
+                                  print('fifty is clicked');
+                                  openCheckout();
+                                });
+                              },
+                              child: Text(
+                                "50",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              color: const Color(0xFF1BC0C5),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          //width: MediaQuery.of(context).size.width*30,
+                          child: Column(
+                            children: <Widget>[
+                              Text('applause'),
+                              SizedBox(
+                                width: 60,
+                                child: RaisedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      amt= 100;
+                                      openCheckout();
+                                    });
+                                  },
+                                  child: Text(
+                                    "100",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  color: const Color(0xFF1BC0C5),
+                                ),
+                              ),
+                            ],
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Color(0xFF2ecc71),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
-                            child: Text(
-                              "👑 ${groupGrade} ",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  } //end of show dialog
+
+  Widget appBarWid() {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      iconTheme: IconThemeData(color: Colors.blueAccent, size: 10.0),
+      elevation: 3,
+      titleSpacing: 0,
+      title: InkWell(
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  "${widget.groupLogo}",
+                ),
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        "${widget.groupTitle.toString().toUpperCase()}",
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          color: Color(0xff3A4276),
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 5),
+                  Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 1.0),
+                        child: Text(
+                          "${NumberFormat.compact().format(widget.followersCount) ?? '0'} Followers ",
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            color: Color(0xff171822),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xFF2ecc71),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        child: Text(
+                          "👑 ${groupGrade} ",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            onTap: () {},
-          ),
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(
-                  Icons.share,
-                  color: Colors.blueAccent,
-                ),
-                onPressed: () async {
-                  FlutterShare.share(
-                      title:
-                          'check our my official Group # ${widget.groupTitle} ✌',
-                      text:
-                          'Check out my official Group ⚡ ${widget.groupTitle} 🔥🎯✌ 👑🎁 👍',
-                      linkUrl:
-                          "https://play.google.com/store/apps/details?id=com.candc.chatogram",
-                      chooserTitle: 'Example Chooser Title');
-                }),
+          ],
+        ),
+        onTap: () {},
+      ),
+      actions: <Widget>[
+        IconButton(
+            icon: Icon(
+              Icons.share,
+              color: Colors.blueAccent,
+            ),
+            onPressed: () async {
+              FlutterShare.share(
+                  title: 'check our my official Group # ${widget.groupTitle} ✌',
+                  text:
+                      'Check out my official Group ⚡ ${widget.groupTitle} 🔥🎯✌ 👑🎁 👍',
+                  linkUrl:
+                      "https://play.google.com/store/apps/details?id=com.candc.chatogram",
+                  chooserTitle: 'Example Chooser Title');
+            }),
 // START of feedback button
 //                IconButton(
 //               icon: Icon(
@@ -799,189 +976,176 @@ Widget appBarWid(){
 //               },
 //             ),
 
-            // END of feedback button
-            // display for group members
-            Visibility(
-              visible: widget.chatOwnerId != widget.userId,
-              child: new PopupMenuButton(
-                  onSelected: (value) {
-                    if (value == "Profile") {
-                      profileRoute(context, 'member');
-                    } else if (value == "Report") {
-                      Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                          builder: (BuildContext context) => ReportScreen(
-                              chatId: widget.chatId, uId: widget.userId),
+        // END of feedback button
+        // display for group members
+        Visibility(
+          visible: widget.chatOwnerId != widget.userId,
+          child: new PopupMenuButton(
+              onSelected: (value) {
+                if (value == "Profile") {
+                  profileRoute(context, 'member');
+                } else if (value == "Report") {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (BuildContext context) => ReportScreen(
+                          chatId: widget.chatId, uId: widget.userId),
+                    ),
+                  );
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+                    PopupMenuItem(
+                      value: "Profile",
+                      child: Text("Profile",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                    PopupMenuItem(
+                      value: "Report",
+                      child: Text("Report",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                    // PopupMenuItem(
+                    //   value: "Exit Group",
+                    //   child: Text("Exit Group"),
+                    // ),
+                  ]),
+        ),
+        // display for group owners
+        Visibility(
+          visible: widget.chatOwnerId == widget.userId,
+          child: new PopupMenuButton(
+              onSelected: (value) {
+                if (value == "Approve Payments") {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (BuildContext context) => JoinRequestApproval(
+                        chatId: widget.chatId,
+                        groupName: widget.groupTitle,
+                      ),
+                    ),
+                  );
+                } else if (value == "Expired Memberships") {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (BuildContext context) => GroupMembersHome(
+                          groupMembersJson: widget.approvedGroupsJson ?? [],
+                          chatId: widget.chatId,
+                          ownerMailId: widget.senderMailId,
+                          groupTitle: widget.groupTitle,
                         ),
-                      );
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuItem<String>>[
-                        PopupMenuItem(
-                          value: "Profile",
-                          child: Text("Profile",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        PopupMenuItem(
-                          value: "Report",
-                          child: Text("Report",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        // PopupMenuItem(
-                        //   value: "Exit Group",
-                        //   child: Text("Exit Group"),
-                        // ),
-                      ]),
-            ),
-            // display for group owners
-            Visibility(
-              visible: widget.chatOwnerId == widget.userId,
-              child: new PopupMenuButton(
-                  onSelected: (value) {
-                    if (value == "Approve Payments") {
-                      Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              JoinRequestApproval(
-                            chatId: widget.chatId,
-                            groupName: widget.groupTitle,
-                          ),
-                        ),
-                      );
-                    } else if (value == "Expired Memberships") {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                            builder: (BuildContext context) => GroupMembersHome(
-                              groupMembersJson: widget.approvedGroupsJson ?? [],
-                              chatId: widget.chatId,
-                              ownerMailId: widget.senderMailId,
-                              groupTitle: widget.groupTitle,
-                            ),
-                          ));
-                    } else if (value == "Earnings") {
-                      Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                            builder: (BuildContext context) => GroupEarnings(),
-                          ));
-                    } else if (value == "Edit Details") {
-                      profileRoute(context, 'owner');
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuItem<String>>[
-                        PopupMenuItem(
-                          value: "Approve Payments",
-                          child: Text("Prime User Payments",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        PopupMenuItem(
-                          value: "Expired Memberships",
-                          child: Text("Prime Members",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        PopupMenuItem(
-                          value: "Earnings",
-                          child: Text("Earnings",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                        PopupMenuItem(
-                          value: "Edit Details",
-                          child: Text("Edit Profile",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
-                              )),
-                        ),
-                      ]),
-            )
-          ],
-        );
-}
+                      ));
+                } else if (value == "Earnings") {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (BuildContext context) => GroupEarnings(),
+                      ));
+                } else if (value == "Edit Details") {
+                  profileRoute(context, 'owner');
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+                    PopupMenuItem(
+                      value: "Approve Payments",
+                      child: Text("Prime User Payments",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                    PopupMenuItem(
+                      value: "Expired Memberships",
+                      child: Text("Prime Members",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                    PopupMenuItem(
+                      value: "Earnings",
+                      child: Text("Earnings",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                    PopupMenuItem(
+                      value: "Edit Details",
+                      child: Text("Edit Profile",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Color(0xff3A4276),
+                            fontWeight: FontWeight.w500,
+                          )),
+                    ),
+                  ]),
+        )
+      ],
+    );
+  }
+
   // sendMessgeFun
-  sendMessageFun(){
-                              try {
-                                if (msgDeliveryMode == "Prime") {
-                                  widget.msgFullPmCount =
-                                      widget.msgFullPmCount + 1;
-                                } else if (msgDeliveryMode == "Non-Prime") {
-                                  widget.msgFullCount = widget.msgFullCount + 1;
-                                } else {
-                                  widget.msgFullCount = widget.msgFullCount + 1;
-                                  widget.msgFullPmCount =
-                                      widget.msgFullPmCount + 1;
-                                }
+  sendMessageFun() {
+    try {
+      if (msgDeliveryMode == "Prime") {
+        widget.msgFullPmCount = widget.msgFullPmCount + 1;
+      } else if (msgDeliveryMode == "Non-Prime") {
+        widget.msgFullCount = widget.msgFullCount + 1;
+      } else {
+        widget.msgFullCount = widget.msgFullCount + 1;
+        widget.msgFullPmCount = widget.msgFullPmCount + 1;
+      }
 
-                                var now = new DateTime.now();
-                                var body = {
-                                  "messageBody": _chatMessageText.text,
-                                  "date": now,
-                                  "author": widget.userId,
-                                  "type": "text",
-                                  "premium": (msgDeliveryMode == "Prime"),
-                                  "messageMode": msgDeliveryMode
-                                };
-                                // var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now};
-                                var lastMessageBody = {
-                                  "lastMsg": _chatMessageText.text,
-                                  "lastMsgTime": now.toString(),
-                                  "title": widget.groupTitle,
-                                  "msgFullCount": widget.msgFullCount,
-                                  "msgFullPmCount": widget.msgFullPmCount,
-                                  "lastPmMsg": _chatMessageText.text
-                                };
+      var now = new DateTime.now();
+      var body = {
+        "messageBody": _chatMessageText.text,
+        "date": now,
+        "author": widget.userId,
+        "type": "text",
+        "premium": (msgDeliveryMode == "Prime"),
+        "messageMode": msgDeliveryMode
+      };
+      // var lastMessageBody ={"lastMsg":_chatMessageText.text, "lastMsgTime": now};
+      var lastMessageBody = {
+        "lastMsg": _chatMessageText.text,
+        "lastMsgTime": now.toString(),
+        "title": widget.groupTitle,
+        "msgFullCount": widget.msgFullCount,
+        "msgFullPmCount": widget.msgFullPmCount,
+        "lastPmMsg": _chatMessageText.text
+      };
 
-                                if (messageCount > 120 &&
-                                    (msgDeliveryMode == "Prime" ||
-                                        msgDeliveryMode == "Non-Prime")) {
-                                  nonPrimeMessageContent.removeAt(0);
-                                  nonPrimeMessageContent.add(body);
-                                  FirebaseController.instanace
-                                      .sendToClear121Message(
-                                          widget.chatId,
-                                          nonPrimeMessageContent,
-                                          lastMessageBody,
-                                          msgDeliveryMode);
-                                } else {
-                                  FirebaseController.instanace.sendChatMessage(
-                                      widget.chatId,
-                                      body,
-                                      lastMessageBody,
-                                      msgDeliveryMode);
-                                }
+      if (messageCount > 120 &&
+          (msgDeliveryMode == "Prime" || msgDeliveryMode == "Non-Prime")) {
+        nonPrimeMessageContent.removeAt(0);
+        nonPrimeMessageContent.add(body);
+        FirebaseController.instanace.sendToClear121Message(widget.chatId,
+            nonPrimeMessageContent, lastMessageBody, msgDeliveryMode);
+      } else {
+        FirebaseController.instanace.sendChatMessage(
+            widget.chatId, body, lastMessageBody, msgDeliveryMode);
+      }
 
-                                _chatMessageText.text = "";
-scrollToBottomFun();
-                                Timer(
-                                    Duration(milliseconds: 500),
-                                    () => _scrollController.jumpTo(
-                                        _scrollController
-                                            .position.maxScrollExtent));
-                              } catch (e) {}
-  } 
+      _chatMessageText.text = "";
+      scrollToBottomFun();
+      Timer(
+          Duration(milliseconds: 500),
+          () => _scrollController
+              .jumpTo(_scrollController.position.maxScrollExtent));
+    } catch (e) {}
+  }
 }
