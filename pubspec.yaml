@@ -66,6 +66,7 @@ dependencies:
   flutter_share: ^1.0.2+1
   shimmer: ^1.1.1
   flutter_phoenix: ^0.1.0
+  flutter_custom_dialog: ^1.0.20
 
 
 dev_dependencies:
