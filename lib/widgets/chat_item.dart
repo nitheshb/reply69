@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
-import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:notification/controllers/firebaseController.dart';
-import 'package:notification/screens/conversation.dart';
+
 
 class ChatItem extends StatefulWidget {
   final String dp;
@@ -110,35 +107,7 @@ class _ChatItemState extends State<ChatItem> {
             SizedBox(height: 5),
             widget.counter == 0
                 ? SizedBox()
-                : InkWell(
-                    onTap: () async {
-                      // var userId = widget.fullUserJson['userId'];
-                      // var modifiedDate = widget.fullUserJson['expiresOn'];
-                      // var kycDocId = widget.fullUserJson['kycDocId'];
-                      // var period = widget.fullUserJson['membershipDuration'];
-                      // var joinedTime = widget.fullUserJson['joinedId'];
-                      // var expiredTime = widget.fullUserJson['expiresOn'];
-
-                      // FirebaseController.instanace.removeMemberOnExpiry(
-                      //     userId,
-                      //     joinedTime,
-                      //     expiredTime,
-                      //     kycDocId,
-                      //     period,
-                      //     widget.chatId,
-                      //     widget.fullUserJson);
-                            _showBasicsFlash(
-                      context: context,
-                      duration: Duration(seconds: 4),
-                      messageText: '${widget.name} removed from  Prime group');
-                      // try {
-                      //   var response = await dio.get(
-                      //       "https://asia-south1-royalpro.cloudfunctions.net/onMemberRemove?id=${userId}&chatId=${widget.chatId}&groupName=${widget.groupTitle}");
-                      // } catch (e) {
-                      //   print('error is ${e}');
-                      // }
-                    },
-                    child: Container(
+                :  Container(
                       padding: EdgeInsets.all(1),
                       decoration: BoxDecoration(
                         color: Colors.red,
@@ -161,32 +130,10 @@ class _ChatItemState extends State<ChatItem> {
                         ),
                       ),
                     ),
-                  ),
           ],
         ),
       ),
     );
   }
-    void _showBasicsFlash({
-    Duration duration,
-    flashStyle = FlashStyle.floating,
-    BuildContext context,
-    String messageText,
-  }) {
-    showFlash(
-      context: context,
-      duration: duration,
-      builder: (context, controller) {
-        return Flash(
-          controller: controller,
-          style: flashStyle,
-          boxShadows: kElevationToShadow[4],
-          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
-          child: FlashBar(
-            message: Text('$messageText'),
-          ),
-        );
-      },
-    );
-  }
+
 }

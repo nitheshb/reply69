@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
@@ -343,40 +344,47 @@ class _GroupMembersHomeState extends State<GroupMembersHome>
                         onPressed: () async {
                           print('insidet this');
 
-                           widget.groupMembersJson =  widget.groupMembersJson.where((m) => (member['kycDocId'] != m['kycDocId'] )).toList();
+                          
+                           Navigator.of(context).pop();
+
+                             var userId = member['userId'];
+                      var modifiedDate = member['expiresOn'];
+                      var kycDocId = member['kycDocId'];
+                      var period = member['membershipDuration'];
+                      var joinedTime = member['joinedId'];
+                      var expiredTime = member['expiresOn'];
+
+                      FirebaseController.instanace.removeMemberOnExpiry(
+                          userId,
+                          joinedTime,
+                          expiredTime,
+                          kycDocId,
+                          period,
+                          widget.chatId,
+                          member);
+               
+                      try {
+                        var response = await dio.get(
+                            "https://asia-south1-royalpro.cloudfunctions.net/onMemberRemove?id=${userId}&chatId=${widget.chatId}&groupName=${widget.groupTitle}");
+
+                             _showBasicsFlash(
+                      context: context,
+                      duration: Duration(seconds: 4),
+                      messageText: '${member['firstName'] ?? 'User ${index + 1}'} removed from  Prime group');
+                      } catch (e) {
+                        print('error is ${e}');
+                      }
+
+                      removedUserdLocal.add(member['kycDocId']);
+
+                       widget.groupMembersJson =  widget.groupMembersJson.where((m) => (member['kycDocId'] != m['kycDocId'] )).toList();
                           setState(() {
                              
-                            widget.expiredDataJson = widget.groupMembersJson;
+                            widget.groupMembersJson = widget.groupMembersJson;
                             // expiredDataJson = [];
                             // widget.groupMembersJson = expiredDataJson;
-                            Navigator.of(context).pop();
+                           
                           });
-                          
-                      //        var userId = member['userId'];
-                      // var modifiedDate = member['expiresOn'];
-                      // var kycDocId = member['kycDocId'];
-                      // var period = member['membershipDuration'];
-                      // var joinedTime = member['joinedId'];
-                      // var expiredTime = member['expiresOn'];
-
-                      // FirebaseController.instanace.removeMemberOnExpiry(
-                      //     userId,
-                      //     joinedTime,
-                      //     expiredTime,
-                      //     kycDocId,
-                      //     period,
-                      //     widget.chatId,
-                      //     member);
-               
-                      // try {
-                      //   var response = await dio.get(
-                      //       "https://asia-south1-royalpro.cloudfunctions.net/onMemberRemove?id=${userId}&chatId=${widget.chatId}&groupName=${widget.groupTitle}");
-                      // } catch (e) {
-                      //   print('error is ${e}');
-                      // }
-
-                    widget.groupMembersJson =  widget.groupMembersJson.where((m) => (member['kycDocId'] != m['kycDocId'] )).toList();
-                      removedUserdLocal.add(member['kycDocId']);
                         },
                       ),
                     ],
@@ -408,8 +416,30 @@ class _GroupMembersHomeState extends State<GroupMembersHome>
             ],
           ),
         ));
+        
   }
-
+  void _showBasicsFlash({
+    Duration duration,
+    flashStyle = FlashStyle.floating,
+    BuildContext context,
+    String messageText,
+  }) {
+    showFlash(
+      context: context,
+      duration: duration,
+      builder: (context, controller) {
+        return Flash(
+          controller: controller,
+          style: flashStyle,
+          boxShadows: kElevationToShadow[4],
+          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
+          child: FlashBar(
+            message: Text('$messageText'),
+          ),
+        );
+      },
+    );
+  }
   @override
   bool get wantKeepAlive => true;
 }
