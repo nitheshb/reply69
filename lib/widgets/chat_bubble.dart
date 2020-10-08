@@ -14,10 +14,12 @@ class ChatBubble extends StatefulWidget {
   final String messageMode;
   final String selMessageMode;
   final String uxId;
+  final String date;
   final premium;
 
   ChatBubble(
       {Key key,
+      @required this.date,
       @required this.dp,
       @required this.name,
       @required this.time,
@@ -49,24 +51,24 @@ class _ChatBubbleState extends State<ChatBubble> {
   Widget build(BuildContext context) {
     var colorBg;
     if (widget.selMessageMode == 'All') {
-      colorBg = Color(0xfff8471a);
+      colorBg = Colors.pink[400];
     } else if (widget.selMessageMode == 'Prime') {
-      colorBg = Color(0xff3ce262);
+      colorBg = Colors.greenAccent;
     } else {
-      colorBg = Color(0xff2c87ff);
+      colorBg = Colors.lightBlueAccent;
     }
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5),
+      padding: EdgeInsets.all(8),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(3),
           boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade100,
-              blurRadius: widget.messageMode == 'paymentAccept' ? 0 : 6,
-              spreadRadius: widget.messageMode == 'paymentAccept' ? 0 : 10,
-            )
+            // BoxShadow(
+            //   color: Colors.grey.shade100,
+            //   blurRadius: widget.messageMode == 'paymentAccept' ? 0 : 6,
+            //   spreadRadius: widget.messageMode == 'paymentAccept' ? 0 : 10,
+            // )
           ],
         ),
         child: InkWell(
@@ -77,29 +79,135 @@ class _ChatBubbleState extends State<ChatBubble> {
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                         color: colorBg,
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(5),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.shade100,
                             blurRadius:
-                                widget.messageMode == 'paymentAccept' ? 0 : 6,
+                                widget.messageMode == 'paymentAccept' ? 0 : 2,
                             spreadRadius:
-                                widget.messageMode == 'paymentAccept' ? 0 : 10,
+                                widget.messageMode == 'paymentAccept' ? 0 : 2,
                           )
                         ],
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          widget.message == ""
-                              ? "Empty Message"
-                              : widget.message,
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              widget.message == ""
+                                  ? "Empty Message"
+                                  : widget.message,
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
-                        ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Container(
+                                // this is for only the user screenshot approval view
+                                child: Visibility(
+                                    visible:
+                                        widget.messageMode == 'paymentAccept',
+                                    child: Column(
+                                      children: <Widget>[
+                                        Text(
+                                          "${widget.name}",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 6.0, top: 4.0),
+                                          child: Text(
+                                            "${widget.uxId}",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Visibility(
+                                    visible: widget.messageMode == 'Prime',
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0, bottom: 2),
+                                      child: Icon(
+                                        FontAwesomeIcons.crown,
+                                        color: Colors.white,
+                                        size: 10,
+                                      ),
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: widget.messageMode == 'All',
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0, bottom: 2),
+                                      child: Icon(
+                                        FontAwesomeIcons.users,
+                                        color: Colors.white,
+                                        size: 10,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0,
+                                          bottom: 8.0,
+                                          right: 2.0,
+                                          left: 2),
+                                      child: widget.date != null
+                                          ? Text(
+                                              "${widget.date}",
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            )
+                                          : Text(
+                                              "07-10",
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            )),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0,
+                                        bottom: 8.0,
+                                        right: 8.0,
+                                        left: 2),
+                                    child: Text(
+                                      "${widget.time}",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        // color: Color(0xff3A4276),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ))
                   : InkWell(
                       onTap: () {
@@ -118,83 +226,6 @@ class _ChatBubbleState extends State<ChatBubble> {
               //   width: MediaQuery.of(context).size.width,
               //   fit: BoxFit.cover,
               // ),
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          // this is for only the user screenshot approval view
-                          child: Visibility(
-                              visible: widget.messageMode == 'paymentAccept',
-                              child: Column(
-                                children: <Widget>[
-                                  Text(
-                                    "${widget.name}",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 6.0, top: 4.0),
-                                    child: Text(
-                                      "${widget.uxId}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Visibility(
-                              visible: widget.messageMode == 'Prime',
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 8.0, bottom: 2),
-                                child: Icon(
-                                  FontAwesomeIcons.crown,
-                                  color: Colors.blue,
-                                  size: 8,
-                                ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: widget.messageMode == 'All',
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 8.0, bottom: 2),
-                                child: Icon(
-                                  FontAwesomeIcons.users,
-                                  color: Colors.blue,
-                                  size: 8,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "${widget.time}",
-                              style: GoogleFonts.poppins(
-                                fontSize: 10,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
 //  ListTile(
               // leading: CircleAvatar(
               //   backgroundImage: AssetImage(

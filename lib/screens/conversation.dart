@@ -95,11 +95,10 @@ class _ConversationState extends State<Conversation> {
     setState(() {
       selectedRadio = val;
       if (val == 2) {
-        scrollToBottomFun();
+ 
         msgDeliveryMode = "Prime";
       } else if (val == 1) {
         msgDeliveryMode = "All";
-        scrollToBottomFun();
       } else if (val == 3) {
         msgDeliveryMode = "Non-Prime";
       }
@@ -336,7 +335,7 @@ class _ConversationState extends State<Conversation> {
                               itemBuilder: (BuildContext context, int index) {
                                 DocumentSnapshot ds = snapshot.data;
                                 var indexVal = index;
-                                //  scrollToBottomFun();
+                                 scrollToBottomFun();
                                 // var datestamp = new DateFormat("dd-MM'T'HH:mm");
                                 var datestamp = new DateFormat("HH:mm");
                                    return ChatBubble(
