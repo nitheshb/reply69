@@ -10,7 +10,7 @@ import 'package:notification/util/state_widget.dart';
 import 'package:notification/widgets/chat_bubble.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import '../bid365_app_theme.dart';
+import '../app_theme.dart';
 
 class JoinRequestApproval extends StatefulWidget {
   JoinRequestApproval({Key key, this.chatId, this.groupName}) : super(key: key);

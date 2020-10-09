@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flash/flash.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:notification/app_theme.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/conversation.dart';
@@ -22,7 +24,16 @@ import 'package:notification/widgets/displayChatsMenuItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
+//final Color color1=AppTheme.kdarkorange;
+//final Color color2=AppTheme.korange;
+final Color color3=Colors.black.withOpacity(0.6);
+final Color color4=Color(0xffFFF7F4);
+//final Color color4=Color(0xffE8FDF6);
+final Color color2=AppTheme.kteal;
+final Color color1=AppTheme.ktheme;
+
 class GroupsLandingScreen extends StatefulWidget {
+
   GroupsLandingScreen(
       {Key key,
       this.uId,
@@ -279,79 +290,99 @@ var searchGroupForReadCount;
 Widget followGroupsTabDisplay(context, userId){
   return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(132),
+        preferredSize: Size.fromHeight(159),
         child: AppBar(
           automaticallyImplyLeading: false,
-          flexibleSpace: Container(
-            //height: 140,
-            //width: double.infinity,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Win more under guidance of Experts ",
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w700,
+          flexibleSpace: Padding(
+            padding: const EdgeInsets.only(top:12,bottom:9,left:12,right: 12),
+            child: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [Colors.white,Colors.white],
+                      tileMode: TileMode.clamp
+                  ),
+                  borderRadius: BorderRadius.circular(15),
+                  //color: Color.fromRGBO(49, 39, 79, 1),
+                  border: Border.all(color: color1.withOpacity(0.5)),
+                  boxShadow: [
+                    BoxShadow(
+                      color:Colors.black.withOpacity(0.2),
+                      blurRadius: 0,
+                      offset: Offset(0, 0),
+                    )
+                  ]
+              ),
+              //height: 140,
+              //width: double.infinity,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top:10.0,right: 15,left: 15,bottom: 0),
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(height: 2),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Win more under guidance of Experts",
+                              style: GoogleFonts.inter(
+                                fontSize: 18,
+                                color: color3.withOpacity(0.9),
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 6),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Follow to receive expert messages",
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w400,
+                          SizedBox(height: 2),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Follow to receive expert messages",
+                              style: GoogleFonts.openSans(
+                                fontSize: 14.5,
+                                color: color3,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                        onChanged: (val) {
-                          setState(() {
-                            _searchTerm = val;
-                            print('search term ${_searchTerm}');
-                          });
-                        },
-                        style: new TextStyle(color: Colors.black, fontSize: 20),
-                        decoration: new InputDecoration(
-                            contentPadding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.grey[400], width: 2)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black)),
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.grey[400], width: 2)),
-                            // border: InputBorder.none,
-                            hintText: 'Search Group Name....',
-                            hintStyle: GoogleFonts.poppins(
-                              fontSize: 13,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w500,
-                            ),
-                            prefixIcon: const Icon(Icons.search, color: Colors.black))),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: TextField(
+                          onChanged: (val) {
+                            setState(() {
+                              _searchTerm = val;
+                              print('search term ${_searchTerm}');
+                            });
+                          },
+                          style: new TextStyle(color: color3.withOpacity(0.9), fontSize: 20),
+                          decoration: new InputDecoration(
+                              contentPadding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: color3, width: 2)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: color3.withOpacity(0.9))),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: color3, width: 2)),
+                              // border: InputBorder.none,
+                              hintText: 'Search Group Name....',
+                              hintStyle: GoogleFonts.poppins(
+                                fontSize: 13,
+                                color: color3.withOpacity(0.9),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              prefixIcon: Icon(Icons.search, color: color3))),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -364,11 +395,11 @@ Widget followGroupsTabDisplay(context, userId){
             if (!snapshot.hasData)  {
               return Column(
                 children: <Widget>[
-                  SizedBox(height: 30),
+                  SizedBox(height: 100),
                   Align(
                     alignment: Alignment.center,
                     child: new Container(
-                      height: 160,
+                      height: 148,
                       width: 160,
                       decoration: BoxDecoration(
                           image: DecorationImage(
@@ -376,7 +407,7 @@ Widget followGroupsTabDisplay(context, userId){
                               fit: BoxFit.fill)),
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
                   Align(
                     alignment: Alignment.topLeft,
                     child: new Container(
@@ -387,9 +418,8 @@ Widget followGroupsTabDisplay(context, userId){
                           Align(
                             alignment: Alignment.center,
                             child: Text("Use above search bar to find",
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 15,
-                                  color: Color(0xff3A4276),
                                   fontWeight: FontWeight.w500,
                                 )),
                           )
@@ -587,9 +617,9 @@ return InkWell(
             Column(
               children: <Widget>[
                 new Text("No groups subscribed yet",
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Color(0xff3A4276),
+                    style: GoogleFonts.nunito(
+                      fontSize: 18,
+                      color: Color(0xff000000),
                       fontWeight: FontWeight.w500,
                     )),
                 SizedBox(height: 16),
@@ -598,9 +628,9 @@ return InkWell(
                     _toggleTab();
                   },
                   child: new Text("Subscribe to a group",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: Colors.blue,
+                      style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        color: color2,
                         fontWeight: FontWeight.w600,
                       )),
                 )
@@ -794,31 +824,66 @@ return InkWell(
     //   });
 
     return Scaffold(
-        appBar: AppBar(
-          title: TabBar(
-            controller: _tabController,
-            indicatorColor: Theme.of(context).accentColor,
-            labelColor: Theme.of(context).accentColor,
-            unselectedLabelColor: Theme.of(context).textTheme.caption.color,
-            isScrollable: false,
-            labelStyle: GoogleFonts.poppins(
-              fontSize: 14,
-              color: Color(0xff3A4276),
-              fontWeight: FontWeight.w400,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(90),
+          child: AppBar(
+            backgroundColor: color1,
+//          flexibleSpace: Container(
+//            child: Padding(
+//              padding: const EdgeInsets.all(20.0),
+//              child: Text('Fantasy Cricket',style: GoogleFonts.nunito(fontSize: 20,),),
+//            ),
+//            decoration: BoxDecoration(
+//              gradient: LinearGradient(
+//                colors: [
+//                  color1,
+//                  color1,
+//                ],
+//                begin: Alignment.topLeft,
+//                end: Alignment.topRight,
+//              ),
+//            ),
+//          ),
+
+          flexibleSpace: Column(
+              children: <Widget>[
+                SizedBox(height: 23,),
+                Padding(
+                  padding: const EdgeInsets.only(top:8.0,bottom: 8,left: 20),
+                  child: Container(
+                    width: double.infinity,
+                    child: Text('Fantasy Cricket',style: GoogleFonts.nunito(color:Colors.white.withOpacity(0.9),fontSize: 20,fontWeight: FontWeight.w600),),
+                  ),
+                ),
+                TabBar(
+
+                  controller: _tabController,
+                  indicatorColor: Colors.white.withOpacity(0.6),
+                  labelColor:Colors.white,
+                  unselectedLabelColor: Colors.white38,
+                  isScrollable: false,
+                  labelStyle: GoogleFonts.nunito(
+                    fontSize: 16,
+                    color: Color(0xffffffff),
+                    fontWeight: FontWeight.w600,
+                  ),
+                  onTap: (index) {
+                    setState(() {
+                      selTabIndex = index;
+                    });
+                  },
+                  tabs: <Widget>[
+                    Tab(
+                      text: "Messages",
+                    ),
+                    Tab(
+                      text: "Follow Experts",
+                    ),
+                  ],
+                ),
+                SizedBox(height: 0,),
+              ],
             ),
-            onTap: (index) {
-              setState(() {
-                selTabIndex = index;
-              });
-            },
-            tabs: <Widget>[
-              Tab(
-                text: "Messages",
-              ),
-              Tab(
-                text: "Follow Experts",
-              ),
-            ],
           ),
         ),
         body: TabBarView(
@@ -836,6 +901,7 @@ return InkWell(
           // this floating button should be visiable only in Follow Experts Tab
          visible: selTabIndex == 1,
           child: FloatingActionButton(
+            backgroundColor: color1,
             child: Container(
               child: Icon(
                 Icons.add,
@@ -925,8 +991,11 @@ return InkWell(
 
   Widget buildApplication(
       logoUrl, title, owner, categories, isFollow, chatId, userId) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(24, 16, 24, 16),
+
+    return Padding(padding: EdgeInsets.only(left: 13,right: 13,bottom: 8),
+    child:Container(
+      height: 93,
+      padding: EdgeInsets.fromLTRB(19, 14, 19, 14),
       margin: EdgeInsets.symmetric(vertical: 2),
       // decoration: BoxDecoration(
       //   color: Colors.white,
@@ -935,70 +1004,86 @@ return InkWell(
       //   ),
       // ),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Color(0xffF1F3F6)),
+        boxShadow: [
+          BoxShadow(
+            color: color1.withOpacity(0.1),
+            blurRadius: 0,
+            offset: Offset(0, 0),
+          )
+        ],
+          gradient: LinearGradient(
+            colors: [Color(0xffF1F3F6),Color(0xffF1F3F6)],
+          ),
+          borderRadius: BorderRadius.circular(20), color: Color(0xffF1F3F6)
+      ),
       child: Column(
         children: [
           Row(
             children: [
               Container(
-                height: 70,
-                width: 65,
+                height: 50,
+                width: 50,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(logoUrl),
                     fit: BoxFit.fill,
                   ),
                   borderRadius: BorderRadius.all(
-                    Radius.circular(10),
+                    Radius.circular(90),
                   ),
                 ),
               ),
               Expanded(
                   child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${title[0].toUpperCase() + title.substring(1)}",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4.0),
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          FontAwesomeIcons.userAlt,
-                          size: 10,
-                          color: Colors.black,
-                        ),
-                        SizedBox(width: 4.0),
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          "${owner[0].toUpperCase() + owner.substring(1)}",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
+                          "${title[0].toUpperCase() + title.substring(1)}",
+                          style: GoogleFonts.openSans(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Wrap(
-                          spacing: 4.0, // gap between adjacent chips
-                          runSpacing: 1.0, // gap between lines
-                          children: _buildSelectedOptions(categories),
+                        SizedBox(height: 2),
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              FontAwesomeIcons.userAlt,
+                              size: 9,
+                              color: Colors.grey[400],
+                            ),
+                            SizedBox(width: 3),
+                            Text(
+                              "${owner[0].toUpperCase() + owner.substring(1)}",
+                              style: GoogleFonts.nunito(
+                                fontSize: 13,
+                                color: Colors.grey[800],
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Wrap(
+                                spacing: 4.0, // gap between adjacent chips
+                                runSpacing: 1.0, // gap between lines
+                                children: _buildSelectedOptions(categories),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 11,
+                        ),
+                        Row(
+                          children: <Widget>[
+
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              )),
+                  )),
               InkWell(
                 onTap: () {
                   if (isFollow) {
@@ -1009,37 +1094,49 @@ return InkWell(
                 },
                 child: Container(
                   height: 35,
-                  width: 100,
+                  width: 92,
                   decoration: BoxDecoration(
-                    gradient: isFollow
-                        ? LinearGradient(
-                            colors: [
-                              Colors.grey,
-                              Colors.grey,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.topRight,
-                          )
-                        : LinearGradient(
-                            colors: [
-                              Color(0xff0072ff),
-                              Color(0xff00d4ff),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.topRight,
-                          ),
+
+
+                    border: isFollow? Border.all(color: Colors.grey,width: 2):Border.all(color: color1,width: 2),
+
+
+
+
+
+//                    gradient: isFollow
+//                        ? LinearGradient(
+//                      colors: [
+//                        Colors.grey,
+//                        Colors.grey,
+//                      ],
+//                      begin: Alignment.topLeft,
+//                      end: Alignment.topRight,
+//                    )
+//                        : LinearGradient(
+//                      colors: [
+//                        Colors.white,
+//                      Colors.white,
+//                      ],
+//                      begin: Alignment.topLeft,
+//                      end: Alignment.topRight,
+//                    ),
                     // color: isFollow ? Colors.grey :Colors.blueAccent,
                     borderRadius: BorderRadius.all(
-                      Radius.circular(6),
+                      Radius.circular(20),
                     ),
                   ),
                   child: Center(
                     child: Text(
                       isFollow ? "UnFollow" : "Follow",
-                      style: TextStyle(
+                      style: isFollow? GoogleFonts.nunito(
                         // fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.white,
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ):GoogleFonts.openSans(
+                        // fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: color1,
                       ),
                     ),
                   ),
@@ -1049,9 +1146,11 @@ return InkWell(
           ),
         ],
       ),
+    ),
     );
   }
 
   @override
   bool get wantKeepAlive => true;
 }
+

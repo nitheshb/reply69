@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:notification/app_theme.dart';
 import 'package:notification/screens/Matches.dart';
 import 'package:notification/screens/profile.dart';
 import 'package:notification/util/state.dart';
@@ -85,7 +86,7 @@ print("===> my owngroups ${myOwnGroups}");
           // sets the background color of the `BottomNavigationBar`
           canvasColor: Theme.of(context).primaryColor,
           // sets the active color of the `BottomNavigationBar` if `Brightness` is light
-          primaryColor: Theme.of(context).accentColor,
+          primaryColor: AppTheme.kteal,
           textTheme: Theme.of(context).textTheme.copyWith(
                 caption: TextStyle(color: Colors.grey[500]),
               ),

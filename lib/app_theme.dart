@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
 
+class AppTheme{
+
+  AppTheme._();
+
+  static const Color korange = Colors.orange;
+  static const Color kdarkorange=Color(0xffFD5701);
+  static const Color kteal = Colors.teal;
+  static const Color ktheme = Color(0xff017373);
+
+
+}
+
+
+
 class Bid365AppTheme {
   Bid365AppTheme._();
 
@@ -19,18 +33,18 @@ class Bid365AppTheme {
 
   // static const Color p_green = Color(0xffFF005A);
   // static const Color nearlyGreen = Color(0xffFF005A);
-  static const Color nearlyBlack = Color(0xFF213333);
+  static const Color nearlyBlack =  Color(0xFF213333);
   static const Color p_green = Color(0xff00ff87);
   static const Color nearlyGreen = Color(0xff00ff87);
   // static const Color nearlyBlack = Color(0xFFefefef);
-  
-  static const Color gradient0 = Color(0xffFFB397); 
+
+  static const Color gradient0 = Color(0xffFFB397);
   static const Color gradient1 = Color(0xffF46AA0);
 
   // status bar color
   static const Color transparentbg = Color(0xffefefef);
 
-  
+
 
 
 
@@ -143,13 +157,13 @@ class Bid365AppTheme {
                                                           color:nearlyBlack,// was lightText
                                                           fontFamily: 'InterM',
   );
-  static const TextStyle money= TextStyle( 
+  static const TextStyle money= TextStyle(
     fontWeight: FontWeight.w600,
                                                     fontSize: 16,
                                                     letterSpacing: 0.27,
                                                     color: nearlyBlack,
                                                     fontFamily: 'InterM',
-                                                        
+
   );
 
 }

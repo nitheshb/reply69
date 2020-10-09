@@ -24,7 +24,7 @@ import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../bid365_app_theme.dart';
+import '../app_theme.dart';
 
 class JoinPremiumGroup extends StatefulWidget {
   JoinPremiumGroup(
