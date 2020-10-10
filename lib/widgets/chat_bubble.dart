@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/pages/imageFullView.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatBubble extends StatefulWidget {
   final String dp;
@@ -31,6 +32,7 @@ class ChatBubble extends StatefulWidget {
       this.premium,
       this.type})
       : super(key: key);
+
   @override
   _ChatBubbleState createState() => _ChatBubbleState();
 }
@@ -46,6 +48,16 @@ class _ChatBubbleState extends State<ChatBubble> {
     showDialog(
         context: context, builder: (BuildContext context) => profileDialog);
   }
+
+  _launchURL(message) async {
+    if (await canLaunch(widget.message)) {
+      await launch(message);
+    } else {
+      throw 'Could not launch ${widget.message}';
+    }
+  }
+  RegExp exp = new RegExp(r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$");
+qq
 
   @override
   Widget build(BuildContext context) {
@@ -96,10 +108,21 @@ class _ChatBubbleState extends State<ChatBubble> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              widget.message == ""
-                                  ? "Empty Message"
-                                  : widget.message,
+                            child: exp.hasMatch(widget.message) ?
+                            GestureDetector(
+                              onTap: (){_launchURL(widget.message);},
+                              child: Container(
+                                child: Text(widget.message,
+                                  style: GoogleFonts.poppins(
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            )
+                                : Text(widget.message,
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 color: Colors.black,
