@@ -394,6 +394,7 @@ class _SignupPageState extends State<SignupPage> {
             lastName: lastName,
             referralCode: referralCode,
             walletMoney: 50,
+            myOwnGroups: []
           ));
         });
         //now automatically login user too
