@@ -259,7 +259,7 @@ class _DisplayMatchesState extends State<DisplayMatches>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Text('Join your 1st Contest',
+                                    Text('',
                                         style: style2.copyWith(
                                             fontSize: 11,
                                             fontWeight: FontWeight.bold)),

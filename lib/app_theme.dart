@@ -7,7 +7,8 @@ class AppTheme{
   static const Color korange = Colors.orange;
   static const Color kdarkorange=Color(0xffFD5701);
   static const Color kteal = Colors.teal;
-  static const Color ktheme = Color(0xff017373);
+  // static const Color ktheme = Color(0xff017373);
+  static const Color ktheme = Color(0xff3A4276);
 
 
 }

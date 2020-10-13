@@ -86,7 +86,7 @@ print("===> my owngroups ${myOwnGroups}");
           // sets the background color of the `BottomNavigationBar`
           canvasColor: Theme.of(context).primaryColor,
           // sets the active color of the `BottomNavigationBar` if `Brightness` is light
-          primaryColor: AppTheme.kteal,
+          primaryColor: Theme.of(context).accentColor,
           textTheme: Theme.of(context).textTheme.copyWith(
                 caption: TextStyle(color: Colors.grey[500]),
               ),

@@ -218,7 +218,7 @@ Widget messagesTabDisplay(context, userId){
                         alignment: Alignment.topLeft,
                         child: Text(
                           "Created Groups ",
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 18,
                             color: Color(0xff3A4276),
                             fontWeight: FontWeight.w700,
@@ -253,11 +253,12 @@ Widget messagesTabDisplay(context, userId){
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "Following Groups ",
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w700,
-                            ),
+                            // style: TextStyle(
+                            //   fontSize: 18,
+                            //   color: Color(0xff3A4276),
+                            //   fontWeight: FontWeight.w700,
+                            // ),
+                            style: TextStyle(fontSize: 22, color: Color(0xff3A4276),fontWeight: FontWeight.w700 ),
                           ),
                         ),
          ),
@@ -301,7 +302,7 @@ Widget followGroupsTabDisplay(context, userId){
                       colors: [Colors.white,Colors.white],
                       tileMode: TileMode.clamp
                   ),
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(6),
                   //color: Color.fromRGBO(49, 39, 79, 1),
                   border: Border.all(color: color1.withOpacity(0.5)),
                   boxShadow: [
@@ -373,7 +374,7 @@ Widget followGroupsTabDisplay(context, userId){
                                       color: color3, width: 2)),
                               // border: InputBorder.none,
                               hintText: 'Search Group Name....',
-                              hintStyle: GoogleFonts.poppins(
+                              hintStyle: TextStyle(
                                 fontSize: 13,
                                 color: color3.withOpacity(0.9),
                                 fontWeight: FontWeight.w500,
@@ -824,49 +825,37 @@ return InkWell(
     //   });
 
     return Scaffold(
+      // appBar: appBarWid(),
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(90),
+           preferredSize: Size.fromHeight(90),
+          
           child: AppBar(
-            backgroundColor: color1,
-//          flexibleSpace: Container(
-//            child: Padding(
-//              padding: const EdgeInsets.all(20.0),
-//              child: Text('Fantasy Cricket',style: GoogleFonts.nunito(fontSize: 20,),),
-//            ),
-//            decoration: BoxDecoration(
-//              gradient: LinearGradient(
-//                colors: [
-//                  color1,
-//                  color1,
-//                ],
-//                begin: Alignment.topLeft,
-//                end: Alignment.topRight,
-//              ),
-//            ),
-//          ),
+            // backgroundColor: color1,
 
           flexibleSpace: Column(
               children: <Widget>[
-                SizedBox(height: 23,),
+                SizedBox(height: 50,),
                 Padding(
-                  padding: const EdgeInsets.only(top:8.0,bottom: 8,left: 20),
+                  padding: const EdgeInsets.only(top:0.0,bottom: 0,left: 0),
                   child: Container(
                     width: double.infinity,
-                    child: Text('Fantasy Cricket',style: GoogleFonts.nunito(color:Colors.white.withOpacity(0.9),fontSize: 20,fontWeight: FontWeight.w600),),
+                    
+                    child: 
+                    Align(alignment: Alignment.center, child:Text('MyExperts',style: GoogleFonts.nunito(color:Colors.black38.withOpacity(0.9),fontSize: 24,fontWeight: FontWeight.w900),)),
                   ),
                 ),
                 TabBar(
 
                   controller: _tabController,
-                  indicatorColor: Colors.white.withOpacity(0.6),
-                  labelColor:Colors.white,
-                  unselectedLabelColor: Colors.white38,
-                  isScrollable: false,
-                  labelStyle: GoogleFonts.nunito(
-                    fontSize: 16,
-                    color: Color(0xffffffff),
-                    fontWeight: FontWeight.w600,
-                  ),
+          indicatorColor: Theme.of(context).accentColor,
+          labelColor: Theme.of(context).accentColor,
+          unselectedLabelColor: Theme.of(context).textTheme.caption.color,
+          isScrollable: false,
+          labelStyle: TextStyle(
+            fontSize: 14,
+            color: Color(0xff3A4276),
+            fontWeight: FontWeight.w400,
+          ),
                   onTap: (index) {
                     setState(() {
                       selTabIndex = index;
@@ -992,9 +981,9 @@ return InkWell(
   Widget buildApplication(
       logoUrl, title, owner, categories, isFollow, chatId, userId) {
 
-    return Padding(padding: EdgeInsets.only(left: 13,right: 13,bottom: 8),
+    return Padding(padding: EdgeInsets.only(left: 13,right: 13,bottom: 2),
     child:Container(
-      height: 93,
+      height: 106,
       padding: EdgeInsets.fromLTRB(19, 14, 19, 14),
       margin: EdgeInsets.symmetric(vertical: 2),
       // decoration: BoxDecoration(
@@ -1014,7 +1003,7 @@ return InkWell(
           gradient: LinearGradient(
             colors: [Color(0xffF1F3F6),Color(0xffF1F3F6)],
           ),
-          borderRadius: BorderRadius.circular(20), color: Color(0xffF1F3F6)
+          borderRadius: BorderRadius.circular(6), color: Color(0xffF1F3F6)
       ),
       child: Column(
         children: [
@@ -1043,7 +1032,7 @@ return InkWell(
                           "${title[0].toUpperCase() + title.substring(1)}",
                           style: GoogleFonts.openSans(
                             fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                         SizedBox(height: 2),
@@ -1063,7 +1052,13 @@ return InkWell(
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-                            Padding(
+                           
+                          ],
+                        ),
+                        SizedBox(height: 4),
+                        Row(
+                          children: <Widget>[
+                               Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Wrap(
                                 spacing: 4.0, // gap between adjacent chips
@@ -1071,14 +1066,6 @@ return InkWell(
                                 children: _buildSelectedOptions(categories),
                               ),
                             ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 11,
-                        ),
-                        Row(
-                          children: <Widget>[
-
                           ],
                         ),
                       ],
@@ -1098,7 +1085,7 @@ return InkWell(
                   decoration: BoxDecoration(
 
 
-                    border: isFollow? Border.all(color: Colors.grey,width: 2):Border.all(color: color1,width: 2),
+
 
 
 
@@ -1121,22 +1108,23 @@ return InkWell(
 //                      begin: Alignment.topLeft,
 //                      end: Alignment.topRight,
 //                    ),
-                    // color: isFollow ? Colors.grey :Colors.blueAccent,
+                    color: isFollow ? Colors.grey :Theme.of(context).accentColor,
                     borderRadius: BorderRadius.all(
-                      Radius.circular(20),
+                      Radius.circular(4),
                     ),
                   ),
                   child: Center(
                     child: Text(
                       isFollow ? "UnFollow" : "Follow",
-                      style: isFollow? GoogleFonts.nunito(
-                        // fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                        color: Colors.grey[600],
+                      style: isFollow? GoogleFonts.openSans(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Colors.black,
                       ):GoogleFonts.openSans(
-                        // fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                        color: color1,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Colors.white,
+                        
                       ),
                     ),
                   ),
@@ -1152,5 +1140,57 @@ return InkWell(
 
   @override
   bool get wantKeepAlive => true;
+    Widget appBarWid(){
+  return AppBar(
+          automaticallyImplyLeading: false,
+          iconTheme: IconThemeData(color: Colors.blueAccent, size: 10.0),
+          elevation: 3,
+          titleSpacing: 0,
+          title: InkWell(
+            child: Row(
+              children: <Widget>[
+               
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            "Title",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Color(0xff3A4276),
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 1.0),
+                            child: Text(
+                              "Followers ",
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Color(0xff171822),
+                              ),
+                            ),
+                          ),
+                        
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            onTap: () {},
+          ),
+      
+        );
+}
 }
 
