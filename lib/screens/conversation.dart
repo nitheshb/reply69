@@ -13,6 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:notification/ImageEditorPack/image_editorHome.dart';
 import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/controllers/gradeMaker.dart';
@@ -82,6 +83,10 @@ class _ConversationState extends State<Conversation> {
   final TextEditingController _chatMessageText = new TextEditingController();
   ScrollController _scrollController = new ScrollController();
 
+ KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
+  int _keyboardVisibilitySubscriberId;
+  bool _keyboardState;
+
  FocusNode inputFocusNode;
   TextEditingController textController;
   File _image;
@@ -95,6 +100,7 @@ class _ConversationState extends State<Conversation> {
   List nonPrimeMessageContent;
   var groupGrade;
   Timer _timer;
+  bool isFirstScrollDone= false;
 
   // Changes the selected value on 'onChanged' click on each radio button
   setSelectedRadio(int val) {
@@ -125,6 +131,7 @@ class _ConversationState extends State<Conversation> {
       _timer = Timer(Duration(milliseconds: 1000), () {
         if (this.mounted) {
           print('check here scroll fun');
+        isFirstScrollDone = true;
           // setState(() {
           //   _initialLoad = false;
           // });
@@ -259,7 +266,7 @@ void widgetBuilt(Duration d) {
 
   void initState() {
     // TODO: implement initState
-     WidgetsBinding.instance.addPostFrameCallback(widgetBuilt);
+    //  WidgetsBinding.instance.addPostFrameCallback(widgetBuilt);
 
     super.initState();
      Admob.initialize(ams.getAdMobAppId());
@@ -291,6 +298,16 @@ void widgetBuilt(Duration d) {
       });
     }
     setReadCountToClear();
+
+    _keyboardState = _keyboardVisibility.isKeyboardVisible;
+    _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
+      onChange: (bool visible) {
+        scrollToBottomFun();
+        setState(() {
+          _keyboardState = visible;
+        });
+      },
+    );
   }
    @override
   void dispose() {
@@ -434,11 +451,25 @@ void widgetBuilt(Duration d) {
                               snapshot.data['messages'].length > 0) {
                             messageCount = snapshot.data['messages'].length;
                             nonPrimeMessageContent = snapshot.data['messages'];
+                            if(!isFirstScrollDone){
+                              Future.delayed(const Duration(milliseconds: 500), () {
+
+// Here you can write your code
+ scrollToBottomFun();
+
+
+});
+                               
+                            }
                             return 
                             NotificationListener<ScrollNotification>(
             onNotification: scrollNotificationFunc,
-                           child: CupertinoScrollbar(
-                              child: ListView.builder(
+                           child: 
+                           CupertinoScrollbar(
+                              child: 
+                              
+                              
+                              ListView.builder(
                                 padding: EdgeInsets.symmetric(horizontal: 10),
                                 itemCount: snapshot.data['messages'].length,
                                 controller: _scrollController,
@@ -447,12 +478,9 @@ void widgetBuilt(Duration d) {
                                 itemBuilder: (BuildContext context, int index) {
                                   DocumentSnapshot ds = snapshot.data;
                                   var indexVal = index ;
-                                  //  scrollToBottomFun();
-                                    print('working');
-                                  // var datestamp = new DateFormat("dd-MM'T'HH:mm");
                                   var datestamp = new DateFormat("HH:mm");
                                    var messageArray =   snapshot.data['messages'];
-                   
+                                   
                                      return ChatBubble(
                                         message: messageArray[indexVal]['type'] == "text"
                                             ? messageArray[indexVal]
