@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -69,6 +70,8 @@ class Conversation extends StatefulWidget {
   var msgFullCount, msgReadCount, msgFullPmCount;
   var groupFullDetails;
   var followersCount;
+  bool inverted = false;
+  bool shouldShowLoadEarlier = false;
 
   @override
   _ConversationState createState() => _ConversationState();
@@ -79,6 +82,8 @@ class _ConversationState extends State<Conversation> {
   final TextEditingController _chatMessageText = new TextEditingController();
   ScrollController _scrollController = new ScrollController();
 
+ FocusNode inputFocusNode;
+  TextEditingController textController;
   File _image;
   int selectedRadio = 0;
   String msgDeliveryMode = "All";
@@ -89,6 +94,7 @@ class _ConversationState extends State<Conversation> {
   int messageCount, nonPrimeMsgCount = 0;
   List nonPrimeMessageContent;
   var groupGrade;
+  Timer _timer;
 
   // Changes the selected value on 'onChanged' click on each radio button
   setSelectedRadio(int val) {
@@ -96,24 +102,125 @@ class _ConversationState extends State<Conversation> {
       selectedRadio = val;
       if (val == 2) {
         msgDeliveryMode = "Prime";
+        WidgetsBinding.instance.addPostFrameCallback(widgetBuilt);
       } else if (val == 1) {
         msgDeliveryMode = "All";
+     WidgetsBinding.instance.addPostFrameCallback(widgetBuilt);
       } else if (val == 3) {
         msgDeliveryMode = "Non-Prime";
+        WidgetsBinding.instance.addPostFrameCallback(widgetBuilt);
+
       }
     });
   }
 
   scrollToBottomFun() {
+    
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 10),
         curve: Curves.easeOut,
-      );
+      ).whenComplete(() {
+      _timer = Timer(Duration(milliseconds: 1000), () {
+        if (this.mounted) {
+          print('check here scroll fun');
+          // setState(() {
+          //   _initialLoad = false;
+          // });
+        }
+      });
+    });
     });
   }
 
+
+//  this is of no use but just to check if bottom is reached or not
+   bool scrollNotificationFunc(ScrollNotification scrollNotification) {
+    double bottom =
+        widget.inverted ? 0.0 : scrollNotification.metrics.maxScrollExtent;
+
+    if (scrollNotification.metrics.pixels == bottom) {
+      // if (widget.visible) {
+      //   // widget.changeVisible(false);
+      // }
+      print('here');
+    } else if ((scrollNotification.metrics.pixels - bottom).abs() > 100) {
+      // if (!widget.visible) {
+      //   widget.changeVisible(true);
+      // }
+      print('here1');
+    }
+    return true;
+  }
+
+void widgetBuilt(Duration d) {
+  print(' ==>i wass here1');
+
+  SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 10),
+        curve: Curves.easeOut,
+      ).whenComplete(() {
+      _timer = Timer(Duration(milliseconds: 1000), () {
+        if (this.mounted) {
+          print('check here mounted ');
+          // setState(() {
+          //   _initialLoad = false;
+          // });
+        }
+      });
+    });
+    });
+    double initPos = widget.inverted
+        ? 0.0
+        : _scrollController.position.maxScrollExtent + 25.0;
+
+    // _scrollController
+    //     .animateTo(
+    //   initPos,
+    //   duration: const Duration(milliseconds: 150),
+    //   curve: Curves.easeInOut,
+    // )
+    //     .whenComplete(() {
+    //   _timer = Timer(Duration(milliseconds: 1000), () {
+    //     if (this.mounted) {
+    //       print('check here');
+    //       // setState(() {
+    //       //   _initialLoad = false;
+    //       // });
+    //     }
+    //   });
+    // });
+
+    _scrollController.addListener(() {
+      bool topReached = widget.inverted
+          ? _scrollController.offset >=
+                  _scrollController.position.maxScrollExtent &&
+              !_scrollController.position.outOfRange
+          : _scrollController.offset <=
+                  _scrollController.position.minScrollExtent &&
+              !_scrollController.position.outOfRange;
+
+      if (widget.shouldShowLoadEarlier) {
+        if (topReached) {
+          print('on showLoadMore');
+          setState(() {
+            // showLoadMore = true;
+          });
+        } else {
+          print('on showLoadMore');
+          setState(() {
+            // showLoadMore = false;
+          });
+        }
+      } else if (topReached) {
+        print('on load Earlier');
+        // widget.onLoadEarlier();
+      }
+    });
+  }
  
 
   static Random random = Random();
@@ -152,6 +259,8 @@ class _ConversationState extends State<Conversation> {
 
   void initState() {
     // TODO: implement initState
+     WidgetsBinding.instance.addPostFrameCallback(widgetBuilt);
+
     super.initState();
      Admob.initialize(ams.getAdMobAppId());
 
@@ -325,44 +434,53 @@ class _ConversationState extends State<Conversation> {
                               snapshot.data['messages'].length > 0) {
                             messageCount = snapshot.data['messages'].length;
                             nonPrimeMessageContent = snapshot.data['messages'];
-                            return ListView.builder(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              itemCount: snapshot.data['messages'].length,
-                              controller: _scrollController,
-                              // shrinkWrap: true,
-                              //reverse: true,
-                              itemBuilder: (BuildContext context, int index) {
-                                DocumentSnapshot ds = snapshot.data;
-                                var indexVal = index;
-                                 scrollToBottomFun();
-                                // var datestamp = new DateFormat("dd-MM'T'HH:mm");
-                                var datestamp = new DateFormat("HH:mm");
-                                   return ChatBubble(
-                                      message: snapshot.data['messages'][indexVal]['type'] == "text"
-                                          ? snapshot.data['messages'][indexVal]
-                                              ['messageBody']
-                                          : snapshot.data['messages'][indexVal]
-                                              ['imageUrl'],
-                                      premium: snapshot.data['messages']
-                                          [indexVal]['premium'],
-                                      type: snapshot.data['messages'][indexVal]
-                                          ['type'],
-                                      img: snapshot.data['messages'][indexVal]
-                                          ['imageUrl'],
-                                      name: snapshot.data['messages'][indexVal]
-                                          ['type'],
-                                      dp: snapshot.data['messages'][indexVal]
-                                          ['imageUrl'],
-                                      messageMode: snapshot.data['messages']
-                                          [indexVal]['messageMode'],
-                                      time: datestamp
-                                          .format(snapshot.data['messages'][indexVal]['date'].toDate())
-                                          .toString(),
-                                      selMessageMode: msgDeliveryMode);
-                              
+                            return 
+                            NotificationListener<ScrollNotification>(
+            onNotification: scrollNotificationFunc,
+                           child: CupertinoScrollbar(
+                              child: ListView.builder(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                itemCount: snapshot.data['messages'].length,
+                                controller: _scrollController,
+                                // shrinkWrap: true,
+                                  reverse: false,
+                                itemBuilder: (BuildContext context, int index) {
+                                  DocumentSnapshot ds = snapshot.data;
+                                  var indexVal = index ;
+                                  //  scrollToBottomFun();
+                                    print('working');
+                                  // var datestamp = new DateFormat("dd-MM'T'HH:mm");
+                                  var datestamp = new DateFormat("HH:mm");
+                                   var messageArray =   snapshot.data['messages'];
+                   
+                                     return ChatBubble(
+                                        message: messageArray[indexVal]['type'] == "text"
+                                            ? messageArray[indexVal]
+                                                ['messageBody']
+                                            : messageArray[indexVal]
+                                                ['imageUrl'],
+                                        premium: messageArray
+                                            [indexVal]['premium'],
+                                        type: messageArray[indexVal]
+                                            ['type'],
+                                        img: messageArray[indexVal]
+                                            ['imageUrl'],
+                                        name: messageArray[indexVal]
+                                            ['type'],
+                                        dp: messageArray[indexVal]
+                                            ['imageUrl'],
+                                        messageMode: messageArray
+                                            [indexVal]['messageMode'],
+                                        time: datestamp
+                                            .format(messageArray[indexVal]['date'].toDate())
+                                            .toString(),
+                                        selMessageMode: msgDeliveryMode);
+                                
 
-                                // fresh start check
-                              },
+                                  // fresh start check
+                                },
+                              ),
+                            )
                             );
                           }
                         }else{
