@@ -26,23 +26,22 @@ import 'package:shimmer/shimmer.dart';
 
 //final Color color1=AppTheme.kdarkorange;
 //final Color color2=AppTheme.korange;
-final Color color3=Colors.black.withOpacity(0.6);
-final Color color4=Color(0xffFFF7F4);
+final Color color3 = Colors.black.withOpacity(0.6);
+final Color color4 = Color(0xffFFF7F4);
 //final Color color4=Color(0xffE8FDF6);
-final Color color2=AppTheme.kteal;
-final Color color1=AppTheme.ktheme;
+final Color color2 = AppTheme.kteal;
+final Color color1 = AppTheme.ktheme;
 
 class GroupsLandingScreen extends StatefulWidget {
-
-  GroupsLandingScreen(
-      {Key key,
-      this.uId,
-      this.uEmailId,
-      this.followingGroupsLocal,
-      this.followingGroupsReadCountLocal})
+  GroupsLandingScreen({Key key,
+    this.uId,
+    this.uEmailId,
+    this.followingGroupsLocal,
+    this.followingGroupsReadCountLocal})
       : super(key: key);
   final String uId, uEmailId;
   List followingGroupsLocal, followingGroupsReadCountLocal;
+
   @override
   _GroupsLandingScreenState createState() => _GroupsLandingScreenState();
 }
@@ -53,7 +52,8 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
   StateModel appState;
   List waitingGroups = [],
       approvedGroups = [],
-      myOwnGroups = [], followingGroupsP = [],
+      myOwnGroups = [],
+      followingGroupsP = [],
       followingGroups = [],
       primeGroups = [];
 
@@ -74,7 +74,6 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
     getlocalPrime_OwnGroups();
     selTabIndex = 0;
 
-
     // new Future.delayed(Duration.zero, () {
     //   loopFollowingGroup(followingGroupsP);
     // });
@@ -87,22 +86,21 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
   getlocalPrime_OwnGroups() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     approvedGroups = await prefs.getStringList('approvedPrimeGroups');
-       myOwnGroups = await prefs.getStringList('myOwnGroups_pref');
-       followingGroupsP = await prefs.getStringList('followingGroups_pref');
+    myOwnGroups = await prefs.getStringList('myOwnGroups_pref');
+    followingGroupsP = await prefs.getStringList('followingGroups_pref');
 
-       if(myOwnGroups == null){
-         myOwnGroups = [];
-         
-       }
+    if (myOwnGroups == null) {
+      myOwnGroups = [];
+    }
 
-       List addFollowMyOwnGroups =[...followingGroupsP, ...myOwnGroups];
+    List addFollowMyOwnGroups = [...followingGroupsP, ...myOwnGroups];
 
- await loopFollowingGroup(addFollowMyOwnGroups);
+    await loopFollowingGroup(addFollowMyOwnGroups);
     print('local true by swetan1 ${addFollowMyOwnGroups}');
   }
 
-
   void updateInformation(String information) {}
+
   loopFollowingGroup(dataArray) {
     dataArray.forEach((data) {
       realTime(data);
@@ -114,7 +112,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
       return;
     }
     DatabaseReference postsRef =
-        FirebaseDatabase.instance.reference().child("Notify").child(id);
+    FirebaseDatabase.instance.reference().child("Notify").child(id);
     postsRef.onValue.listen((event) async {
       var snap = event.snapshot;
 
@@ -131,7 +129,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
         NotifyData.removeWhere((item) => item['t'] == '${data['t']}');
         SharedPreferences prefs = await SharedPreferences.getInstance();
         var msgReadCountvar = prefs.getInt("${"qoX1aNeMcKgl69UCntgq"}");
-    
+
         data['chatId'] = id;
         data['readCount'] = msgReadCountvar ?? 0;
         NotifyData.add(data);
@@ -192,7 +190,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
           },
         );
       }
-  
+
       setState(() {});
     });
   }
@@ -203,402 +201,450 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
     return msgReadCountvar ?? 1000;
   }
 
-Widget messagesTabDisplay(context, userId){
-  return SingleChildScrollView(
-            child: Column(children: <Widget>[
-              Visibility(
-                visible: myOwnGroups.length> 0,
-                child:
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0,0,0),
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Created Groups ",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0xff3A4276),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 6),
-                    ListView.builder(
-              itemCount: NotifyData.length,
-              shrinkWrap: true,
-              padding: EdgeInsets.only(top: 8, bottom: 8),
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index){
-
-                return
-                myOwnGroups.contains(NotifyData[index]['chatId']) ?
-                recentChatDetailsCard(NotifyData[index],userId,0,) :
-                Container();
-              },
-            ),
-                    ],
-                  ),
-                ),
-              ),
-              ),
-
-
-
-         Padding(
-           padding: const EdgeInsets.only(left:8.0, top: 8),
-           child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Following Groups ",
-                            // style: TextStyle(
-                            //   fontSize: 18,
-                            //   color: Color(0xff3A4276),
-                            //   fontWeight: FontWeight.w700,
-                            // ),
-                            style: TextStyle(fontSize: 22, color: Color(0xff3A4276),fontWeight: FontWeight.w700 ),
-                          ),
-                        ),
-         ),
-        followingGroupsP.length == 0
-        ? noGroupsFolllowed()
-        :  ListView.builder(
-              itemCount: NotifyData.length,
-              shrinkWrap: true,
-              padding: EdgeInsets.only(top: 8),
-              physics: BouncingScrollPhysics(),
-              itemBuilder: (context, index){
-var searchGroupForReadCount;
-                try {
-                    searchGroupForReadCount = widgetCountCheck.firstWhere(
-                  (data) => data['chatId'] == NotifyData[index]['chatId']);
-                } catch (e) {
-                  print('error is ${e}');
-                  searchGroupForReadCount ={'readCount': 0};
-                }
-
-                return
-                (followingGroupsP.contains(NotifyData[index]['chatId'])) ?
-                 recentChatDetailsCard(NotifyData[index],userId,searchGroupForReadCount['readCount'] ?? 0,):Container();
-              },
-            )
-            ]),
-          );
-}
-
-Widget followGroupsTabDisplay(context, userId){
-  return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(159),
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top:12,bottom:9,left:12,right: 12),
+  Widget messagesTabDisplay(context, userId) {
+    return SingleChildScrollView(
+      child: Column(children: <Widget>[
+        Visibility(
+          visible: myOwnGroups.length > 0,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 0),
             child: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [Colors.white,Colors.white],
-                      tileMode: TileMode.clamp
-                  ),
-                  borderRadius: BorderRadius.circular(6),
-                  //color: Color.fromRGBO(49, 39, 79, 1),
-                  border: Border.all(color: color1.withOpacity(0.5)),
-                  boxShadow: [
-                    BoxShadow(
-                      color:Colors.black.withOpacity(0.2),
-                      blurRadius: 0,
-                      offset: Offset(0, 0),
-                    )
-                  ]
-              ),
-              //height: 140,
-              //width: double.infinity,
               child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top:10.0,right: 15,left: 15,bottom: 0),
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(height: 2),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              "Win more under guidance of Experts",
-                              style: GoogleFonts.inter(
-                                fontSize: 18,
-                                color: color3.withOpacity(0.9),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 2),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              "Follow to receive expert messages",
-                              style: GoogleFonts.openSans(
-                                fontSize: 14.5,
-                                color: color3,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Created Groups ",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Color(0xff3A4276),
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: TextField(
-                          onChanged: (val) {
-                            setState(() {
-                              _searchTerm = val;
-                              print('search term ${_searchTerm}');
-                            });
-                          },
-                          style: new TextStyle(color: color3.withOpacity(0.9), fontSize: 20),
-                          decoration: new InputDecoration(
-                              contentPadding:
-                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: color3, width: 2)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: color3.withOpacity(0.9))),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: color3, width: 2)),
-                              // border: InputBorder.none,
-                              hintText: 'Search Group Name....',
-                              hintStyle: TextStyle(
-                                fontSize: 13,
-                                color: color3.withOpacity(0.9),
-                                fontWeight: FontWeight.w500,
-                              ),
-                              prefixIcon: Icon(Icons.search, color: color3))),
-                    ),
+                  SizedBox(height: 6),
+                  ListView.builder(
+                    itemCount: NotifyData.length,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(top: 8, bottom: 8),
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return myOwnGroups.contains(NotifyData[index]['chatId'])
+                          ? recentChatDetailsCard(
+                        NotifyData[index],
+                        userId,
+                        0,
+                      )
+                          : Container();
+                    },
                   ),
                 ],
               ),
             ),
           ),
         ),
-      ),
-      body:SingleChildScrollView(
-        child: StreamBuilder(
-          stream: searchGroupsQuery(_searchTerm),
-          builder: (context, snapshot) {
-            // display default img/ placeholder when no results are available
-            if (!snapshot.hasData)  {
-              return Column(
-                children: <Widget>[
-                  SizedBox(height: 100),
-                  Align(
-                    alignment: Alignment.center,
-                    child: new Container(
-                      height: 148,
-                      width: 160,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/searchFind.png'),
-                              fit: BoxFit.fill)),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: new Container(
-                      height: 160,
-                      // width: 160,
-                      child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.center,
-                            child: Text("Use above search bar to find",
-                                style: GoogleFonts.inter(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                )),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              );
-            } else if (snapshot.hasData) {
-              return   snapshot.data['payload'].length  == 0
-                  ? Align(
-                alignment: Alignment.center,
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: 60),
-                    new Container(
-                      height: MediaQuery.of(context).size.height / 3,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/searchFind.png'),
-                              fit: BoxFit.cover)),
-                    ),
-                    new Text('No Matched Data Found'),
-                  ],
-                ),
-              )
-                  :  ListView.builder(
-                itemCount: snapshot.data['payload'].length,
-                shrinkWrap: true,
-                padding: EdgeInsets.only(top: 8),
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (context, index){
-                  DocumentSnapshot ds = snapshot.data;
-                  // Todo:  check y this followersA was declared
-                  var followersA = [];
-                  return
-                    InkWell(
-
-                      // This is card Widget
-                      child:  buildApplication(
-                          ds['payload'][index]['logo'],
-                          ds['payload'][index]['title'],
-                          ds['payload'][index]['ownerName'],
-                          ds['payload'][index]['category'],
-                          followingGroupsP.contains(ds['payload'][index]['chatId']),
-                          ds['payload'][index]['chatId'],
-                          userId
-                      ),
-                      onTap:(){
-                        Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Profile3(
-                              title: ds['payload'][index]['title'],
-                              avatarUrl: ds['payload'][index]['logo'],
-                              categories: ds['payload'][index]['category'],
-                              following: followersA.contains(widget.uId),
-                              chatId: ds['payload'][index]['chatId'],
-                              userId: userId,
-                              followers: ds['payload'][index]['followers'] ?? [],
-                              groupOwnerName: ds['payload'][index]['ownerName'] ?? '',
-                              feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
-                              seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
-                              thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
-                              lastWeekRating: ds['payload'][index]['lastWeekRating'] ?? 'NA',
-                              followingGroupsLocal: followingGroupsP)),
-                        );
-                      },
-
-                    );
-
-
-                },
-              );
-
-
-              //
-              // return CustomScrollView(
-              //   shrinkWrap: true,
-              //   slivers: <Widget>[
-              //     SliverList(
-              //       delegate: SliverChildBuilderDelegate((context, index) {
-              //         DocumentSnapshot ds = snapshot.data;
-              //         var followersA = [];
-              //         return Container(
-              //             child: InkWell(
-              //                 onTap: () {
-              //                   Navigator.push(context,
-              //                       MaterialPageRoute(builder: (context) => Profile3(
-              //                           title: ds['payload'][index]['title'],
-              //                           avatarUrl: ds['payload'][index]['logo'],
-              //                           categories: ds['payload'][index]['category'],
-              //                           following: followersA.contains(widget.uId),
-              //                           chatId: ds['payload'][index]['chatId'],
-              //                           userId: userId,
-              //                           followers: ds['payload'][index]['followers'] ?? [],
-              //                           groupOwnerName: ds['payload'][index]['ownerName'] ?? '',
-              //                           feeDetails: ds['payload'][index]['FeeDetails'] ?? [],
-              //                           seasonRating: ds['payload'][index]['seasonRating'] ?? 'NA',
-              //                           thisWeekRating: ds['payload'][index]['thisWeekRating'] ?? 'NA',
-              //                           lastWeekRating: ds['payload'][index]['lastWeekRating'] ?? 'NA',
-              //                           followingGroupsLocal: followingGroupsP)),
-              //                   );
-              //                   },
-              //                 child: Padding(
-              //                   padding: const EdgeInsets.only(
-              //                       left: 8.0, right: 8.0),
-              //                   child: buildApplication(
-              //                       ds['payload'][index]['logo'],
-              //                       ds['payload'][index]['title'],
-              //                       ds['payload'][index]['ownerName'],
-              //                       ds['payload'][index]['category'],
-              //                       followingGroupsP.contains(ds['payload'][index]['chatId']),
-              //                       ds['payload'][index]['chatId'],
-              //                       userId
-              //                   ),
-              //                 ),
-              //             ),
-              //         );
-              //         },
-              //         childCount: snapshot.data['payload'].length ?? 0,
-              //       ),
-              //     ),
-              //   ],
-              // );
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, top: 8),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Following Groups ",
+              // style: TextStyle(
+              //   fontSize: 18,
+              //   color: Color(0xff3A4276),
+              //   fontWeight: FontWeight.w700,
+              // ),
+              style: TextStyle(
+                  fontSize: 22,
+                  color: Color(0xff3A4276),
+                  fontWeight: FontWeight.w700),
+            ),
+          ),
+        ),
+        followingGroupsP.length == 0
+            ? noGroupsFolllowed()
+            : ListView.builder(
+          itemCount: NotifyData.length,
+          shrinkWrap: true,
+          padding: EdgeInsets.only(top: 8),
+          physics: BouncingScrollPhysics(),
+          itemBuilder: (context, index) {
+            var searchGroupForReadCount;
+            try {
+              searchGroupForReadCount = widgetCountCheck.firstWhere(
+                      (data) =>
+                  data['chatId'] == NotifyData[index]['chatId']);
+            } catch (e) {
+              print('error is ${e}');
+              searchGroupForReadCount = {'readCount': 0};
             }
 
+            return (followingGroupsP
+                .contains(NotifyData[index]['chatId']))
+                ? recentChatDetailsCard(
+              NotifyData[index],
+              userId,
+              searchGroupForReadCount['readCount'] ?? 0,
+            )
+                : Container();
           },
-        ),
-      )
-  );
+        )
+      ]),
+    );
+  }
 
-}
-
-  Widget recentChatDetailsCard(NotifyData, userId, alreadyReadCount){
-return InkWell(
-                onTap: () async {
-                  var snap = await FirebaseController.instanace.getChatOwnerId(NotifyData['chatId']);
-                  var chatId = approvedGroups.contains(NotifyData['chatId'])
-                          ? "${NotifyData['chatId']}PGrp"
-                          : "${NotifyData['chatId']}";
-                  final information = await Navigator.push(
-                    context, MaterialPageRoute(
-                      builder: (context) => Conversation(
-                          followingGroupsLocal: followingGroupsP,
-                          groupFullDetails: [],
-                          chatId: chatId,
-                          groupSportCategory: [],
-                          chatOwnerId: snap['o'],
-                          groupTitle: NotifyData['t'] ?? "",
-                          groupLogo: NotifyData['i'],
-                          followers: [],
-                          approvedGroupsJson: [],
-                          userId: widget.uId,
-                          senderMailId: widget.uEmailId,
-                          chatType: "",
-                          waitingGroups: waitingGroups,
-                          approvedGroups: [],
-                          followersCount: snap['c'] ?? 0,
-                          msgFullCount: NotifyData['c'],
-                          msgFullPmCount: NotifyData['pc'],
-                          msgReadCount: 0),
-                    ),
-                  );
-                  updateInformation(information);
-                },
-                child: ChatMenuIcon(
-                  user: userId,
-                  dp: "${NotifyData['i']}",
-                  groupName: "${NotifyData['t']}",
-                  isOnline: true,
-                  counter: "${NotifyData['c'] - alreadyReadCount}",
-                  // counter: 0,
-                  msg: "${approvedGroups.contains(NotifyData['chatId']) ? NotifyData['pm'] : NotifyData['m']}",
-                  time: "${""}",
-                  amiPrime: approvedGroups.contains(NotifyData['chatId']),
-                  amiOwner: myOwnGroups.contains(NotifyData['chatId']),
+  Widget followGroupsTabDisplay(context, userId) {
+    return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(180),
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            flexibleSpace: Padding(
+              padding: const EdgeInsets.only(
+                  top: 12, bottom: 9, left: 12, right: 12),
+              child: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.white, Colors.white],
+                        tileMode: TileMode.clamp),
+                    borderRadius: BorderRadius.circular(6),
+                    //color: Color.fromRGBO(49, 39, 79, 1),
+                    border: Border.all(color: color1.withOpacity(0.5)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 0,
+                        offset: Offset(0, 0),
+                      )
+                    ]),
+                //height: 140,
+                //width: double.infinity,
+                child: Container(
+                  //height: MediaQuery.of(context).size.height*0.35,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 10.0, right: 15, left: 15, bottom: 0),
+                        child: Container(
+                          child: Column(
+                            children: <Widget>[
+                              SizedBox(height: 2),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "Win more under guidance of Experts",
+                                  style: GoogleFonts.inter(
+                                    fontSize: 18,
+                                    color: color3.withOpacity(0.9),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 2),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "Follow to receive expert messages",
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 14.5,
+                                    color: color3,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: TextField(
+                              onChanged: (val) {
+                                setState(() {
+                                  _searchTerm = val;
+                                  print('search term ${_searchTerm}');
+                                });
+                              },
+                              style: new TextStyle(
+                                  color: color3.withOpacity(0.9), fontSize: 20),
+                              decoration: new InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 10),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                      BorderSide(color: color3, width: 2)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: color3.withOpacity(0.9))),
+                                  border: OutlineInputBorder(
+                                      borderSide:
+                                      BorderSide(color: color3, width: 2)),
+                                  // border: InputBorder.none,
+                                  hintText: 'Search Group Name....',
+                                  hintStyle: TextStyle(
+                                    fontSize: 13,
+                                    color: color3.withOpacity(0.9),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  prefixIcon:
+                                  Icon(Icons.search, color: color3))),
+                        ),
+                      ),
+                      // SizedBox(height: 200,),
+                    ],
+                  ),
                 ),
-              );
+              ),
+            ),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: StreamBuilder(
+            stream: searchGroupsQuery(_searchTerm),
+            builder: (context, snapshot) {
+              // display default img/ placeholder when no results are available
+              if (!snapshot.hasData || _searchTerm== null||_searchTerm.length == 0) {
+                return Column(
+                  children: <Widget>[
+                    SizedBox(height: 20),
+                    Align(
+                      alignment: Alignment.center,
+                      child: new Container(
+                        height: 128,
+                        width: 140,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/searchFind.png'),
+                                fit: BoxFit.fill)),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: new Container(
+                        height: 40,
+                        // width: 160,
+                        child: Column(
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text("Use above search bar to find",
+                                  style: GoogleFonts.inter(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  )),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      //code for trendindg widget
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              SizedBox(
+                                height: 80,
+                                //width: 500,
+                                child: Container(
+                                  child: StreamBuilder(
+                                      stream: searchGroupsQuery('G'),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          print("Loading");
+                                        } else {
+                                          return Container(
+                                            child: ListView.builder(
+                                                itemCount: snapshot.data['payload']
+                                                    .length,
+                                                shrinkWrap: true,
+                                                padding: EdgeInsets.only(top: 8),
+                                                physics: BouncingScrollPhysics(),
+                                                scrollDirection: Axis.horizontal,
+                                                itemBuilder: (context, index){
+                                                  DocumentSnapshot ds = snapshot.data;
+                                                  return Container(
+                                                    //height: 30,
+                                                    //child: Text(ds['payload'][index]['title']),
+                                                    child: trending(
+                                                      ds['payload'][index]
+                                                          ['logo'],
+                                                      ds['payload'][index]
+                                                          ['title'],
+                                                      ds['payload'][index]
+                                                          ['ownerName'],
+                                                    ),
+                                                  );
+                                                }
+
+                                            ),
+                                          );
+                                        }
+                                        return Container();
+                                      }),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              } else if (snapshot.hasData) {
+                return snapshot.data['payload'].length == 0
+                    ? Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 60),
+                      new Container(
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 3,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image:
+                                AssetImage('assets/searchFind.png'),
+                                fit: BoxFit.cover)),
+                      ),
+                      new Text('No Matched Data Found'),
+                    ],
+                  ),
+                )
+                    : ListView.builder(
+                  itemCount: snapshot.data['payload'].length,
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(top: 8),
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot temp = snapshot.data;
+                    DocumentSnapshot ds;
+                    var a;
+                    a = temp['payload'][index]['title'];
+                    if (a.contains(
+                      //if loop for improving search results
+                        new RegExp(_searchTerm, caseSensitive: false))) {
+                      ds = snapshot.data;
+                      var followersA = [];
+                      return InkWell(
+                        // This is card Widget
+                        child: buildApplication(
+                            ds['payload'][index]['logo'],
+                            ds['payload'][index]['title'],
+                            ds['payload'][index]['ownerName'],
+                            ds['payload'][index]['category'],
+                            followingGroupsP
+                                .contains(ds['payload'][index]['chatId']),
+                            ds['payload'][index]['chatId'],
+                            userId),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Profile3(
+                                        title: ds['payload'][index]['title'],
+                                        avatarUrl: ds['payload'][index]
+                                        ['logo'],
+                                        categories: ds['payload'][index]
+                                        ['category'],
+                                        following:
+                                        followersA.contains(widget.uId),
+                                        chatId: ds['payload'][index]
+                                        ['chatId'],
+                                        userId: userId,
+                                        followers: ds['payload'][index]
+                                        ['followers'] ??
+                                            [],
+                                        groupOwnerName: ds['payload'][index]
+                                        ['ownerName'] ??
+                                            '',
+                                        feeDetails: ds['payload'][index]
+                                        ['FeeDetails'] ??
+                                            [],
+                                        seasonRating: ds['payload'][index]
+                                        ['seasonRating'] ??
+                                            'NA',
+                                        thisWeekRating:
+                                        ds['payload'][index]['thisWeekRating'] ??
+                                            'NA',
+                                        lastWeekRating: ds['payload'][index]['lastWeekRating'] ??
+                                            'NA',
+                                        followingGroupsLocal: followingGroupsP)),
+                          );
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+
+                    // Todo:  check y this followersA was declared
+                  },
+                );
+              }
+              return Container();
+            },
+          ),
+        ));
+  }
+
+  Widget recentChatDetailsCard(NotifyData, userId, alreadyReadCount) {
+    return InkWell(
+      onTap: () async {
+        var snap = await FirebaseController.instanace
+            .getChatOwnerId(NotifyData['chatId']);
+        var chatId = approvedGroups.contains(NotifyData['chatId'])
+            ? "${NotifyData['chatId']}PGrp"
+            : "${NotifyData['chatId']}";
+        final information = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                Conversation(
+                    followingGroupsLocal: followingGroupsP,
+                    groupFullDetails: [],
+                    chatId: chatId,
+                    groupSportCategory: [],
+                    chatOwnerId: snap['o'],
+                    groupTitle: NotifyData['t'] ?? "",
+                    groupLogo: NotifyData['i'],
+                    followers: [],
+                    approvedGroupsJson: [],
+                    userId: widget.uId,
+                    senderMailId: widget.uEmailId,
+                    chatType: "",
+                    waitingGroups: waitingGroups,
+                    approvedGroups: [],
+                    followersCount: snap['c'] ?? 0,
+                    msgFullCount: NotifyData['c'],
+                    msgFullPmCount: NotifyData['pc'],
+                    msgReadCount: 0),
+          ),
+        );
+        updateInformation(information);
+      },
+      child: ChatMenuIcon(
+        user: userId,
+        dp: "${NotifyData['i']}",
+        groupName: "${NotifyData['t']}",
+        isOnline: true,
+        counter: "${NotifyData['c'] - alreadyReadCount}",
+        // counter: 0,
+        msg:
+        "${approvedGroups.contains(NotifyData['chatId'])
+            ? NotifyData['pm']
+            : NotifyData['m']}",
+        time: "${""}",
+        amiPrime: approvedGroups.contains(NotifyData['chatId']),
+        amiOwner: myOwnGroups.contains(NotifyData['chatId']),
+      ),
+    );
   }
 
   Widget noGroupsFolllowed() {
@@ -606,9 +652,15 @@ return InkWell(
         alignment: Alignment.center,
         child: Column(
           children: <Widget>[
-            SizedBox(height: MediaQuery.of(context).size.height / 4.5),
+            SizedBox(height: MediaQuery
+                .of(context)
+                .size
+                .height / 4.5),
             new Container(
-              height: MediaQuery.of(context).size.height / 5.5,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 5.5,
               child: Icon(
                 FontAwesomeIcons.star,
                 color: Colors.grey,
@@ -712,11 +764,6 @@ return InkWell(
         });
   }
 
- 
-
-
-
-
   void _showBasicsFlash({
     Duration duration,
     flashStyle = FlashStyle.floating,
@@ -776,7 +823,7 @@ return InkWell(
   searchGroupsQuery(query) {
     if (query != null && ((query.length == 1))) {
       var followGroupState =
-          FirebaseController.instanace.searchResultsByName(query);
+      FirebaseController.instanace.searchResultsByName(query);
       return followGroupState;
     } else {
       return;
@@ -796,11 +843,14 @@ return InkWell(
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   Future<SharedPreferences> prefs = SharedPreferences.getInstance();
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     //followingGroups =  ['nQ4T04slkEdANneRb4k62'];
-    appState = StateWidget.of(context).state;
+    appState = StateWidget
+        .of(context)
+        .state;
     final userId = appState?.firebaseUserAuth?.uid ?? '';
     final email = appState?.firebaseUserAuth?.email ?? '';
     final followGroupState = appState.followingGroups;
@@ -827,35 +877,50 @@ return InkWell(
     return Scaffold(
       // appBar: appBarWid(),
         appBar: PreferredSize(
-           preferredSize: Size.fromHeight(90),
-          
+          preferredSize: Size.fromHeight(100),
           child: AppBar(
             // backgroundColor: color1,
 
-          flexibleSpace: Column(
+            flexibleSpace: Column(
               children: <Widget>[
-                SizedBox(height: 50,),
+                SizedBox(
+                  height: 40,
+                ),
                 Padding(
-                  padding: const EdgeInsets.only(top:0.0,bottom: 0,left: 0),
+                  padding: const EdgeInsets.only(top: 0.0, bottom: 0, left: 0),
                   child: Container(
                     width: double.infinity,
-                    
-                    child: 
-                    Align(alignment: Alignment.center, child:Text('MyExperts',style: GoogleFonts.nunito(color:Colors.black38.withOpacity(0.9),fontSize: 24,fontWeight: FontWeight.w900),)),
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'MyExperts',
+                          style: GoogleFonts.nunito(
+                              color: Colors.black38.withOpacity(0.9),
+                              fontSize: 24,
+                              fontWeight: FontWeight.w900),
+                        )),
                   ),
                 ),
                 TabBar(
-
                   controller: _tabController,
-          indicatorColor: Theme.of(context).accentColor,
-          labelColor: Theme.of(context).accentColor,
-          unselectedLabelColor: Theme.of(context).textTheme.caption.color,
-          isScrollable: false,
-          labelStyle: TextStyle(
-            fontSize: 14,
-            color: Color(0xff3A4276),
-            fontWeight: FontWeight.w400,
-          ),
+                  indicatorColor: Theme
+                      .of(context)
+                      .accentColor,
+                  labelColor: Theme
+                      .of(context)
+                      .accentColor,
+                  unselectedLabelColor:
+                  Theme
+                      .of(context)
+                      .textTheme
+                      .caption
+                      .color,
+                  isScrollable: false,
+                  labelStyle: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w400,
+                  ),
                   onTap: (index) {
                     setState(() {
                       selTabIndex = index;
@@ -870,25 +935,23 @@ return InkWell(
                     ),
                   ],
                 ),
-                SizedBox(height: 0,),
+                SizedBox(
+                  height: 0,
+                ),
               ],
             ),
           ),
         ),
-        body: TabBarView(
-            controller: _tabController,
-            children: <Widget>[
-
+        body: TabBarView(controller: _tabController, children: <Widget>[
           // first tab
-        messagesTabDisplay(context,userId),
-
+          messagesTabDisplay(context, userId),
 
           // second tab
-        followGroupsTabDisplay(context,userId)
+          followGroupsTabDisplay(context, userId)
         ]),
         floatingActionButton: Visibility(
           // this floating button should be visiable only in Follow Experts Tab
-         visible: selTabIndex == 1,
+          visible: selTabIndex == 1,
           child: FloatingActionButton(
             backgroundColor: color1,
             child: Container(
@@ -898,15 +961,15 @@ return InkWell(
               ),
             ),
             onPressed: () async {
-
               if (allowGroupCreation) {
                 //
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CreateGroupProfile(
-                        primaryButtonRoute: "/home",
-                        followingGroupsLocal: followingGroupsP),
+                    builder: (context) =>
+                        CreateGroupProfile(
+                            primaryButtonRoute: "/home",
+                            followingGroupsLocal: followingGroupsP),
                   ),
                 );
               } else {
@@ -919,6 +982,7 @@ return InkWell(
           ),
         ));
   }
+
 // UnFollow Group Function
 
   unFollowFun(chatId, userId) async {
@@ -928,16 +992,15 @@ return InkWell(
     setState(() {
       followingGroupsP.remove(chatId);
       prefs.setStringList('followingGroups_pref', followingGroupsP);
-
     });
 
     await Navigator.of(context).pushAndRemoveUntil(
         new MaterialPageRoute(
-          builder: (BuildContext context) => MainScreen(
-              userId: userId,
-              followingGroupsLocal: followingGroupsP),
+          builder: (BuildContext context) =>
+              MainScreen(
+                  userId: userId, followingGroupsLocal: followingGroupsP),
         ),
-        (Route<dynamic> route) => false);
+            (Route<dynamic> route) => false);
   }
 
 // Follow Group Function
@@ -959,11 +1022,11 @@ return InkWell(
         });
         await Navigator.of(context).pushAndRemoveUntil(
             new MaterialPageRoute(
-              builder: (BuildContext context) => MainScreen(
-                  userId: userId,
-                  followingGroupsLocal: followingGroupsP),
+              builder: (BuildContext context) =>
+                  MainScreen(
+                      userId: userId, followingGroupsLocal: followingGroupsP),
             ),
-            (Route<dynamic> route) => false);
+                (Route<dynamic> route) => false);
       } else {
         _showBasicsFlash(
             context: context,
@@ -978,56 +1041,35 @@ return InkWell(
     }
   }
 
-  Widget buildApplication(
-      logoUrl, title, owner, categories, isFollow, chatId, userId) {
-
-    return Padding(padding: EdgeInsets.only(left: 13,right: 13,bottom: 2),
-    child:Container(
-      height: 106,
-      padding: EdgeInsets.fromLTRB(19, 14, 19, 14),
-      margin: EdgeInsets.symmetric(vertical: 2),
-      // decoration: BoxDecoration(
-      //   color: Colors.white,
-      //   borderRadius: BorderRadius.all(
-      //     Radius.circular(10),
-      //   ),
-      // ),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: color1.withOpacity(0.1),
-            blurRadius: 0,
-            offset: Offset(0, 0),
-          )
-        ],
-          gradient: LinearGradient(
-            colors: [Color(0xffF1F3F6),Color(0xffF1F3F6)],
-          ),
-          borderRadius: BorderRadius.circular(6), color: Color(0xffF1F3F6)
-      ),
+  Widget trending(logoUrl, title, owner){
+    return Container(
       child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(logoUrl),
-                    fit: BoxFit.fill,
+        children: <Widget>[
+          Card(
+            elevation: 3,
+            //color: Colors.white70,
+            child: Container(
+              padding: EdgeInsets.all(5),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(logoUrl),
+                        fit: BoxFit.fill,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(90),
+                      ),
+                    ),
                   ),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(90),
-                  ),
-                ),
-              ),
-              Expanded(
-                  child: Padding(
+                  Container(
                     padding: EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         Text(
                           "${title[0].toUpperCase() + title.substring(1)}",
                           style: GoogleFonts.openSans(
@@ -1045,52 +1087,137 @@ return InkWell(
                             ),
                             SizedBox(width: 3),
                             Text(
-                              "${owner[0].toUpperCase() + owner.substring(1)}",
+                              "${owner[0].toUpperCase() +
+                                  owner.substring(1)}",
                               style: GoogleFonts.nunito(
                                 fontSize: 13,
                                 color: Colors.grey[800],
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
-                           
                           ],
                         ),
                         SizedBox(height: 4),
-                        Row(
-                          children: <Widget>[
-                               Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Wrap(
-                                spacing: 4.0, // gap between adjacent chips
-                                runSpacing: 1.0, // gap between lines
-                                children: _buildSelectedOptions(categories),
-                              ),
-                            ),
-                          ],
-                        ),
+
                       ],
                     ),
-                  )),
-              InkWell(
-                onTap: () {
-                  if (isFollow) {
-                    unFollowFun(chatId, userId);
-                  } else {
-                    followFun(chatId, userId);
-                  }
-                },
-                child: Container(
-                  height: 35,
-                  width: 92,
+                  )
+
+                ],
+              ),
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
+
+  Widget buildApplication(logoUrl, title, owner, categories, isFollow, chatId,
+      userId) {
+    return Padding(
+      padding: EdgeInsets.only(left: 13, right: 13, bottom: 2),
+      child: Container(
+        height: 106,
+        padding: EdgeInsets.fromLTRB(19, 14, 19, 14),
+        margin: EdgeInsets.symmetric(vertical: 2),
+        // decoration: BoxDecoration(
+        //   color: Colors.white,
+        //   borderRadius: BorderRadius.all(
+        //     Radius.circular(10),
+        //   ),
+        // ),
+        decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: color1.withOpacity(0.1),
+                blurRadius: 0,
+                offset: Offset(0, 0),
+              )
+            ],
+            gradient: LinearGradient(
+              colors: [Color(0xffF1F3F6), Color(0xffF1F3F6)],
+            ),
+            borderRadius: BorderRadius.circular(6),
+            color: Color(0xffF1F3F6)),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  height: 50,
+                  width: 50,
                   decoration: BoxDecoration(
-
-
-
-
-
-
-
-
+                    image: DecorationImage(
+                      image: NetworkImage(logoUrl),
+                      fit: BoxFit.fill,
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(90),
+                    ),
+                  ),
+                ),
+                Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${title[0].toUpperCase() + title.substring(1)}",
+                            style: GoogleFonts.openSans(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Row(
+                            children: <Widget>[
+                              Icon(
+                                FontAwesomeIcons.userAlt,
+                                size: 9,
+                                color: Colors.grey[400],
+                              ),
+                              SizedBox(width: 3),
+                              Text(
+                                "${owner[0].toUpperCase() +
+                                    owner.substring(1)}",
+                                style: GoogleFonts.nunito(
+                                  fontSize: 13,
+                                  color: Colors.grey[800],
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 4),
+                          Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Wrap(
+                                  spacing: 4.0, // gap between adjacent chips
+                                  runSpacing: 1.0, // gap between lines
+                                  children: _buildSelectedOptions(categories),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )),
+                InkWell(
+                  onTap: () {
+                    if (isFollow) {
+                      unFollowFun(chatId, userId);
+                    } else {
+                      followFun(chatId, userId);
+                    }
+                  },
+                  child: Container(
+                    height: 35,
+                    width: 92,
+                    decoration: BoxDecoration(
 //                    gradient: isFollow
 //                        ? LinearGradient(
 //                      colors: [
@@ -1108,89 +1235,91 @@ return InkWell(
 //                      begin: Alignment.topLeft,
 //                      end: Alignment.topRight,
 //                    ),
-                    color: isFollow ? Colors.grey :Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(4),
+                      color: isFollow
+                          ? Colors.grey
+                          : Theme
+                          .of(context)
+                          .accentColor,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(4),
+                      ),
                     ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      isFollow ? "UnFollow" : "Follow",
-                      style: isFollow? GoogleFonts.openSans(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: Colors.black,
-                      ):GoogleFonts.openSans(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: Colors.white,
-                        
+                    child: Center(
+                      child: Text(
+                        isFollow ? "UnFollow" : "Follow",
+                        style: isFollow
+                            ? GoogleFonts.openSans(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Colors.black,
+                        )
+                            : GoogleFonts.openSans(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 
   @override
   bool get wantKeepAlive => true;
-    Widget appBarWid(){
-  return AppBar(
-          automaticallyImplyLeading: false,
-          iconTheme: IconThemeData(color: Colors.blueAccent, size: 10.0),
-          elevation: 3,
-          titleSpacing: 0,
-          title: InkWell(
-            child: Row(
-              children: <Widget>[
-               
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+
+  Widget appBarWid() {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      iconTheme: IconThemeData(color: Colors.blueAccent, size: 10.0),
+      elevation: 3,
+      titleSpacing: 0,
+      title: InkWell(
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            "Title",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 1.0),
-                            child: Text(
-                              "Followers ",
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Color(0xff171822),
-                              ),
-                            ),
-                          ),
-                        
-                        ],
+                      Text(
+                        "Title",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color(0xff3A4276),
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 5),
+                  Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 1.0),
+                        child: Text(
+                          "Followers ",
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Color(0xff171822),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            onTap: () {},
-          ),
-      
-        );
+          ],
+        ),
+        onTap: () {},
+      ),
+    );
+  }
 }
-}
-
