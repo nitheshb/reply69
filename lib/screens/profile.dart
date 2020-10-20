@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -9,8 +10,8 @@ import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
 import 'package:package_info/package_info.dart';
 import 'package:notification/controllers/firebaseController.dart';
-
-import 'conversation.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -20,7 +21,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   StateModel appState;
 
-
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -28,12 +28,6 @@ class _ProfileState extends State<Profile> {
     buildNumber: 'Unknown',
   );
   static Random random = Random();
-
-  @override
-  void initState() {
-    super.initState();
-    _initPackageInfo();
-  }
 
   Future<void> _initPackageInfo() async {
     final PackageInfo info = await PackageInfo.fromPlatform();
@@ -145,7 +139,6 @@ class _ProfileState extends State<Profile> {
                         ),
                         color: Theme.of(context).accentColor,
                         onPressed: () {
-
                           StateWidget.of(context).logOutUser();
 
                           // Navigator.pushNamedAndRemoveUntil(context, "/signin", (r) => false);
@@ -195,7 +188,15 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                       ],
-                    ))))
+                    )))),
+            RaisedButton(
+                child: Container(
+                  child: Text("Share"),
+                ),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Contacts()));
+                })
           ],
         ),
       ),
@@ -217,12 +218,69 @@ class _ProfileState extends State<Profile> {
         Text(
           title,
           style: GoogleFonts.poppins(
-            fontSize: 12,
+            fontSize: 19,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,
           ),
         ),
       ],
+    );
+  }
+}
+
+class Contacts extends StatefulWidget {
+  @override
+  _ContactsState createState() => _ContactsState();
+}
+
+class _ContactsState extends State<Contacts> {
+  TextEditingController searchController = new TextEditingController();
+  List<Contact> contacts = [];
+  @override
+  void initState() {
+    super.initState();
+    getPermissions();
+    getAllContacts();
+  }
+
+  getAllContacts() async {
+    Iterable<Contact> _contacts =
+        (await ContactsService.getContacts(withThumbnails: false)).toList();
+    setState(() {
+      contacts = _contacts;
+    });
+  }
+
+  getPermissions() async {
+    if (await Permission.contacts.request().isGranted) {
+      getAllContacts();
+      searchController.addListener(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Share"),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                Contact contact = contacts[index];
+                return ListTile(
+                  title: Text(contact.phones.elementAt(0).value),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
