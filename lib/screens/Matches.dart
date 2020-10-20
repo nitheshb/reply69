@@ -413,8 +413,7 @@ void _settingModalBottomSheet(context) {
       isScrollControlled: true,
       context: context,
       builder: (BuildContext bc) {
-        return SingleChildScrollView(
-          child: Container(
+        return Container(
             //height: MediaQuery.of(context).size.height * 0.1,
             height: 655,
             decoration: new BoxDecoration(
@@ -424,295 +423,421 @@ void _settingModalBottomSheet(context) {
                 topRight: const Radius.circular(5.0),
               ),
             ),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(22.0),
-                      child: GestureDetector(
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.grey,
-                          size: 25,
-                        ),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 23.0, left: 2),
-                          child: Text('Pre Match Analysis', style: style1),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5, left: 2),
-                          child: Text('Indian T20 League, 2020', style: style2),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50, left: 60),
-                      child: Text('⏱ 9h 47m Left', style: style2),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 18,
-                ),
-                Divider(
-                  height: 10,
-                  color: Colors.grey.withOpacity(0.1),
-                  thickness: 5,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Image.asset('assets/facts.png',
-                            width: 25, height: 25),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(
-                          bottom: 3, // space between underline and text
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                          color: Color(0xffEBD148), // Text colour here
-                          width: 3.0, // Underline width
-                        ))),
-                        child: Text("Match", style: style3),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(
-                          bottom: 3, // space between underline and text
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                          color: Colors.transparent, // Text colour here
-                          width: 3.0, // Underline width
-                        ))),
-                        child: Text(" Facts", style: style3),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 5, right: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Image.asset('assets/checklist.png',
-                          width: 20, height: 20),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        "It\'s easy to not look beyond Warner or Baristow, but \nManish Pandey has been solid for Hydrabad with 85 \nruns in 2 games at an average of 43.",
-                        style: style2.copyWith(
-                          fontSize: 13,
-                        ),
-                        textAlign: TextAlign.left,
-                        softWrap: true,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20.0, top: 15, right: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Image.asset('assets/checklist.png',
-                          width: 20, height: 20),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        "Rishabh Pant is a dasher but you can take a punt on \nhim since he has scored 31 in the first match & 37 in \nthe second.",
-                        style: style2.copyWith(
-                          fontSize: 13,
-                        ),
-                        textAlign: TextAlign.left,
-                        softWrap: true,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20.0, top: 15, right: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Image.asset('assets/checklist.png',
-                          width: 20, height: 20),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        "Jonny Bairstow failed to make a big score in the 2nd \nmatch but he made a handy 61 in the first & could do \nso again.",
-                        style: style2.copyWith(
-                          fontSize: 13,
-                        ),
-                        textAlign: TextAlign.left,
-                        softWrap: true,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20.0, top: 15, right: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Image.asset('assets/checklist.png',
-                          width: 20, height: 20),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text(
-                        "Anrich Nortje has had a good tournament , picked up \n2 wickets at an economy rate just under 7",
-                        style: style2.copyWith(
-                          fontSize: 13,
-                        ),
-                        textAlign: TextAlign.left,
-                        softWrap: true,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 13,
-                ),
-                Divider(
-                  height: 1,
-                  color: Colors.grey.withOpacity(0.5),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(top: 20.0, left: 20, right: 20),
-                  child: Container(
-                    height: 90,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Color(0xffEDFFf0),
-                        border: Border.all(color: Color(0xffd9f9d1))),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 22),
-                      child: Row(
-                        children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Image.asset('assets/idea.png',
-                                  width: 22, height: 22),
-                              Text(
-                                'Tip',
-                                style: style3.copyWith(fontSize: 11),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            width: 22,
-                          ),
-                          Text(
-                            "Depending on who bats first, try picking your captain \nfrom the team,since it is easier to bat without \nscoreboard pressure as trend has shown in this \ntournament & both these team prefer to bat first.",
-                            style: style2.copyWith(
-                              color: Colors.black,
-                              fontSize: 11,
+            child: StreamBuilder(
+                stream: FirebaseController.instanace.getMatchesList('Cricket'),
+                builder: (context, snapshot) {
+//                  return Container(child:
+//                  ListView.builder(
+//                      itemCount: snapshot.data.documents.length,
+//                      itemBuilder: (BuildContext context, int index) {
+//                        Map friend = friends[index];
+//                        DocumentSnapshot ds = snapshot.data
+//                            .documents[index];
+//                        var matchDetails = ds['matchDetails'] ?? {};
+//                        var mFacts = ds['mTips'] ?? {};
+//                        print("$mFacts");
+//                        return Container(child: Text("${mFacts['mTips']}"),);
+//
+//                      }
+//                  )
+//                  );
+
+                    return Container(
+                      child:SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(22.0),
+                                  child: GestureDetector(
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Colors.grey,
+                                      size: 25,
+                                    ),
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 23.0, left: 2),
+                                      child: Text(
+                                          'Pre Match Analysis', style: style1),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 5, left: 2),
+                                      child: Text(
+                                          'Indian T20 League, 2020', style: style2),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 50, left: 60),
+                                  child: Text('⏱ 9h 47m Left', style: style2),
+                                ),
+                              ],
                             ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Is this information helpful?',
-                        style: style2.copyWith(
-                            color: Colors.black,
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Container(
-                          height: 25,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.grey)),
-                          child: Center(
-                              child: Text(
-                            'Yes',
-                            style:
-                                TextStyle(fontSize: 12.5, color: Colors.grey),
-                          )),
+                            SizedBox(
+                              height: 13,
+                            ),
+                            Divider(
+                              height: 5,
+                              color: Colors.grey.withOpacity(0.1),
+                              thickness: 5,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Image.asset('assets/facts.png',
+                                        width: 25, height: 25),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                      bottom: 3, // space between underline and text
+                                    ),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                              color: Color(0xffEBD148),
+                                              // Text colour here
+                                              width: 3.0, // Underline width
+                                            ))),
+                                    child: Text("Match", style: style3),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                      bottom: 3, // space between underline and text
+                                    ),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                              color: Colors.transparent,
+                                              // Text colour here
+                                              width: 3.0, // Underline width
+                                            ))),
+                                    child: Text(" Facts", style: style3),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: 100,
+                              child: ListView.builder(
+                                  itemCount: snapshot.data.documents.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    Map friend = friends[index];
+                                    DocumentSnapshot ds = snapshot.data
+                                        .documents[index];
+                                    var matchDetails = ds['matchDetails'] ?? {};
+                                    var mFacts = ds['mTips'] ?? '';
+                                    var mWReport = ds['WReport'] ?? '';
+                                    var mTip = ds['WTip'] ?? '';
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20.0, top: 5, right: 10),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Image.asset('assets/checklist.png',
+                                              width: 20, height: 20),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          Text("${matchDetails['team-1']}",
+                                            style: style2.copyWith(
+                                              fontSize: 13,
+                                            ),
+                                            textAlign: TextAlign.left,
+                                            softWrap: true,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Image.asset('assets/facts.png',
+                                        width: 25, height: 25),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                      bottom: 3, // space between underline and text
+                                    ),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                              color: Color(0xffEBD148),
+                                              // Text colour here
+                                              width: 3.0, // Underline width
+                                            ))),
+                                    child: Text("Pitch", style: style3),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                      bottom: 3, // space between underline and text
+                                    ),
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                            bottom: BorderSide(
+                                              color: Colors.transparent,
+                                              // Text colour here
+                                              width: 3.0, // Underline width
+                                            ))),
+                                    child: Text(" & Weather Report", style: style3),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 100,
+                              child: ListView.builder(
+                                  itemCount: snapshot.data.documents.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    Map friend = friends[index];
+                                    DocumentSnapshot ds = snapshot.data
+                                        .documents[index];
+                                    var matchDetails = ds['matchDetails'] ?? {};
+                                    var mFacts = ds['mTips'] ?? '';
+                                    var mWReport = ds['WReport'] ?? '';
+                                    var mTip = ds['WTip'] ?? '';
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 27.0, top: 5, right: 10),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text("${matchDetails['team-2']}",
+                                            style: style2.copyWith(
+                                              fontSize: 13,
+                                            ),
+                                            textAlign: TextAlign.left,
+                                            softWrap: true,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                              ),
+                            ),
+                            Divider(
+                              height: 1,
+                              color: Colors.grey.withOpacity(0.6),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Padding(
+                              padding:
+                              const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+                              child: Container(
+                                height: 90,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Color(0xffEDFFf0),
+                                    border: Border.all(color: Color(0xffd9f9d1))),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 22),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Image.asset('assets/idea.png',
+                                              width: 22, height: 22),
+                                          Text(
+                                            'Tip',
+                                            style: style3.copyWith(fontSize: 11),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 22,
+                                      ),
+                                      Text(
+                                        "Depending on who bats first, try picking your captain \nfrom the team,since it is easier to bat without \nscoreboard pressure as trend has shown in this \ntournament & both these team prefer to bat first.",
+                                        style: style2.copyWith(
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 15),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    'Is this information helpful?',
+                                    style: style2.copyWith(
+                                        color: Colors.black,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Container(
+                                      height: 25,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border.all(color: Colors.grey)),
+                                      child: Center(
+                                          child: Text(
+                                            'Yes',
+                                            style:
+                                            TextStyle(
+                                                fontSize: 12.5, color: Colors.grey),
+                                          )),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2),
+                                    child: Container(
+                                      height: 25,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border.all(color: Colors.grey)),
+                                      child: Center(
+                                          child: Text(
+                                            'No',
+                                            style:
+                                            TextStyle(
+                                                fontSize: 12.5, color: Colors.grey),
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 9,
+                            ),
+                            Container(
+                              height: 55,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xff00C37A),
+                                    Color(0xff00A155),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                ),
+                              ),
+                              child: Center(
+                                  child: Text(
+                                    'PLAY NOW',
+                                    style:
+                                    style3.copyWith(color: Colors.white.withOpacity(
+                                        0.9)),
+                                  )),
+                            ),
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: Container(
-                          height: 25,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.grey)),
-                          child: Center(
-                              child: Text(
-                            'No',
-                            style:
-                                TextStyle(fontSize: 12.5, color: Colors.grey),
-                          )),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 9,
-                ),
-                Container(
-                  height: 55,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xff00C37A),
-                        Color(0xff00A155),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  child: Center(
-                      child: Text(
-                    'PLAY NOW',
-                    style:
-                        style3.copyWith(color: Colors.white.withOpacity(0.9)),
-                  )),
-                ),
-              ],
+                    );
+
+
+                }
             ),
-          ),
-        );
+          );
+
       });
   //#00A155 #00C37A
 }
+
+
+//                Padding(
+//                  padding:
+//                      const EdgeInsets.only(left: 20.0, top: 15, right: 10),
+//                  child: Row(
+//                    crossAxisAlignment: CrossAxisAlignment.start,
+//                    children: <Widget>[
+//                      Image.asset('assets/checklist.png',
+//                          width: 20, height: 20),
+//                      SizedBox(
+//                        width: 15,
+//                      ),
+//                      Text(
+//                        "Rishabh Pant is a dasher but you can take a punt on \nhim since he has scored 31 in the first match & 37 in \nthe second.",
+//                        style: style2.copyWith(
+//                          fontSize: 13,
+//                        ),
+//                        textAlign: TextAlign.left,
+//                        softWrap: true,
+//                      ),
+//                    ],
+//                  ),
+//                ),
+//                Padding(
+//                  padding:
+//                      const EdgeInsets.only(left: 20.0, top: 15, right: 10),
+//                  child: Row(
+//                    crossAxisAlignment: CrossAxisAlignment.start,
+//                    children: <Widget>[
+//                      Image.asset('assets/checklist.png',
+//                          width: 20, height: 20),
+//                      SizedBox(
+//                        width: 15,
+//                      ),
+//                      Text(
+//                        "Jonny Bairstow failed to make a big score in the 2nd \nmatch but he made a handy 61 in the first & could do \nso again.",
+//                        style: style2.copyWith(
+//                          fontSize: 13,
+//                        ),
+//                        textAlign: TextAlign.left,
+//                        softWrap: true,
+//                      ),
+//                    ],
+//                  ),
+//                ),
+//                Padding(
+//                  padding:
+//                      const EdgeInsets.only(left: 20.0, top: 15, right: 10),
+//                  child: Row(
+//                    crossAxisAlignment: CrossAxisAlignment.start,
+//                    children: <Widget>[
+//                      Image.asset('assets/checklist.png',
+//                          width: 20, height: 20),
+//                      SizedBox(
+//                        width: 15,
+//                      ),
+//                      Text(
+//                        "Anrich Nortje has had a good tournament , picked up \n2 wickets at an economy rate just under 7",
+//                        style: style2.copyWith(
+//                          fontSize: 13,
+//                        ),
+//                        textAlign: TextAlign.left,
+//                        softWrap: true,
+//                      ),
+//                    ],
+//                  ),
+//                ),
