@@ -617,25 +617,18 @@ void widgetBuilt(Duration d) {
                   ),
                 ),
               ),
-              Visibility(
+
+Visibility(
                 visible: (widget.chatOwnerId != widget.userId),
                 child: Visibility(
                   visible: !widget.chatId.contains('PGrp'),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          top: 10, left: 16, right: 16, bottom: 8),
-                      child: Container(
-                        height: 48,
-                        decoration: new BoxDecoration(
-                          color: Theme.of(context).accentColor,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(2.0),
-                          ),
-                        ),
-                        child: InkWell(
-                          onTap: () {
+                  child:
+
+                                  Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                      InkWell(
+                      onTap: () {
                             profileRoute(context, 'member');
 
                             // if(lock){
@@ -645,51 +638,85 @@ void widgetBuilt(Duration d) {
                             //   getImage();
                             // }
                           },
+                    child: Container(
+                      height: 50.0,
+                      width: 140.0,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Color(0xFF2ecc71),
+                              style: BorderStyle.solid,
+                              width: 1.0),
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Color(0xFF2ecc71)),
+                      child: Center(
                           child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Column(
-                                children: <Widget>[
-                                  SizedBox(height: 6),
-                                  Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Icon(
+                            children: [
+                              SizedBox(width:11),
+                              Icon(
                                       FontAwesomeIcons.crown,
                                       color: Colors.white,
-                                      size: 28,
+                                      size: 16,
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: 13),
-                              Align(
-                                alignment: Alignment.center,
-                                child: Column(
-                                  children: <Widget>[
-                                    SizedBox(height: 13),
-                                    Text(
-                                      (!widget.waitingGroups
-                                              .contains(widget.chatId))
-                                          ? "Upgrade To Prime"
-                                          : "Under Review",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                    SizedBox(width:8),
+                              Text('Join Prime',
+                                  style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      color: Colors.white,
+                                      fontSize: 18.0)),
                             ],
+                          )),
+                    )
+                    ),
+                    Container(
+                      height: 50.0,
+                      width: 130.0,
+                      
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color(0xFF2ecc71),
+                            style: BorderStyle.solid,
+                            width: 1.0),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Row(
+                        children: [
+                           SizedBox(width:4),
+                          Center(
+                            child: Image.asset(
+                  'assets/win.png',
+                  width: 30.0,
+                  height: 70.0,
+                )
                           ),
-                        ),
+
+                              SizedBox(width:8),
+                              Text('Applause',
+                                  style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      color: Colors.black87,
+                                      fontSize: 18.0)),
+                        ],
                       ),
                     ),
-                  ),
+                    Container(
+                      height: 65.0,
+                      width: 60.0,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Colors.grey,
+                            style: BorderStyle.solid,
+                            width: 1.0),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Center(
+                        child: Icon(FontAwesomeIcons.heart, color: Colors.black),
+                      ),
+                    ),
+                  
+                  ],
                 ),
-              ),
+                ),),
+         
               Visibility(
                 visible: widget.chatOwnerId == widget.userId,
                 child: Align(

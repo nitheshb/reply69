@@ -142,7 +142,7 @@ class Auth {
     }
   }
 
-  static Future<String> storeUserLocal(User user) async {
+  static Future<String> storeUserLocal(User user, userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> approvedGroupsList = [];
     List<String> myOwnGroupsList = [];
@@ -152,6 +152,7 @@ class Auth {
     //  this is used in notifications
     String storeUserId = user.userId;
     await prefs.setString('FireUserId', storeUserId);
+    await prefs.setString('userId', userId);
     await prefs.setString('firstName', user.firstName);
 
     if (user.approvedGroups != null) {

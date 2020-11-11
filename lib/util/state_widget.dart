@@ -118,7 +118,7 @@ class _StateWidgetState extends State<StateWidget> {
     User user = await Auth.getUserFirestore(userId);
 
     await Auth.getAndUpdateFcmToken(user, userId);
-    await Auth.storeUserLocal(user);
+    await Auth.storeUserLocal(user, userId);
     Settings settings = await Auth.getSettingsFirestore(userId);
     await Auth.storeSettingsLocal(settings);
     await initUser();

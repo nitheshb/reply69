@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flash/flash.dart';
@@ -11,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:notification/app_theme.dart';
 import 'package:notification/controllers/firebaseController.dart';
+import 'package:notification/models/users.dart';
 import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/conversation.dart';
 import 'package:notification/screens/createGroup.dart';
@@ -51,7 +53,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
   TabController _tabController;
   StateModel appState;
   List waitingGroups = [],
-      approvedGroups = [],
+      approvedGroupsP = [],
       myOwnGroups = [],
       followingGroupsP = [],
       followingGroups = [],
@@ -78,14 +80,53 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
     //   loopFollowingGroup(followingGroupsP);
     // });
   }
+   void didChangeDependencies() {
+      super.didChangeDependencies();
+      // set your stuff here 
+      print('%%%%%%%%%%%%%% what is this about');
+       getlocalPrime_OwnGroups();
+      }
 
   void _toggleTab() {
     _tabController.animateTo(1);
   }
 
+
+syncApprovedData(syncCheck, approvedNewData) async {
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> approvedGroupsList = [];
+approvedGroupsP =approvedNewData;
+// getlocalPrime_OwnGroups();
+   await approvedNewData.forEach((data) async {
+        // search for the rc count and update it
+        await approvedGroupsList.add(data);
+
+  prefs.setStringList('approvedPrimeGroups' , approvedGroupsList);
+ approvedGroupsP =  prefs.getStringList('approvedPrimeGroups');
+ 
+
+      });
+   
+   getlocalPrime_OwnGroups();
+}
   getlocalPrime_OwnGroups() async {
+
+    print(' iwas called');
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    approvedGroups = await prefs.getStringList('approvedPrimeGroups');
+
+    var userId = await prefs.getString('userId');
+    print('===============> $userId');
+      DocumentSnapshot variable =  await Firestore.instance
+          .collection('IAM')
+          .document(userId)
+          .get();
+          
+
+          print('value of shit is ${variable.data['approvedGroups']}');
+
+
+    
+    approvedGroupsP = await prefs.getStringList('approvedPrimeGroups');
     myOwnGroups = await prefs.getStringList('myOwnGroups_pref');
     followingGroupsP = await prefs.getStringList('followingGroups_pref');
 
@@ -98,6 +139,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
     await loopFollowingGroup(addFollowMyOwnGroups);
     print('local true by swetan1 ${addFollowMyOwnGroups}');
   }
+
 
   void updateInformation(String information) {}
 
@@ -440,6 +482,18 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                         ),
                       ),
                     ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text("Top Experts",
+                                    style: GoogleFonts.inter(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900,
+                                    )),
+                              ),
+                    ),
                     SingleChildScrollView(
                       //code for trendindg widget
                       scrollDirection: Axis.horizontal,
@@ -599,7 +653,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
       onTap: () async {
         var snap = await FirebaseController.instanace
             .getChatOwnerId(NotifyData['chatId']);
-        var chatId = approvedGroups.contains(NotifyData['chatId'])
+        var chatId = approvedGroupsP.contains(NotifyData['chatId'])
             ? "${NotifyData['chatId']}PGrp"
             : "${NotifyData['chatId']}";
         final information = await Navigator.push(
@@ -637,11 +691,11 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
         counter: "${NotifyData['c'] - alreadyReadCount}",
         // counter: 0,
         msg:
-        "${approvedGroups.contains(NotifyData['chatId'])
+        "${approvedGroupsP.contains(NotifyData['chatId'])
             ? NotifyData['pm']
             : NotifyData['m']}",
         time: "${""}",
-        amiPrime: approvedGroups.contains(NotifyData['chatId']),
+        amiPrime: approvedGroupsP.contains(NotifyData['chatId']),
         amiOwner: myOwnGroups.contains(NotifyData['chatId']),
       ),
     );
@@ -901,6 +955,48 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                         )),
                   ),
                 ),
+            
+                 StreamBuilder<DocumentSnapshot>(
+                      stream: Firestore.instance.collection('IAM').document(userId).snapshots(),
+                      builder: (BuildContext context, snapshot){
+                        if(snapshot.hasError) {
+                        print('erros ${snapshot.hasError}');
+                          return Center(child: Text('Error: '));
+                        }
+                        else if(snapshot.hasData) {
+
+                          Function deepEq = const DeepCollectionEquality().equals;
+List list1 = [ 1, 2, 3];
+List list2 = [ 1, 2, 3];
+// print(    eq(list1, list2)); // => false
+print(deepEq(list1, list2));
+Function unOrdDeepEq = const DeepCollectionEquality.unordered().equals;
+                        var check =  unOrdDeepEq(list1,list1);
+                        // var check1 =  unOrdDeepEq( [ 1, 3, 2],[ 1, 2, 3]);
+                        // var check3 =   unOrdDeepEq([ 1, 3] == [ 1, 2]);
+                        //  print('doctor is is  $check ,  $check1 , $check3  ${snapshot.data.data}');
+
+                          var ds = snapshot.data.data;
+                     
+                          List followingGroups = ds['followingGroups0'];
+                         
+                          List approvedGroups = ds['approvedGroups'];
+                          // List approvedGroups = ['approvedNewData'];
+                          List myOwnGroups = ds['myOwnGroups'] ;
+
+                          print('doctor is is ${deepEq(approvedGroups,approvedGroupsP )}  ${approvedGroupsP}');
+
+                          if(! deepEq(approvedGroups,approvedGroupsP )) {
+                             syncApprovedData('sync', approvedGroups);
+                          }
+                          
+                         return Container();
+                        }
+                        
+
+                      },
+                    ),
+                
                 TabBar(
                   controller: _tabController,
                   indicatorColor: Theme
@@ -1049,7 +1145,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
             elevation: 3,
             //color: Colors.white70,
             child: Container(
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.only(bottom: 5),
               child: Row(
                 children: <Widget>[
                   Container(
