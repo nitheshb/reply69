@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -65,7 +65,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
   List searchLists = [];
   int selTabIndex;
   var shimmer = true;
-
+  int _current=0;
   @override
   void initState() {
     super.initState();
@@ -288,7 +288,9 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
             )
                 : Container();
           },
-        )
+        ),
+        Container(color: Colors.pink,height: 500,width: double.infinity,child:  CarouselWithIndicatorDemo(),),
+
       ]),
     );
   }
@@ -440,59 +442,97 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                         ),
                       ),
                     ),
-                    SingleChildScrollView(
-                      //code for trendindg widget
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              SizedBox(
-                                height: 80,
-                                //width: 500,
-                                child: Container(
-                                  child: StreamBuilder(
-                                      stream: searchGroupsQuery('G'),
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData) {
-                                          print("Loading");
-                                        } else {
-                                          return Container(
-                                            child: ListView.builder(
-                                                itemCount: snapshot.data['payload']
-                                                    .length,
-                                                shrinkWrap: true,
-                                                padding: EdgeInsets.only(top: 8),
-                                                physics: BouncingScrollPhysics(),
-                                                scrollDirection: Axis.horizontal,
-                                                itemBuilder: (context, index){
-                                                  DocumentSnapshot ds = snapshot.data;
-                                                  return Container(
-                                                    //height: 30,
-                                                    //child: Text(ds['payload'][index]['title']),
-                                                    child: trending(
-                                                      ds['payload'][index]
-                                                          ['logo'],
-                                                      ds['payload'][index]
-                                                          ['title'],
-                                                      ds['payload'][index]
-                                                          ['ownerName'],
-                                                    ),
-                                                  );
-                                                }
-
-                                            ),
-                                          );
-                                        }
-                                        return Container();
-                                      }),
-                                ),
+                    SizedBox(height: 60,),
+                    Column(
+                        children: [
+                          Container(
+                            height: 70,
+                            width: double.infinity,
+                            child: CarouselSlider(
+                              items: expertSliders,
+                              options: CarouselOptions(
+                                  autoPlay: true,
+                                  enlargeCenterPage: true,
+                                  //aspectRatio: 2.0,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _current = index;
+                                    });
+                                  }
                               ),
-                            ],
+                            ),
                           ),
-                        ],
-                      ),
-                    )
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: imgList.map((url) {
+                              int index = imgList.indexOf(url);
+                              return Container(
+                                width: 8.0,
+                                height: 8.0,
+                                margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _current == index
+                                      ? Color.fromRGBO(0, 0, 0, 0.9)
+                                      : Color.fromRGBO(0, 0, 0, 0.4),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ]
+                    ),
+//                    SingleChildScrollView(
+//                      //code for trendindg widget
+//                      scrollDirection: Axis.horizontal,
+//                      child: Row(
+//                        children: <Widget>[
+//                          Column(
+//                            children: <Widget>[
+//                              SizedBox(
+//                                height: 80,
+//                                //width: 500,
+//                                child: Container(
+//                                  child: StreamBuilder(
+//                                      stream: searchGroupsQuery('G'),
+//                                      builder: (context, snapshot) {
+//                                        if (!snapshot.hasData) {
+//                                          print("Loading");
+//                                        } else {
+//                                          return Container(
+//                                            child: ListView.builder(
+//                                                itemCount: snapshot.data['payload']
+//                                                    .length,
+//                                                shrinkWrap: true,
+//                                                padding: EdgeInsets.only(top: 8),
+//                                                physics: BouncingScrollPhysics(),
+//                                                scrollDirection: Axis.horizontal,
+//                                                itemBuilder: (context, index){
+//                                                  DocumentSnapshot ds = snapshot.data;
+//                                                  return Container(
+//                                                    //height: 30,
+//                                                    //child: Text(ds['payload'][index]['title']),
+//                                                    child: trending(
+//                                                      ds['payload'][index]
+//                                                          ['logo'],
+//                                                      ds['payload'][index]
+//                                                          ['title'],
+//                                                      ds['payload'][index]
+//                                                          ['ownerName'],
+//                                                    ),
+//                                                  );
+//                                                }
+//                                            ),
+//                                          );
+//                                        }
+//                                        return Container();
+//                                      }),
+//                                ),
+//                              ),
+//                            ],
+//                          ),
+//                        ],
+//                      ),
+//                    )
                   ],
                 );
               } else if (snapshot.hasData) {
@@ -1323,3 +1363,217 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
     );
   }
 }
+
+final List<String> imgList = [
+  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+];
+
+
+searchGroupsQuery(query) {
+  if (query != null && ((query.length == 1))) {
+    var followGroupState =
+    FirebaseController.instanace.searchResultsByName(query);
+    return followGroupState;
+  } else {
+    return;
+  }
+}
+
+final List<Widget> expertSliders = imgList.map((item) => Container(
+  child: StreamBuilder(
+      stream: searchGroupsQuery('G'),
+      builder: (context, snapshot) {
+        DocumentSnapshot ds = snapshot.data;
+        int index=1;
+        if (!snapshot.hasData) {
+          print("Loading");
+        } else {
+          return Container(
+            child: Container(
+                    //child: Text(ds['payload'][index]['title']),
+                    child: trending(
+                      ds['payload'][index]
+                      ['logo'],
+                      ds['payload'][index]
+                      ['title'],
+                      ds['payload'][index]
+                      ['ownerName'],
+                    ),
+                  ),
+          );
+        }
+        return Container(
+        );
+      }),
+)).toList();
+
+Widget trending(logoUrl, title, owner){
+  return Container(
+    child: Column(
+      children: <Widget>[
+        Card(
+          elevation: 3,
+          //color: Colors.white70,
+          child: Container(
+            padding: EdgeInsets.all(5),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(logoUrl),
+                      fit: BoxFit.fill,
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(90),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "${title[0].toUpperCase() + title.substring(1)}",
+                        style: GoogleFonts.openSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                            FontAwesomeIcons.userAlt,
+                            size: 9,
+                            color: Colors.grey[400],
+                          ),
+                          SizedBox(width: 3),
+                          Text(
+                            "${owner[0].toUpperCase() +
+                                owner.substring(1)}",
+                            style: GoogleFonts.nunito(
+                              fontSize: 13,
+                              color: Colors.grey[800],
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+
+                    ],
+                  ),
+                )
+
+              ],
+            ),
+          ),
+        ),
+
+      ],
+    ),
+  );
+}
+
+final List<Widget> imageSliders = imgList.map((item) => Container(
+  child: Container(
+    margin: EdgeInsets.all(5.0),
+    child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+        child: Stack(
+          children: <Widget>[
+            Image.network(item, fit: BoxFit.cover, width: 1000.0),
+            Positioned(
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(200, 0, 0, 0),
+                      Color.fromARGB(0, 0, 0, 0)
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                child: Text(
+                  'Win like these Experts',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+    ),
+  ),
+)).toList();
+
+class CarouselWithIndicatorDemo extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _CarouselWithIndicatorState();
+  }
+}
+
+class _CarouselWithIndicatorState extends State<CarouselWithIndicatorDemo> {
+  int _current = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Win cash with Experts')),
+      body: Column(
+          children: [
+            CarouselSlider(
+              items: imageSliders,
+              options: CarouselOptions(
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  aspectRatio: 2.0,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _current = index;
+                    });
+                  }
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: imgList.map((url) {
+                int index = imgList.indexOf(url);
+                return Container(
+                  width: 8.0,
+                  height: 8.0,
+                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _current == index
+                        ? Color.fromRGBO(0, 0, 0, 0.9)
+                        : Color.fromRGBO(0, 0, 0, 0.4),
+                  ),
+                );
+              }).toList(),
+            ),
+          ]
+      ),
+    );
+  }
+}
+
+
