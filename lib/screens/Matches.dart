@@ -14,13 +14,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Color color1 = Colors.grey[600];
 
-final style2 = GoogleFonts.nunito(
+final style2 = GoogleFonts.poppins(
     color: Colors.grey[600], fontSize: 13, fontWeight: FontWeight.w600);
 
-final style1 = GoogleFonts.nunito(
+final style1 = GoogleFonts.poppins(
     color: Color(0xff352D80), fontSize: 18.5, fontWeight: FontWeight.w800);
 
-final style3 = GoogleFonts.nunito(
+final style3 = GoogleFonts.poppins(
     color: Colors.black, fontSize: 16, fontWeight: FontWeight.w800);
 
 class DisplayMatches extends StatefulWidget {
@@ -67,15 +67,17 @@ class _DisplayMatchesState extends State<DisplayMatches>
       appBar: AppBar(
         title: TabBar(
           controller: _tabController,
-          indicatorColor: Theme.of(context).accentColor,
-          labelColor: Theme.of(context).accentColor,
-          unselectedLabelColor: Theme.of(context).textTheme.caption.color,
-          isScrollable: false,
-          labelStyle: GoogleFonts.poppins(
-            fontSize: 14,
-            color: Color(0xff3A4276),
-            fontWeight: FontWeight.w400,
-          ),
+          isScrollable: true,
+          indicatorColor: Color(0xff14142B),
+                  unselectedLabelColor: Color(0xff6E7191),
+                  labelColor: Color(0xff14142B),
+                  
+                  labelStyle: style2.copyWith(
+                                                fontSize: 16,
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 0.25
+                                                ),
           tabs: <Widget>[
             Tab(
               text: "Cricket",
@@ -164,119 +166,144 @@ class _DisplayMatchesState extends State<DisplayMatches>
                       var matchDetails = ds['matchDetails'] ?? {};
                       var format = DateFormat('d-MMMM HH:mm a');
 
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 140,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Constants.lightPrimary,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.4),
-                                  blurRadius: 9.0,
-                                  spreadRadius: 1.0,
-                                ),
-                              ]),
-                          child: Column(
-                            //crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 10, right: 10, top: 5),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MatchDetails()));
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text('Today in 09h 47m 44s',
+                      return InkWell(
+                        onTap: (){
+                          _settingModalBottomSheet(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 130,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Color(0xffFCFCFC),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.4),
+                                    blurRadius: 9.0,
+                                    spreadRadius: 1.0,
+                                  ),
+                                ]),
+                            child: Column(
+                              //crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10, top: 5),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MatchDetails()));
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text('Today in 09h 47m 44s',
+                                            style: style2.copyWith(
+                                                fontSize: 11,
+                                                color: Color(0xffC30052),
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 0.75)),
+                                        Text(
+                                          'Indian T20 League, 2020',
                                           style: style2.copyWith(
-                                              fontSize: 11,
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.w800)),
+                                              fontSize: 13,
+                                              color: Color(0xffA0A3BD),
+                                              fontWeight: FontWeight.w500,
+                                              letterSpacing: 0.25),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              
+                                Padding(
+                                  padding: const EdgeInsets.all(7.14),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Column(
+                                        children: [
+                                           Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.5, vertical: 7),
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            matchDetails['team_1_pic'],
+                                          ),
+                                          radius: 20,
+                                        ),
+                                      ),
+                                          Text("${matchDetails['team-1']}", style: style2.copyWith(
+                                              fontSize: 14,
+                                              color: Color(0xff6E7191),
+                                              fontWeight: FontWeight.w700,
+                                              letterSpacing: 0.75)),
+
+                                        ],
+                                      ),
+                                     
                                       Text(
-                                        'Indian T20 League, 2020',
+                                        'vs',
                                         style: style2.copyWith(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.bold),
+                                              fontSize: 24,
+                                              color: Color(0xff14142B),
+                                              fontWeight: FontWeight.w800,
+                                              letterSpacing: 1),
+                                      ),
+
+                                                         Column(
+                                        children: [
+                                           Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.5, vertical: 7),
+                                        child: CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                            matchDetails['team_2_pic'],
+                                          ),
+                                          radius: 20,
+                                        ),
+                                      ),
+                                          Text("${matchDetails['team-2']}", style: style2.copyWith(
+                                              fontSize: 14,
+                                              color: Color(0xff6E7191),
+                                              fontWeight: FontWeight.w700,
+                                              letterSpacing: 0.75)),
+
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                              Divider(
-                                color: Colors.grey[600].withOpacity(0.3),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text("${matchDetails['team-1']}"),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.5),
-                                      child: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          matchDetails['team_1_pic'],
-                                        ),
-                                        radius: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      'vs',
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.5),
-                                      child: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          matchDetails['team_2_pic'],
-                                        ),
-                                        radius: 20,
-                                      ),
-                                    ),
-                                    Text("${matchDetails['team-2']}"),
-                                  ],
-                                ),
-                              ),
-                              Divider(
-                                color: Colors.grey[600].withOpacity(0.3),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text('',
-                                        style: style2.copyWith(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.bold)),
-                                    GestureDetector(
-                                      onTap: () {
-                                        _settingModalBottomSheet(context);
-                                      },
-                                      child: Text('Pre Match Analysis',
+                               
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      
+                                      Text('',
                                           style: style2.copyWith(
                                               fontSize: 11,
-                                              color: Colors.green,
-                                              fontWeight: FontWeight.w800)),
-                                    ),
-                                  ],
+                                              fontWeight: FontWeight.bold)),
+                                      GestureDetector(
+                                        onTap: () {
+                                          _settingModalBottomSheet(context);
+                                        },
+                                        child: CircleAvatar(backgroundColor: Color(0xff00BA88),radius: 4,),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );

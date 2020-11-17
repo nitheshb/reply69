@@ -51,26 +51,26 @@ class _ChatBubbleState extends State<ChatBubble> {
   Widget build(BuildContext context) {
     var colorBg;
     if (widget.selMessageMode == 'All') {
-      colorBg = Colors.pink[400];
+      colorBg = Color(0xffDEF9FF);
     } else if (widget.selMessageMode == 'Prime') {
-      colorBg = Colors.greenAccent;
+      colorBg = Color(0xffFFDFED);
     } else {
-      colorBg = Colors.lightBlueAccent;
+      colorBg = Color(0xffFFF4DF);
     }
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(1),
       child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(3),
-          boxShadow: [
-            // BoxShadow(
-            //   color: Colors.grey.shade100,
-            //   blurRadius: widget.messageMode == 'paymentAccept' ? 0 : 6,
-            //   spreadRadius: widget.messageMode == 'paymentAccept' ? 0 : 10,
-            // )
-          ],
-        ),
+        // decoration: BoxDecoration(
+        //   color: Colors.white,
+        //   borderRadius: BorderRadius.circular(3),
+        //   boxShadow: [
+        //     // BoxShadow(
+        //     //   color: Colors.grey.shade100,
+        //     //   blurRadius: widget.messageMode == 'paymentAccept' ? 0 : 6,
+        //     //   spreadRadius: widget.messageMode == 'paymentAccept' ? 0 : 10,
+        //     // )
+        //   ],
+        // ),
         child: InkWell(
           child: Column(
             children: <Widget>[
@@ -80,15 +80,15 @@ class _ChatBubbleState extends State<ChatBubble> {
                       decoration: BoxDecoration(
                         color: colorBg,
                         borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade100,
-                            blurRadius:
-                                widget.messageMode == 'paymentAccept' ? 0 : 2,
-                            spreadRadius:
-                                widget.messageMode == 'paymentAccept' ? 0 : 2,
-                          )
-                        ],
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //     color: Colors.grey.shade100,
+                        //     blurRadius:
+                        //         widget.messageMode == 'paymentAccept' ? 0 : 2,
+                        //     spreadRadius:
+                        //         widget.messageMode == 'paymentAccept' ? 0 : 2,
+                        //   )
+                        // ],
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -101,9 +101,10 @@ class _ChatBubbleState extends State<ChatBubble> {
                                   ? "Empty Message"
                                   : widget.message,
                               style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Color(0xff4E4B66),
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.75
                               ),
                             ),
                           ),
@@ -175,7 +176,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                                               "${widget.date}",
                                               style: GoogleFonts.poppins(
                                                 fontSize: 12,
-                                                color: Colors.white,
+                                                color: Color(0xffA0A3BD),
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             )
@@ -183,7 +184,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                                               "07-10",
                                               style: GoogleFonts.poppins(
                                                 fontSize: 12,
-                                                color: Colors.white,
+                                                color: Color(0xffA0A3BD),
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             )),
@@ -198,7 +199,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                                       style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         // color: Color(0xff3A4276),
-                                        color: Colors.white,
+                                        color: Color(0xffA0A3BD),
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -213,11 +214,30 @@ class _ChatBubbleState extends State<ChatBubble> {
                       onTap: () {
                         onTapProfileChatItem(context, widget.img);
                       },
-                      child: Image(
-                        image: CachedNetworkImageProvider(widget.img),
-                        height: MediaQuery.of(context).size.width,
+                      child: Container(
                         width: MediaQuery.of(context).size.width,
-                        fit: BoxFit.fill,
+                      decoration: BoxDecoration(
+                        color: colorBg,
+                        borderRadius: BorderRadius.circular(5),
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //     color: Colors.grey.shade100,
+                        //     blurRadius:
+                        //         widget.messageMode == 'paymentAccept' ? 0 : 2,
+                        //     spreadRadius:
+                        //         widget.messageMode == 'paymentAccept' ? 0 : 2,
+                        //   )
+                        // ],
+                      ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(1.0,1,1,34),
+                          child: Image(
+                            image: CachedNetworkImageProvider(widget.img),
+                            height: MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                       )),
               // Image.network(
               //   "${widget.img}",

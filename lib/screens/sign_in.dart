@@ -14,6 +14,8 @@ import 'package:notification/util/validators.dart';
 import 'package:notification/widgets/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+final style2 = GoogleFonts.poppins(
+    color: Colors.grey[600], fontSize: 13, fontWeight: FontWeight.w600);
 class MySignInScreenHome extends StatefulWidget {
   @override
   _MySignInScreenHomeState createState() => _MySignInScreenHomeState();
@@ -54,21 +56,25 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                     children: <Widget>[
                       Expanded(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Column(
                               children: <Widget>[
-                                SizedBox(height: 30),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: new Container(
-                                    // color: Colors.red,
-                                    height:
-                                        MediaQuery.of(context).size.height / 5,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Image(
-                                        image: AssetImage('assets/13.png')),
-                                  ),
+                                SizedBox(height: dh/3),
+                                // Align(
+                                //   alignment: Alignment.center,
+                                //   child: new Container(
+                                //     // color: Colors.red,
+                                //     height:
+                                //         MediaQuery.of(context).size.height / 5,
+                                //     width: MediaQuery.of(context).size.width,
+                                //     child: Image(
+                                //         image: AssetImage('assets/13.png')),
+                                //   ),
+                                // ),
+
+
+
                                   //  child: Container(
                                   //   width: 160,
                                   //     child: Row(
@@ -90,7 +96,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                                   //       ],
                                   //     ),
                                   //   ),
-                                ),
+                                
                                 // SizedBox(height: 20,),
                               ],
                             ),
@@ -122,47 +128,44 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                                 ],
                               ),
                             ),
+                            Container(
+                              height: 40,
+                            ),
                             FadeAnimation(
                                 1.4,
                                 Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 40),
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
                                   child: Container(
-                                    padding: EdgeInsets.only(top: 3, left: 3),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        border: Border(
-                                          bottom:
-                                              BorderSide(color: Colors.black),
-                                          top: BorderSide(color: Colors.black),
-                                          left: BorderSide(color: Colors.black),
-                                          right:
-                                              BorderSide(color: Colors.black),
-                                        )),
+                                  
+                                  
                                     child: MaterialButton(
-                                      minWidth: double.infinity,
-                                      height: dh * 0.08,
+                                      minWidth: 108,
+                                      height: 40,
                                       onPressed: () {
                                         _emailLogin(
                                             email: _email.text,
                                             password: _password.text,
                                             context: context);
                                       },
-                                      color: Colors.greenAccent,
+                                      color: Color(0xff5F2EEA),
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(50)),
+                                              BorderRadius.circular(40)),
                                       child: Text(
                                         "Login",
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: style2.copyWith(
+                                                fontSize: 14,
+                                                color: Color(0xffF7F7FC),
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 0.75),
                                       ),
                                     ),
                                   ),
                                 )),
+                                Container(
+                              height: 4,
+                            ),
                             FadeAnimation(
                                 1.5,
                                 InkWell(
@@ -171,13 +174,26 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 40.0, right: 40.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Container(
-                                          alignment: Alignment(1.0, 0.0),
+                                        left: 0.0, right: 0.0, top: 1),
+                                    child: 
+                                       
+                                        Text(
+                                          "Signup",
+                                          style: style2.copyWith(
+                                                fontSize: 16,
+                                                color: Color(0xff4E4B66),
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 0.75),
+                                        ),
+                                      
+                                    
+                                  ),
+                                )),
+                            Container(
+                              height: 100,
+                            ),
+                                 Container(
+                                          alignment: Alignment.bottomCenter,
                                           // padding: EdgeInsets.only(top: 15.0, left: 20.0,right:18),
                                           child: InkWell(
                                             onTap: () {
@@ -193,27 +209,15 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                                               //  StateWidget.of(context).resetPassword('nithe.nithesh@gmail.com');
                                             },
                                             child: Text(
-                                              'Forgot Password',
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 12,
-                                                color: Color(0xff3A4276),
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                              'Forgot Password?',
+                                              style: style2.copyWith(
+                                                fontSize: 14,
+                                                color: Color(0xffA0A3BD),
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 0.75),
                                             ),
                                           ),
                                         ),
-                                        Text(
-                                          "Sign up",
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 16,
-                                            color: Color(0xff3A4276),
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ))
                           ],
                         ),
                       ),
@@ -236,21 +240,27 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
       height: 58,
       child: Padding(
           padding: EdgeInsets.only(top: 4, left: 24, right: 16),
-          child: TextFormField(
-            keyboardType: TextInputType.emailAddress,
-            autofocus: false,
-            controller: _email,
-            validator: Validator.validateEmail,
-            decoration: InputDecoration(
-              labelText: 'EMAIL',
-              labelStyle: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey),
-              border: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Color(0xFFE7E7E7))),
-            ),
-          )),
+          child:TextFormField(
+                                    keyboardType: TextInputType.emailAddress,
+                                    autofocus: false,
+                                    controller: _email,
+                                    validator: Validator.validateEmail,
+                                    decoration: InputDecoration(
+                                        labelText: 'Email',
+                                        labelStyle: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey),
+                                            border: OutlineInputBorder(
+                                            borderSide:
+                                               new  BorderSide(color: Color(0xFFE7E7E7))),
+                                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFFE7E7E7)))
+                                           
+                                                ),
+                                  )
+          ),
     );
   }
 
@@ -368,6 +378,73 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
   }
 
   Widget makeUserNameField({label, obscureText = false}) {
+TextStyle textStyle = Theme.of(context).textTheme.title;
+    // return Padding(
+    //                 padding: EdgeInsets.only(
+    //                     top: 5.0, bottom: 5.0),
+    //                 child: TextFormField(
+    //                   keyboardType: TextInputType.number,
+    //                   style: textStyle,
+    //                   controller: _email,
+    //                   validator: (String value) {
+    //                     if (value.isEmpty) {
+    //                       return 'Please enter principal amount';
+    //                     }
+    //                   },
+    //                   decoration: InputDecoration(
+    //                       labelText: 'Principal',
+    //                       hintText: 'Enter Principal e.g. 12000',
+    //                       labelStyle: textStyle,
+    //                       errorStyle: TextStyle(
+    //                         color: Colors.yellowAccent,
+    //                         fontSize: 15.0
+    //                       ),
+    //                       border: OutlineInputBorder(
+    //                           borderRadius: BorderRadius.circular(5.0))),
+    //                 ));
+
+    return  Container(
+        
+  height: 64,
+        decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(20),
+    color: Color(0xffEFF0F6),
+    
+  ),
+        
+          child: TextFormField(
+           
+                                          keyboardType: TextInputType.emailAddress,
+                                          autofocus: false,
+                                          controller: _email,
+                                          validator: Validator.validateEmail,
+                                          decoration: InputDecoration(
+                                              //floatingLabelBehavior:FloatingLabelBehavior.always,
+                                           contentPadding: EdgeInsets.only(top: 6,bottom: 4,left: 20,right: 6),
+                                              labelText: 'Email',
+                                              labelStyle: style2.copyWith(
+                                                      fontSize: 14,
+                                                      color: Color(0xff6E7191),
+                                                      fontWeight: FontWeight.w600,
+                                                      letterSpacing: 0.25),
+                                                      border: InputBorder.none,
+                                                  // border: OutlineInputBorder(
+                                                  //   borderRadius:BorderRadius.circular(20.0),
+                                                  // borderSide:
+                                                  //    new  BorderSide(color: Color(0xff14142B))),
+
+                                               
+
+                                          //             focusedBorder: OutlineInputBorder(
+                                          //               borderRadius:BorderRadius.circular(20.0),
+                                          // borderSide:
+                                          //     BorderSide(color: Colors.red))
+                                                 
+                                                      ),
+                                        
+        ),
+      
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[

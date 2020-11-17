@@ -101,17 +101,20 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
               "${widget.groupName[0].toUpperCase() + widget.groupName.substring(1)}",
               maxLines: 1,
               style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        color: widget.amiPrime ?  Colors.white :Color(0xff3A4276),
-                        fontWeight: FontWeight.w800,
+                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 0.75,
+   
+                        color: widget.amiPrime ?  Colors.white :Color(0xff6E7191),
+
                       ),
             ),
             subtitle: Text(
               "${widget.msg}",
               style: GoogleFonts.poppins (
-                      fontSize: 12,
-                      color: widget.amiPrime  ? Colors.white :Color(0xff3A4276),
-                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: widget.amiPrime  ? Colors.white :Color(0xffA0A3BD),
+                      fontWeight: FontWeight.w500,
                     ),
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
@@ -145,7 +148,7 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
                       child:Container(
                   padding: EdgeInsets.all(1),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: Color(0xffFFF4DF),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   constraints: BoxConstraints(
@@ -156,10 +159,11 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
                     padding: EdgeInsets.only(top: 2, left: 5, right: 5, bottom: 2),
                     child:Text(
                       "${widget.counter}",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                      ),
+                      style: GoogleFonts.poppins (
+                      fontSize: 13,
+                      color: Color(0xffC30052),
+                      fontWeight: FontWeight.w500,
+                    ),
                       textAlign: TextAlign.center,
                     ),
                   ),

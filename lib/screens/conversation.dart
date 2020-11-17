@@ -480,6 +480,8 @@ void widgetBuilt(Duration d) {
                                   var indexVal = index ;
                                   var datestamp = new DateFormat("HH:mm");
                                    var messageArray =   snapshot.data['messages'];
+
+                                   
                                    
                                      return ChatBubble(
                                         message: messageArray[indexVal]['type'] == "text"
@@ -535,7 +537,7 @@ void widgetBuilt(Duration d) {
                               ],
                             ));
                       })),
-
+SizedBox(height: 10),
               Visibility(
                 visible: (widget.chatOwnerId == widget.userId),
                 child: Padding(
@@ -547,66 +549,94 @@ void widgetBuilt(Duration d) {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Text("Send To",
+                          Text("Send to :",
                               style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                                color: Color(0xff000000),
+                                fontWeight: FontWeight.w500,
                               )),
                           Row(
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
-                                  Radio(
-                                    value: 1,
-                                    groupValue: selectedRadio,
-                                    activeColor: Colors.green,
-                                    onChanged: (val) {
-                                      setSelectedRadio(val);
+                                  SizedBox(width: 6),
+                                  // Radio(
+                                  //   value: 1,
+                                  //   groupValue: selectedRadio,
+                                  //   activeColor: Colors.green,
+                                  //   onChanged: (val) {
+                                  //     setSelectedRadio(val);
+                                  //   },
+                                  // ),
+                                  InkWell(
+                                    onTap: (){
+                                      setSelectedRadio(1);
                                     },
-                                  ),
-                                  Text("Common",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: Color(0xff3A4276),
-                                        fontWeight: FontWeight.w500,
-                                      ))
+                                    child: Container(
+                                      padding: EdgeInsets.fromLTRB(16, 7,16,7),
+        decoration: BoxDecoration(
+          color: selectedRadio == 1 ? Color(0xffF1FCFF) : Color(0xffEFF0F6),
+            border: Border.all(width: 2, color: selectedRadio == 1 ?  Color(0xff1CC8EE): Color(0xffEFF0F6)),
+            borderRadius: BorderRadius.circular(39)),
+                                      child: Text("Common",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 13,
+                                            color: selectedRadio == 1 ? Color(0xff0096B7) : Color(0xffA0A3BD),
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: 0.25
+                                          )),
+                                    ),
+                                  )
                                 ],
                               ),
                               Row(
                                 children: <Widget>[
-                                  Radio(
-                                    value: 2,
-                                    groupValue: selectedRadio,
-                                    activeColor: Colors.blue,
-                                    onChanged: (val) {
-                                      setSelectedRadio(val);
+                                  SizedBox(width: 10),
+                                    InkWell(
+                                    onTap: (){
+                                      setSelectedRadio(2);
                                     },
-                                  ),
-                                  Text("Prime",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: Color(0xff3A4276),
-                                        fontWeight: FontWeight.w500,
-                                      ))
+                                    child: Container(
+                                      padding: EdgeInsets.fromLTRB(16, 7,16,7),
+        decoration: BoxDecoration(
+          color: selectedRadio == 2 ? Color(0xffFFF3F8) : Color(0xffEFF0F6),
+            border: Border.all(width: 2, color: selectedRadio == 2 ?  Color(0xffFF84B7): Color(0xffEFF0F6)),
+            borderRadius: BorderRadius.circular(39)),
+                                      child: Text("Prime",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 13,
+                                            color: selectedRadio == 2 ? Color(0xffC30052) : Color(0xffA0A3BD),
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: 0.25
+                                          )),
+                                    ),
+                                  )
+                                 
                                 ],
                               ),
                               Row(
                                 children: <Widget>[
-                                  Radio(
-                                    value: 3,
-                                    groupValue: selectedRadio,
-                                    activeColor: Colors.green,
-                                    onChanged: (val) {
-                                      setSelectedRadio(val);
+                                  SizedBox(width: 10),
+                                  
+                                       InkWell(
+                                    onTap: (){
+                                      setSelectedRadio(3);
                                     },
-                                  ),
-                                  Text("Non-Prime",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: Color(0xff3A4276),
-                                        fontWeight: FontWeight.w500,
-                                      ))
+                                    child: Container(
+                                      padding: EdgeInsets.fromLTRB(16, 7,16,7),
+        decoration: BoxDecoration(
+          color: selectedRadio == 3 ? Color(0xffFFF9EF) : Color(0xffEFF0F6),
+            border: Border.all(width: 2, color: selectedRadio == 3 ?  Color(0xffFFD789): Color(0xffEFF0F6)),
+            borderRadius: BorderRadius.circular(39)),
+                                      child: Text("Non-Prime",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 13,
+                                            color: selectedRadio == 3 ? Color(0xff946200) : Color(0xffA0A3BD),
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: 0.25
+                                          )),
+                                    ),
+                                  )
                                 ],
                               ),
                             ],
@@ -617,14 +647,18 @@ void widgetBuilt(Duration d) {
                   ),
                 ),
               ),
-
+SizedBox(height: 10),
 Visibility(
                 visible: (widget.chatOwnerId != widget.userId),
                 child: Visibility(
                   visible: !widget.chatId.contains('PGrp'),
                   child:
 
-                                  Row(
+                                  Container(
+                                    
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                       InkWell(
@@ -639,32 +673,36 @@ Visibility(
                             // }
                           },
                     child: Container(
-                      height: 50.0,
-                      width: 140.0,
+                      height: 56.0,
+                      width: 200.0,
                       decoration: BoxDecoration(
                           border: Border.all(
-                              color: Color(0xFF2ecc71),
+                              color: Color(0xFF5F2EEA),
                               style: BorderStyle.solid,
                               width: 1.0),
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Color(0xFF2ecc71)),
-                      child: Center(
-                          child: Row(
-                            children: [
-                              SizedBox(width:11),
-                              Icon(
-                                      FontAwesomeIcons.crown,
-                                      color: Colors.white,
-                                      size: 16,
-                                    ),
-                                    SizedBox(width:8),
-                              Text('Join Prime',
-                                  style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.white,
-                                      fontSize: 18.0)),
-                            ],
-                          )),
+                          borderRadius: BorderRadius.circular(40.0),
+                          color: Color(0xFF5F2EEA)),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(32,8.0, 20, 8),
+                        child: Center(
+                            child: Row(
+                              children: [
+                                SizedBox(width:11),
+                                Icon(
+                                            FontAwesomeIcons.crown,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                          SizedBox(width:8),
+                                Text('Join Prime',
+                                        style: GoogleFonts.poppins(
+                                           fontWeight: FontWeight.w600,
+                                            color: Color(0xffF7F7FC),
+                                            letterSpacing: 0.75,
+                                            fontSize: 16.0)),
+                              ],
+                            )),
+                      ),
                     )
                     ),
                     Container(
@@ -691,10 +729,10 @@ Visibility(
 
                               SizedBox(width:8),
                               Text('Applause',
-                                  style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.black87,
-                                      fontSize: 18.0)),
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.black87,
+                                          fontSize: 18.0)),
                         ],
                       ),
                     ),
@@ -715,6 +753,8 @@ Visibility(
                   
                   ],
                 ),
+                                    ),
+                                  ),
                 ),),
          
               Visibility(
@@ -726,86 +766,91 @@ Visibility(
                     color: Theme.of(context).primaryColor,
                     child: Container(
                       constraints: BoxConstraints(
-                        maxHeight: 100,
+                        maxHeight: 120,
+                        minHeight: 56
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                        
-                          IconButton(
-                            icon: Icon(
-                              Icons.image,
-                              color: Color(0xff3E8Df3),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom:8.0, top: 8),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                          
+                            IconButton(
+                              icon: Icon(
+                                Icons.image,
+                                color: Color(0xffA0A3BD),
+                              ),
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return MyImageEditorPro(
+                                    appBarColor: Colors.blue,
+                                    bottomBarColor: Colors.blue,
+                                    groupLogo: widget.groupLogo,
+                                    chatId: widget.chatId,
+                                    userId: widget.userId,
+                                    premiumMode: msgDeliveryMode == 'Prime',
+                                    deliveryMode: msgDeliveryMode,
+                                    msgFullCount: widget.msgFullCount,
+                                    msgFullPmCount: widget.msgFullPmCount,
+                                  );
+                                })).then((geteditimage) {
+                                  if (geteditimage != null) {
+                                    setState(() {
+                                      _image = geteditimage;
+                                    });
+                                  }
+                                }).catchError((er) {});
+                                //  Navigator.push(
+                                //     context,
+                                //    new  MaterialPageRoute(
+                                //         builder: (BuildContext context) => ImageEditorPage(chatId: widget.chatId,userId: widget.userId,chatType: "Image", groupLogo: widget.groupLogo),
+                                //         ),
+                                //  );
+                              },
                             ),
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return MyImageEditorPro(
-                                  appBarColor: Colors.blue,
-                                  bottomBarColor: Colors.blue,
-                                  groupLogo: widget.groupLogo,
-                                  chatId: widget.chatId,
-                                  userId: widget.userId,
-                                  premiumMode: msgDeliveryMode == 'Prime',
-                                  deliveryMode: msgDeliveryMode,
-                                  msgFullCount: widget.msgFullCount,
-                                  msgFullPmCount: widget.msgFullPmCount,
-                                );
-                              })).then((geteditimage) {
-                                if (geteditimage != null) {
-                                  setState(() {
-                                    _image = geteditimage;
-                                  });
-                                }
-                              }).catchError((er) {});
-                              //  Navigator.push(
-                              //     context,
-                              //    new  MaterialPageRoute(
-                              //         builder: (BuildContext context) => ImageEditorPage(chatId: widget.chatId,userId: widget.userId,chatType: "Image", groupLogo: widget.groupLogo),
-                              //         ),
-                              //  );
-                            },
-                          ),
 
-                          Flexible(
-                            child: TextField(
+                            Flexible(
+                              child: TextField(
 //                                                     onTap: () {
 // Timer(
 // Duration(milliseconds: 300),
 // () => _scrollController
 //     .jumpTo(_scrollController.position.maxScrollExtent));
 // },
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: Theme.of(context).textTheme.title.color,
-                              ),
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.all(10.0),
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                hintText:
-                                    "Write your message... ${messageCount}",
-                                hintStyle: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  color: Color(0xff3A4276),
-                                  fontWeight: FontWeight.w300,
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: Theme.of(context).textTheme.title.color,
                                 ),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(10.0),
+                                  border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  hintText:
+                                      "Write your message... ${messageCount}",
+                                  hintStyle: GoogleFonts.poppins(
+                                    fontSize: 13,
+                                    color: Color(0xffA0A3BD),
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 0.25
+                                  ),
+                                ),
+                                controller: _chatMessageText,
+                                maxLines: null,
                               ),
-                              controller: _chatMessageText,
-                              maxLines: null,
                             ),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.send,
-                              color: Theme.of(context).accentColor,
-                            ),
-                            onPressed: () {
-                              // TODO: show error to user when message is not delivered
-                             sendMessageFun();
-                            },
-                          )
-                        ],
+                            IconButton(
+                              icon: Icon(
+                                Icons.send,
+                                color: Color(0xff1CC8EE),
+                              ),
+                              onPressed: () {
+                                // TODO: show error to user when message is not delivered
+                               sendMessageFun();
+                              },
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -857,7 +902,7 @@ Visibility(
 Widget appBarWid(){
   return AppBar(
           automaticallyImplyLeading: false,
-          iconTheme: IconThemeData(color: Colors.blueAccent, size: 10.0),
+          iconTheme: IconThemeData(color: Color(0xff4E4B66), size: 10.0),
           elevation: 3,
           titleSpacing: 0,
           title: InkWell(
@@ -880,14 +925,14 @@ Widget appBarWid(){
                           Text(
                             "${widget.groupTitle.toString().toUpperCase()}",
                             style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w800,
+                              fontSize: 16,
+                              color: Color(0xff1B1A57),
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 5),
+                      // SizedBox(height: 5),
                       Row(
                         children: <Widget>[
                           Padding(
@@ -895,8 +940,9 @@ Widget appBarWid(){
                             child: Text(
                               "${NumberFormat.compact().format(widget.followersCount) ?? '0'} Followers ",
                               style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                color: Color(0xff171822),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xff4F5E7B),
                               ),
                             ),
                           ),
@@ -928,7 +974,7 @@ Widget appBarWid(){
             IconButton(
                 icon: Icon(
                   Icons.share,
-                  color: Colors.blueAccent,
+                  color: Color(0xff4E4B66),
                 ),
                 onPressed: () async {
                   FlutterShare.share(
@@ -974,6 +1020,7 @@ Widget appBarWid(){
 
             // END of feedback button
             // display for group members
+            
             Visibility(
               visible: widget.chatOwnerId != widget.userId,
               child: new PopupMenuButton(
@@ -1020,6 +1067,7 @@ Widget appBarWid(){
             Visibility(
               visible: widget.chatOwnerId == widget.userId,
               child: new PopupMenuButton(
+                color: Color(0xffEFF0F6),
                   onSelected: (value) {
                     if (value == "Approve Payments") {
                       Navigator.push(
@@ -1057,38 +1105,42 @@ Widget appBarWid(){
                       <PopupMenuItem<String>>[
                         PopupMenuItem(
                           value: "Approve Payments",
-                          child: Text("Prime User Payments",
+                          child: Text("User Payments",
                               style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Color(0xff14142B),
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.75
                               )),
                         ),
                         PopupMenuItem(
                           value: "Expired Memberships",
                           child: Text("Prime Members",
                               style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Color(0xff14142B),
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.75
                               )),
                         ),
                         PopupMenuItem(
                           value: "Earnings",
                           child: Text("Earnings",
                               style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Color(0xff14142B),
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.75
                               )),
                         ),
                         PopupMenuItem(
                           value: "Edit Details",
                           child: Text("Edit Profile",
                               style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Color(0xff3A4276),
-                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Color(0xff14142B),
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.75
                               )),
                         ),
                       ]),

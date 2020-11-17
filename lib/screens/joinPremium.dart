@@ -251,17 +251,57 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
 
   Widget followUnfollowButtons(context) {
     return lockModify
-        ? FlatButton(
-            child: Text(
-              "Unfollow",
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            color: Colors.grey,
-            onPressed: () async {
+        ? InkWell(
+            child:  Container(
+                    height: 40,
+                    width: 120,
+                    decoration: BoxDecoration(
+                      
+//                    gradient: isFollow
+//                        ? LinearGradient(
+//                      colors: [
+//                        Colors.grey,
+//                        Colors.grey,
+//                      ],
+//                      begin: Alignment.topLeft,
+//                      end: Alignment.topRight,
+//                    )
+//                        : LinearGradient(
+//                      colors: [
+//                        Colors.white,
+//                      Colors.white,
+//                      ],
+//                      begin: Alignment.topLeft,
+//                      end: Alignment.topRight,
+//                    ),
+border: Border.all(color: AppTheme.ktheme),
+                      color: true
+                          ? AppTheme.ktheme
+                          : Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(40),
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        true ? "Following" : "Follow",
+                        style: true
+                            ? GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Color(0xffF7F7FC),
+                          letterSpacing: 0.75
+                        )
+                            : GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: AppTheme.ktheme,
+                        ),
+                      ),
+                    ),
+                  ),
+      
+            onTap: () async {
               //  this is for token
               SharedPreferences prefs = await SharedPreferences.getInstance();
               String userToken = prefs.get('FCMToken');
@@ -285,17 +325,56 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
               return;
             },
           )
-        : FlatButton(
-            child: Text(
-              "Follow",
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            color: Theme.of(context).accentColor,
-            onPressed: () async {
+        : InkWell(
+            child:  Container(
+                    height: 40,
+                    width: 120,
+                    decoration: BoxDecoration(
+                      
+//                    gradient: isFollow
+//                        ? LinearGradient(
+//                      colors: [
+//                        Colors.grey,
+//                        Colors.grey,
+//                      ],
+//                      begin: Alignment.topLeft,
+//                      end: Alignment.topRight,
+//                    )
+//                        : LinearGradient(
+//                      colors: [
+//                        Colors.white,
+//                      Colors.white,
+//                      ],
+//                      begin: Alignment.topLeft,
+//                      end: Alignment.topRight,
+//                    ),
+border: Border.all(color: AppTheme.ktheme),
+                      color: false
+                          ? AppTheme.ktheme
+                          : Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(40),
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        false ? "Following" : "Follow",
+                        style: false
+                            ? GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Color(0xffF7F7FC),
+                        )
+                            : GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: AppTheme.ktheme,
+                           letterSpacing: 0.75
+                        ),
+                      ),
+                    ),
+                  ),
+            onTap: () async {
               // make an entry in db as joinedGroups
               try {
                 setState(() {
@@ -428,9 +507,10 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
                   TextSpan(
                     text: "Profile",
                     style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      color: Color(0xff3A4276),
-                      fontWeight: FontWeight.w500,
+                      fontSize: 32,
+                      color: Color(0xff14142B),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1
                     ),
                   ),
                 ],
@@ -449,11 +529,23 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
             // seasonRating: widget.seasonRating,
             // thisWeekRating: widget.thisWeekRating,
             // lastWeekRating: widget.lastWeekRating),
-
+ Container(
+   height: 40,
+   child: Row(
+                              children: <Widget>[
+                                Wrap(
+                                  spacing: 4.0, // gap between adjacent chips
+                                  runSpacing: 1.0, // gap between lines
+                                  children:
+                                      _buildSelectedOptions(widget.categories),
+                                ),
+                              ],
+                            ),
+ ),
             Align(
               alignment: Alignment.topCenter,
               child: Container(
-                height: 400,
+                height: 290,
 
                 margin: EdgeInsets.only(
                   top: 15,
@@ -461,198 +553,203 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
                 ),
                 padding: EdgeInsets.all(10),
                 // height: screenAwareSize(145, context),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(6),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade100,
-                      blurRadius: 6,
-                      spreadRadius: 10,
-                    )
-                  ],
-                ),
+                
                 child: Column(
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 16,
+                        horizontal: 2,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(height: 20),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            // mainAxisAlignment: MainAxisAlignment.s,
                             children: <Widget>[
                               CircleAvatar(
-                                radius: 36,
+                                radius: 57,
                                 backgroundImage:
                                     NetworkImage("${widget.avatarUrl}"),
                               ),
-                              Row(
+                    SizedBox(width:20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                            "${widget.title.toUpperCase()}",
+                            style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Color(0xff6E7191),
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.75
+                            ),
+                          ),
+                          SizedBox(
+                            height: 0,
+                          ),
+                          Text(
+                            "by ${widget.groupOwnerName}",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Color(0xff7E819E),
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.75
+                            ),
+                          ),
+                          SizedBox(
+                            height: 0,
+                          ),
+                          Text(
+                            "${widget.followersCount} Followers",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: Color(0xff7E819E),
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.75
+                            ),
+                          ),
+SizedBox(
+                            height: 16,
+                          ),
+                          Row(
                                 children: <Widget>[
                                   Visibility(
                                     visible: widget.accessingBy == 'owner',
                                     child: editGroupButton(context),
                                   ),
-                                  SizedBox(
+                                  Visibility(
+                                    visible: widget.accessingBy == 'owner',
+                                    child: SizedBox(
                                     width: 8,
                                   ),
+                                  ),
+                                  
                                   followUnfollowButtons(context),
                                 ],
                               ),
+                                ],
+                              ),
+                              
                             ],
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            "${widget.title.toUpperCase()}",
-                            style: GoogleFonts.poppins(
-                              fontSize: 20,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w800,
+                         
+                         SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Description",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: Color(0xff4E4B66),
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.75
+                              ),
                             ),
                           ),
                           SizedBox(
                             height: 8,
                           ),
-                          Text(
-                            "Predictor Name: ${widget.groupOwnerName}",
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            "Description",
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            "NA",
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w500,
+                          Padding(
+                            padding: const EdgeInsets.only(left:8.0),
+                            child: Text(
+                              "NA",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                color: Color(0xff4E4B66),
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0.75
+                              ),
                             ),
                           ),
                           SizedBox(
                             height: 20,
                           ),
-                          Text(
-                            "Category",
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Color(0xff3A4276),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Wrap(
-                                spacing: 4.0, // gap between adjacent chips
-                                runSpacing: 1.0, // gap between lines
-                                children:
-                                    _buildSelectedOptions(widget.categories),
-                              ),
-                            ],
-                          ),
+                          
                         ],
                       ),
                     ),
                     Expanded(
                       child: Container(),
                     ),
-                    Divider(
-                      color: Colors.grey[400],
+                  
+                  ],
+                ),
+              ),
+            ),
+Center(
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Just Rs ${widget.feeArray[0]['fee'] ?? 0} for ${widget.feeArray[0]['days'] ?? 0} days",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Color(0xff4E4B66),
+                        fontWeight: FontWeight.w400,
+                        letterSpacing: 0.25
+                      ),
                     ),
-                    Container(
-                      height: 64,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          _buildCategory(
-                              "30-DAYS FEE", "Rs ${widget.feeArray[0]['fee']}"),
-                          _buildCategory(
-                              "Followers", "${widget.followersCount}"),
-                          _buildCategory(
-                              "Rating", "${widget.seasonRating ?? 'NA'}"),
-                        ],
+                    
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Center(
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Send Payment at",
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        color: Color(0xff3A4276),
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.75
+                      ),
+                    ),
+                    
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            Center(
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    
+                   
+                    TextSpan(
+                      text: " ${widget.paymentScreenshotNo}",
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        color: Color(0xff3A4276),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                     WidgetSpan(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Icon(
+                          FontAwesomeIcons.phoneAlt,
+                          color: Colors.green,
+                          size: 20,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-
-            SizedBox(
-              height: 30,
-            ),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Send payment Phonepe or GPay",
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      color: Color(0xff3A4276),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  WidgetSpan(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Icon(
-                        FontAwesomeIcons.phoneAlt,
-                        color: Colors.green,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                  TextSpan(
-                    text: " ${widget.paymentScreenshotNo}",
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Color(0xff3A4276),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
             Container(
-              margin: EdgeInsets.only(
-                top: 15,
-                right: 20,
-              ),
-              padding: EdgeInsets.all(10),
-              // height: screenAwareSize(145, context),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(6),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade100,
-                    blurRadius: 6,
-                    spreadRadius: 10,
-                  )
-                ],
-              ),
+          
+              
+           
+             
               child: StreamBuilder(
                   stream: FirebaseController.instanace
                       .getUserKycStatus(widget.chatId, widget.userId),
@@ -762,17 +859,7 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
   Widget uploadDocContent(context, payment_approve_status, userId,
       panCardImageUrl, lock, _image, phoneNumber, firstName) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6),
-        gradient: LinearGradient(
-          colors: [
-            Colors.white,
-            Colors.white,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
+      
       child: Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: <Widget>[
@@ -858,15 +945,17 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
                             });
                           }
                         },
-                        color: Theme.of(context).accentColor,
+                        color: Colors.transparent,
                         child: Text(
                           "Submit For Verification",
                           style: GoogleFonts.poppins(
                             fontSize: 14,
-                            color: Colors.white,
+                            color: Color(0xffBCA4FF),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
+                        
+                        
                       ),
                     ],
                   ),
@@ -883,11 +972,12 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
           Container(
             padding: EdgeInsets.only(top: 38, left: 16, right: 16, bottom: 8),
             child: Container(
-              height: 48,
+              width: 309,
+              height: 56,
               decoration: new BoxDecoration(
-                color: Colors.redAccent,
+                color: Color(0xffED2E7E),
                 borderRadius: const BorderRadius.all(
-                  Radius.circular(2.0),
+                  Radius.circular(40.0),
                 ),
                 //  boxShadow: <BoxShadow>[
                 //                           BoxShadow(
@@ -921,9 +1011,10 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
                     Text(
                       'Upload Payment Screenshot',
                       style: GoogleFonts.poppins(
-                        fontSize: 14,
+                        fontSize: 16,
                         color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.75
                       ),
                     ),
                   ],

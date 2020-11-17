@@ -198,20 +198,22 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
             
                 SizedBox(height: 80),
                 Text(
-                  "Are you a fantasy sports expert ?",
+                  "Become Fantasy Sports Expert?",
                   style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    color: Colors.redAccent,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 32,
+                    color: Color(0xff14142B),
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1
                   ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 42),
                 Text(
-                  "Create Group Profile",
+                  "Create Group",
                   style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w500,
+                    fontSize: 24,
+                    color: Color(0xff4E4B66),
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 1
                   ),
                 ),
 
@@ -287,7 +289,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                               1.3,
                                               makePremiumField(
                                                   label:
-                                                      "Phone pe or Google Pay Number",
+                                                      "Phone pe or Google Pay Number ",
                                                   obscureText: false)),
 
                                       
@@ -488,24 +490,25 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             colors: [
-                                              Color(0xff0072ff),
-                                              Color(0xff00d4ff),
+                                              Color(0xff5F2EEA),
+                                              Color(0xff5F2EEA),
                                             ],
                                             begin: Alignment.topLeft,
                                             end: Alignment.topRight,
                                           ),
                                           // color: isFollow ? Colors.grey :Colors.blueAccent,
                                           borderRadius: BorderRadius.all(
-                                            Radius.circular(6),
+                                            Radius.circular(32),
                                           ),
                                         ),
                                         child: Center(
                                           child: Text(
                                             "Create Group",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
                                               fontSize: 20,
-                                              color: Colors.white,
+                                              color: Color(0xffFCFCFC),
+                                              letterSpacing: 0.75
                                             ),
                                           ),
                                         ),
@@ -956,8 +959,9 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           label,
           style: GoogleFonts.poppins(
             fontSize: 16,
-            color: Color(0xff3A4276),
+            color: Color(0xff14142B),
             fontWeight: FontWeight.w700,
+            letterSpacing: 0.75
           ),
         ),
         SizedBox(
@@ -972,6 +976,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
             // print("the value is  $value");
             return groupNameAlreadyExists;
           },
+          
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(

@@ -26,11 +26,14 @@ import 'package:shimmer/shimmer.dart';
 
 //final Color color1=AppTheme.kdarkorange;
 //final Color color2=AppTheme.korange;
-final Color color3 = Colors.black.withOpacity(0.6);
+final Color color3 = Color(0xff14142B);
 final Color color4 = Color(0xffFFF7F4);
 //final Color color4=Color(0xffE8FDF6);
 final Color color2 = AppTheme.kteal;
 final Color color1 = AppTheme.ktheme;
+
+final style2 = GoogleFonts.poppins(
+    color: Colors.grey[600], fontSize: 13, fontWeight: FontWeight.w600);
 
 class GroupsLandingScreen extends StatefulWidget {
   GroupsLandingScreen({Key key,
@@ -213,12 +216,17 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                 children: <Widget>[
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Text(
-                      "Created Groups ",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Color(0xff3A4276),
-                        fontWeight: FontWeight.w700,
+                    child: 
+                    Padding(
+                      padding: const EdgeInsets.only(left:8.0),
+                      child: Text(
+                        "Created Groups ",
+                        style: style2.copyWith(
+                                                  fontSize: 24,
+                                                  color: Color(0xffA0A3BD),
+                                                  fontWeight: FontWeight.w700,
+                                                  letterSpacing: 0.25
+                                                  ),
                       ),
                     ),
                   ),
@@ -247,17 +255,17 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
           padding: const EdgeInsets.only(left: 8.0, top: 8),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              "Following Groups ",
-              // style: TextStyle(
-              //   fontSize: 18,
-              //   color: Color(0xff3A4276),
-              //   fontWeight: FontWeight.w700,
-              // ),
-              style: TextStyle(
-                  fontSize: 22,
-                  color: Color(0xff3A4276),
-                  fontWeight: FontWeight.w700),
+            child: Padding(
+              padding: const EdgeInsets.only(left:0.0),
+              child: Text(
+                "Following Groups ",
+                style: style2.copyWith(
+                                                    fontSize: 24,
+                                                    color: Color(0xffA0A3BD),
+                                                    fontWeight: FontWeight.w700,
+                                                    letterSpacing: 0.25
+                                                    ),
+              ),
             ),
           ),
         ),
@@ -305,20 +313,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
               padding: const EdgeInsets.only(
                   top: 12, bottom: 9, left: 12, right: 12),
               child: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [Colors.white, Colors.white],
-                        tileMode: TileMode.clamp),
-                    borderRadius: BorderRadius.circular(6),
-                    //color: Color.fromRGBO(49, 39, 79, 1),
-                    border: Border.all(color: color1.withOpacity(0.5)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 0,
-                        offset: Offset(0, 0),
-                      )
-                    ]),
+              
                 //height: 140,
                 //width: double.infinity,
                 child: Container(
@@ -359,10 +354,25 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                           ),
                         ),
                       ),
+                      SizedBox(height: 6),
                       Container(
+                        height: 57,
+                                    decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Color(0xffEFF0F6),
+                                // boxShadow: [
+                                //   BoxShadow(
+                                //     color: Colors.grey.withOpacity(0.4),
+                                //     blurRadius: 9.0,
+                                //     spreadRadius: 1.0,
+                                //   ),
+                                // ]
+                                ),
+                        
                         child: Padding(
-                          padding: const EdgeInsets.all(15.0),
+                          padding: const EdgeInsets.only(top:7.5, bottom: 7.5, left: 4, right: 4),
                           child: TextField(
+
                               onChanged: (val) {
                                 setState(() {
                                   _searchTerm = val;
@@ -370,28 +380,30 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                                 });
                               },
                               style: new TextStyle(
-                                  color: color3.withOpacity(0.9), fontSize: 20),
+                                  color:  Color(0xff14142B), fontSize: 20),
                               decoration: new InputDecoration(
+                                filled: true,
+                                 fillColor: Color(0xffEFF0F6),
                                   contentPadding: EdgeInsets.symmetric(
-                                      vertical: 0, horizontal: 10),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                      BorderSide(color: color3, width: 2)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: color3.withOpacity(0.9))),
-                                  border: OutlineInputBorder(
-                                      borderSide:
-                                      BorderSide(color: color3, width: 2)),
-                                  // border: InputBorder.none,
+                                      vertical: 10, horizontal: 10),
+                                  // enabledBorder: OutlineInputBorder(
+                                  //     borderSide:
+                                  //     BorderSide(color: color3, width: 2)),
+                                  // focusedBorder: OutlineInputBorder(
+                                  //     borderSide: BorderSide(
+                                  //         color: Color(0xffEFF0F6))),
+                                   
+                                  // border: OutlineInputBorder(
+                                  //     borderSide:
+                                  //     BorderSide(color: Color(0xffEFF0F6), width: 2)),
+                                   border: InputBorder.none,
                                   hintText: 'Search Group Name....',
-                                  hintStyle: TextStyle(
-                                    fontSize: 13,
-                                    color: color3.withOpacity(0.9),
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  isDense: true,                      // Added this
+
+                                  hintStyle: GoogleFonts.poppins(
+    color: Color(0xffA0A3BD), fontSize: 16, fontWeight: FontWeight.w600),
                                   prefixIcon:
-                                  Icon(Icons.search, color: color3))),
+                                  Icon(Icons.search, color: color3, size: 28))),
                         ),
                       ),
                       // SizedBox(height: 200,),
@@ -943,24 +955,17 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                 ),
                 TabBar(
                   controller: _tabController,
-                  indicatorColor: Theme
-                      .of(context)
-                      .accentColor,
-                  labelColor: Theme
-                      .of(context)
-                      .accentColor,
-                  unselectedLabelColor:
-                  Theme
-                      .of(context)
-                      .textTheme
-                      .caption
-                      .color,
+                  indicatorColor: Color(0xff14142B),
+                  unselectedLabelColor: Color(0xff6E7191),
+                  labelColor: Color(0xff14142B),
+                  
                   isScrollable: false,
-                  labelStyle: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xff3A4276),
-                    fontWeight: FontWeight.w400,
-                  ),
+                  labelStyle: style2.copyWith(
+                                                fontSize: 16,
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 0.25
+                                                ),
                   onTap: (index) {
                     setState(() {
                       selTabIndex = index;
@@ -971,7 +976,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                       text: "Messages",
                     ),
                     Tab(
-                      text: "Follow Experts",
+                      text: "Follow",
                     ),
                   ],
                 ),
@@ -1161,25 +1166,20 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
         height: 106,
         padding: EdgeInsets.fromLTRB(19, 14, 19, 14),
         margin: EdgeInsets.symmetric(vertical: 2),
+     
         // decoration: BoxDecoration(
-        //   color: Colors.white,
-        //   borderRadius: BorderRadius.all(
-        //     Radius.circular(10),
-        //   ),
-        // ),
-        decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: color1.withOpacity(0.1),
-                blurRadius: 0,
-                offset: Offset(0, 0),
-              )
-            ],
-            gradient: LinearGradient(
-              colors: [Color(0xffF1F3F6), Color(0xffF1F3F6)],
-            ),
-            borderRadius: BorderRadius.circular(6),
-            color: Color(0xffF1F3F6)),
+        //     boxShadow: [
+        //       BoxShadow(
+        //         color: color1.withOpacity(0.1),
+        //         blurRadius: 0,
+        //         offset: Offset(0, 0),
+        //       )
+        //     ],
+        //     gradient: LinearGradient(
+        //       colors: [Color(0xffF1F3F6), Color(0xffF1F3F6)],
+        //     ),
+        //     borderRadius: BorderRadius.circular(6),
+        //     color: Color(0xffF1F3F6)),
         child: Column(
           children: [
             Row(
@@ -1255,9 +1255,10 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                     }
                   },
                   child: Container(
-                    height: 35,
-                    width: 92,
+                    height: 40,
+                    width: 120,
                     decoration: BoxDecoration(
+                      
 //                    gradient: isFollow
 //                        ? LinearGradient(
 //                      colors: [
@@ -1275,28 +1276,27 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
 //                      begin: Alignment.topLeft,
 //                      end: Alignment.topRight,
 //                    ),
+border: Border.all(color: AppTheme.ktheme),
                       color: isFollow
-                          ? Colors.grey
-                          : Theme
-                          .of(context)
-                          .accentColor,
+                          ? AppTheme.ktheme
+                          : Colors.white,
                       borderRadius: BorderRadius.all(
-                        Radius.circular(4),
+                        Radius.circular(40),
                       ),
                     ),
                     child: Center(
                       child: Text(
-                        isFollow ? "UnFollow" : "Follow",
+                        isFollow ? "Following" : "Follow",
                         style: isFollow
-                            ? GoogleFonts.openSans(
-                          fontWeight: FontWeight.w500,
+                            ? GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
                           fontSize: 14,
-                          color: Colors.black,
+                          color: Color(0xffF7F7FC),
                         )
-                            : GoogleFonts.openSans(
-                          fontWeight: FontWeight.w500,
+                            : GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
                           fontSize: 14,
-                          color: Colors.white,
+                          color: AppTheme.ktheme,
                         ),
                       ),
                     ),
