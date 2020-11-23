@@ -18,7 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:r_upgrade/r_upgrade.dart';
+// import 'package:r_upgrade/r_upgrade.dart';
 
 // import 'package:test_app_1/pages/homeNavScreen1.dart';
 // import 'package:test_app_1/ui/screens/homeNew.dart';
@@ -293,7 +293,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void upgrade() async {
-    await RUpgrade.upgradeFromAndroidStore(AndroidStore.GOOGLE_PLAY);
+    // await RUpgrade.upgradeFromAndroidStore(AndroidStore.GOOGLE_PLAY);
+
     //    bool isSuccess =await RUpgrade.upgradeFromUrl(
     //               PLAY_STORE_URL,
     //             );
@@ -307,7 +308,7 @@ class _MyAppState extends State<MyApp> {
     //            );
 
     //  Navigator.pop(context);
-    await _showFreezer(context);
+    // await _showFreezer(context);
 
     // print('app upgrade id is $id');
   }
