@@ -193,27 +193,33 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           child: Container(
             width: MediaQuery.of(context).size.width,
             child: Column(
-
+               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
             
                 SizedBox(height: 80),
-                Text(
-                  "Become Fantasy Sports Expert?",
-                  style: GoogleFonts.poppins(
-                    fontSize: 32,
-                    color: Color(0xff14142B),
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1
+                Padding(
+                  padding: const EdgeInsets.only(left:15.0),
+                  child: Text(
+                    "Become Fantasy Sports Expert",
+                    style: GoogleFonts.poppins(
+                      fontSize: 32,
+                      color: Color(0xff14142B),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1
+                    ),
                   ),
                 ),
                 SizedBox(height: 42),
-                Text(
-                  "Create Group",
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    color: Color(0xff4E4B66),
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 1
+                Padding(
+                  padding: const EdgeInsets.only(left:18.0),
+                  child: Text(
+                    "Create Group",
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      color: Color(0xff4E4B66),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1
+                    ),
                   ),
                 ),
 
@@ -243,17 +249,20 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                           label: "Group Name",
                                           obscureText: false),
                                     ),
-                                    FadeAnimation(1.3, groupPicUpload()),
-                                    SizedBox(height: 10),
-                                    FadeAnimation(
-                                        1.3, groupCategoryFieldCustomField()),
-                                    SizedBox(height: 10),
+                                    SizedBox(height: 20),
+                                    FadeAnimation(1.3, stateSelection()),
+                                    SizedBox(height: 20),
+                                    Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: FadeAnimation(
+                                          1.3, groupCategoryFieldCustomField()),
+                                    ),
+                                    SizedBox(height: 20),
                                     FadeAnimation(
                                         1.3, premiumGroupToggle(context)),
                                     SizedBox(height: 10),
                                     // FadeAnimation(1.3, makeCagegoryField(label: "Group Category", obscureText: false)),
-//  premium
-
+//  premiu
                                     Visibility(
                                       visible: configImageCompression,
                                       child: Column(
@@ -289,11 +298,11 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                               1.3,
                                               makePremiumField(
                                                   label:
-                                                      "Phone pe or Google Pay Number ",
+                                                      "Accept Payments ",
                                                   obscureText: false)),
 
-                                      
-                                          FadeAnimation(1.3, stateSelection()),
+                                          SizedBox(height: 10),
+                                          FadeAnimation(1.3, groupPicUpload()),
                                         ],
                                       ),
                                     ),
@@ -485,7 +494,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                         }
                                       },
                                       child: Container(
-                                        height: 65,
+                                        height: 55,
                                         // width: 100,
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
@@ -506,7 +515,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                             "Create Group",
                                             style: GoogleFonts.poppins(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 20,
+                                              fontSize: 18,
                                               color: Color(0xffFCFCFC),
                                               letterSpacing: 0.75
                                             ),
@@ -568,17 +577,12 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
   }
 
   Widget premiumGroupToggle(context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+//          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            // Icon(
-            //   Icons.photo_size_select_small,
-            //   size: 15,
-            // ),
-
             Text('Prime Group Details',
                 style: GoogleFonts.poppins(
                   fontSize: 16,
@@ -596,7 +600,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
       1.3,
       MultiSelect(
           autovalidate: false,
-          titleText: "Group Category",
+          titleText: "Select Sports",
           validator: (value) {
             if (value == null) {
               return 'Please select one or more option(s)';
@@ -644,10 +648,12 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
   Widget stateSelection() {
     return Center(
       child: Container(
+        height: 51,
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
-            border: Border.all(width: 1, color: Colors.grey),
-            borderRadius: BorderRadius.circular(10)),
+          color: Color(0xffEFF0F6),
+            border: Border.all(width: 1, color: Colors.white),
+            borderRadius: BorderRadius.circular(15)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -660,9 +666,9 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                     hint: new Text(
                       "Select State",
                       style: GoogleFonts.poppins(
-                        fontSize: 16,
+                        fontSize: 14,
                         color: Color(0xff3A4276),
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     value: _selected,
@@ -744,7 +750,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           ),
         ),
         SizedBox(
-          height: 5,
+          height: 15
         ),
         TextFormField(
           obscureText: obscureText,
@@ -771,14 +777,24 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           },
 
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400])),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueAccent),
+            filled: true,
+            fillColor: Color(0xffEFF0F6),
+            hintText: "UPI / Phone Number",
+            hintStyle:GoogleFonts.poppins(
+                fontSize: 14,
+                color: Color(0xffA0A3BD),
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.75
             ),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400])),
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 29),
+            enabledBorder: OutlineInputBorder(
+                borderRadius:BorderRadius.circular(15.0),
+                borderSide: BorderSide(color: Colors.transparent)
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius:BorderRadius.circular(15.0),
+              borderSide: BorderSide(color: Colors.white),
+            ),
           ),
         ),
         SizedBox(
@@ -792,14 +808,14 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            color: Color(0xff3A4276),
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+//        Text(
+//          label,
+//          style: GoogleFonts.poppins(
+//            fontSize: 16,
+//            color: Color(0xff3A4276),
+//            fontWeight: FontWeight.w700,
+//          ),
+//        ),
         SizedBox(
           height: 5,
         ),
@@ -826,14 +842,24 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
             return retstatemnt;
           },
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400])),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueAccent),
+            filled: true,
+            fillColor: Color(0xffEFF0F6),
+            hintText: label,
+            hintStyle:GoogleFonts.poppins(
+                fontSize: 14,
+                color: Color(0xffA0A3BD),
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.75
             ),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400])),
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 29),
+            enabledBorder: OutlineInputBorder(
+                borderRadius:BorderRadius.circular(15.0),
+                borderSide: BorderSide(color: Colors.transparent)
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius:BorderRadius.circular(15.0),
+              borderSide: BorderSide(color: Colors.white),
+            ),
           ),
         ),
         SizedBox(
@@ -847,14 +873,14 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            color: Color(0xff3A4276),
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+//        Text(
+//          label,
+//          style: GoogleFonts.poppins(
+//            fontSize: 16,
+//            color: Color(0xff3A4276),
+//            fontWeight: FontWeight.w700,
+//          ),
+//        ),
         SizedBox(
           height: 5,
         ),
@@ -880,14 +906,24 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           },
           // validator: Validator.validatePassword,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400])),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueAccent),
+            filled: true,
+            fillColor: Color(0xffEFF0F6),
+            hintText: label,
+            hintStyle:GoogleFonts.poppins(
+                fontSize: 14,
+                color: Color(0xffA0A3BD),
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.75
             ),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400])),
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 29),
+            enabledBorder: OutlineInputBorder(
+                borderRadius:BorderRadius.circular(15.0),
+                borderSide: BorderSide(color: Colors.transparent)
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius:BorderRadius.circular(15.0),
+              borderSide: BorderSide(color: Colors.white),
+            ),
           ),
         ),
         SizedBox(
@@ -905,7 +941,8 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
         },
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6), color: Color(0xffF1F3F6)),
+              boxShadow: [BoxShadow(color: Color(0xffFCFCFC), offset: Offset(5, 5), blurRadius: 10, spreadRadius: 0.1)],
+              borderRadius: BorderRadius.circular(15), color: Color(0xffEFF0F6)),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 10.0),
             child: Row(
@@ -934,11 +971,11 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                   children: <Widget>[
                     SizedBox(width: 4.0),
                     Text(
-                      "Upload group profile picture",
+                      "   Upload group profile picture",
                       style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        color: Color(0xff3A4276),
-                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Color(0xffA0A3BD),
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
@@ -952,46 +989,38 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
   }
 
   Widget makeUserNameField({label, obscureText = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            color: Color(0xff14142B),
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.75
+    return Container(
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        obscureText: obscureText,
+        controller: _groupTitle,
+        // validator: Validator.validateGroupName,
+        validator: (value) {
+          // print("the value is  $value");
+          return groupNameAlreadyExists;
+        },
+
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Color(0xffEFF0F6),
+          hintText: "Group Name",
+          hintStyle:GoogleFonts.poppins(
+              fontSize: 14,
+              color: Color(0xffA0A3BD),
+              fontWeight: FontWeight.w400,
+              letterSpacing: 0.75
+          ),
+          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 29),
+          enabledBorder: OutlineInputBorder(
+              borderRadius:BorderRadius.circular(15.0),
+              borderSide: BorderSide(color: Colors.transparent)
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius:BorderRadius.circular(15.0),
+            borderSide: BorderSide(color: Colors.white),
           ),
         ),
-        SizedBox(
-          height: 5,
-        ),
-        TextFormField(
-          keyboardType: TextInputType.emailAddress,
-          obscureText: obscureText,
-          controller: _groupTitle,
-          // validator: Validator.validateGroupName,
-          validator: (value) {
-            // print("the value is  $value");
-            return groupNameAlreadyExists;
-          },
-          
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400])),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueAccent),
-            ),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400], width: 4)),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-      ],
+      ),
     );
   }
 }
