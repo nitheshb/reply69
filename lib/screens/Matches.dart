@@ -1,8 +1,8 @@
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:notification/util/const.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:notification/controllers/firebaseController.dart';
@@ -125,10 +125,15 @@ class _DisplayMatchesState extends State<DisplayMatches>
                       children: <Widget>[
                         SizedBox(
                             height: MediaQuery.of(context).size.height / 4.5),
-                        new Container(
-                          height: MediaQuery.of(context).size.height / 3,
-                          child: SvgPicture.asset('assets/performance.svg'),
-                        ),
+                        // new Container(
+                        //   height: MediaQuery.of(context).size.height / 3,
+                        //   child: SvgPicture.asset('assets/performance.svg'),
+                        // ),
+                         Image(
+                width: 100,
+                height: 100,
+                image: Svg('assets/performance.svg'),
+              ),
                         new Text(
                           'No ${categoryName} Matches Scedules',
                           style: GoogleFonts.poppins(
