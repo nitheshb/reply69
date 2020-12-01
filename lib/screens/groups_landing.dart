@@ -225,7 +225,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                                                   fontSize: 24,
                                                   color: Color(0xffA0A3BD),
                                                   fontWeight: FontWeight.w700,
-                                                  letterSpacing: 0.25
+                                                  letterSpacing: 1
                                                   ),
                       ),
                     ),
@@ -1491,7 +1491,7 @@ final List<Widget> imageSliders = imgList.map((item) => Container(
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
         child: Stack(
           children: <Widget>[
-            Image.network(item, fit: BoxFit.cover, width: 1000.0),
+            Image.network(item, fit: BoxFit.fill, width: 1000.0),
             Positioned(
               bottom: 0.0,
               left: 0.0,
@@ -1558,8 +1558,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicatorDemo> {
               children: imgList.map((url) {
                 int index = imgList.indexOf(url);
                 return Container(
-                  width: 8.0,
-                  height: 8.0,
+                  width: 4.0,
+                  height: 4.0,
                   margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,

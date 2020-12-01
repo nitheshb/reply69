@@ -1,6 +1,7 @@
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/Animation/FadeAnimation.dart';
 import 'package:notification/controllers/firebaseController.dart';
@@ -120,6 +121,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                                     makeUserNameField(
                                         label: "Email", obscureText: false),
                                   ),
+                                 
                                   FadeAnimation(
                                       1.3,
                                       makePasswordField(
@@ -377,74 +379,54 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
     );
   }
 
+
   Widget makeUserNameField({label, obscureText = false}) {
 TextStyle textStyle = Theme.of(context).textTheme.title;
-    // return Padding(
-    //                 padding: EdgeInsets.only(
-    //                     top: 5.0, bottom: 5.0),
-    //                 child: TextFormField(
-    //                   keyboardType: TextInputType.number,
-    //                   style: textStyle,
-    //                   controller: _email,
-    //                   validator: (String value) {
-    //                     if (value.isEmpty) {
-    //                       return 'Please enter principal amount';
-    //                     }
-    //                   },
-    //                   decoration: InputDecoration(
-    //                       labelText: 'Principal',
-    //                       hintText: 'Enter Principal e.g. 12000',
-    //                       labelStyle: textStyle,
-    //                       errorStyle: TextStyle(
-    //                         color: Colors.yellowAccent,
-    //                         fontSize: 15.0
-    //                       ),
-    //                       border: OutlineInputBorder(
-    //                           borderRadius: BorderRadius.circular(5.0))),
-    //                 ));
 
-    return  Container(
+  //  adds background color textField as per Ux
+   
+  //   return  Container(
         
-  height: 64,
-        decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(20),
-    color: Color(0xffEFF0F6),
+  // height: 64,
+  //       decoration: BoxDecoration(
+  //   borderRadius: BorderRadius.circular(20),
+  //   color: Color(0xffEFF0F6),
     
-  ),
+  // ),
         
-          child: TextFormField(
+  //         child: TextFormField(
            
-                                          keyboardType: TextInputType.emailAddress,
-                                          autofocus: false,
-                                          controller: _email,
-                                          validator: Validator.validateEmail,
-                                          decoration: InputDecoration(
-                                              //floatingLabelBehavior:FloatingLabelBehavior.always,
-                                           contentPadding: EdgeInsets.only(top: 6,bottom: 4,left: 20,right: 6),
-                                              labelText: 'Email',
-                                              labelStyle: style2.copyWith(
-                                                      fontSize: 14,
-                                                      color: Color(0xff6E7191),
-                                                      fontWeight: FontWeight.w600,
-                                                      letterSpacing: 0.25),
-                                                      border: InputBorder.none,
-                                                  // border: OutlineInputBorder(
-                                                  //   borderRadius:BorderRadius.circular(20.0),
-                                                  // borderSide:
-                                                  //    new  BorderSide(color: Color(0xff14142B))),
+  //                                         keyboardType: TextInputType.emailAddress,
+  //                                         autofocus: false,
+  //                                         controller: _email,
+  //                                         validator: Validator.validateEmail,
+  //                                         decoration: InputDecoration(
+  //                                             //floatingLabelBehavior:FloatingLabelBehavior.always,
+  //                                          contentPadding: EdgeInsets.only(top: 6,bottom: 4,left: 20,right: 6),
+  //                                             labelText: 'Email',
+  //                                             labelStyle: style2.copyWith(
+  //                                                     fontSize: 14,
+  //                                                     color: Color(0xff6E7191),
+  //                                                     fontWeight: FontWeight.w600,
+  //                                                     letterSpacing: 0.25),
+  //                                                     border: InputBorder.none,
+  //                                                 // border: OutlineInputBorder(
+  //                                                 //   borderRadius:BorderRadius.circular(20.0),
+  //                                                 // borderSide:
+  //                                                 //    new  BorderSide(color: Color(0xff14142B))),
 
                                                
 
-                                          //             focusedBorder: OutlineInputBorder(
-                                          //               borderRadius:BorderRadius.circular(20.0),
-                                          // borderSide:
-                                          //     BorderSide(color: Colors.red))
+  //                                         //             focusedBorder: OutlineInputBorder(
+  //                                         //               borderRadius:BorderRadius.circular(20.0),
+  //                                         // borderSide:
+  //                                         //     BorderSide(color: Colors.red))
                                                  
-                                                      ),
+  //                                                     ),
                                         
-        ),
+  //       ),
       
-    );
+  //   );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[

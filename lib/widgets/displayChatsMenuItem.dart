@@ -101,20 +101,21 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
               "${widget.groupName[0].toUpperCase() + widget.groupName.substring(1)}",
               maxLines: 1,
               style: GoogleFonts.poppins(
-                fontSize: 14,
+                fontSize: 16,
                                                 fontWeight: FontWeight.w700,
                                                 letterSpacing: 0.75,
    
-                        color: widget.amiPrime ?  Colors.white :Color(0xff6E7191),
+                        color: widget.amiPrime ?  Colors.white :Color(0xff4E4B66),
 
                       ),
             ),
             subtitle: Text(
               "${widget.msg}",
               style: GoogleFonts.poppins (
-                      fontSize: 14,
+                      fontSize: 13,
                       color: widget.amiPrime  ? Colors.white :Color(0xffA0A3BD),
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.75,
                     ),
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
@@ -132,6 +133,29 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
                 ),
 
                 SizedBox(height: 5),
+                widget.amiPrime ? Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Color(0xffFFF4DF),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 11,
+                    minHeight: 11,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 2, left: 5, right: 5, bottom: 2),
+                    child:Text(
+                      "d",
+                      style: GoogleFonts.poppins (
+                      fontSize: 13,
+                      color: Color(0xffC30052),
+                      fontWeight: FontWeight.w500,
+                    ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ) :Container(width: 0, height: 0),
                 widget.counter == "0"
                     ?SizedBox()
                     :InkWell(
