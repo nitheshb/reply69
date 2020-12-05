@@ -206,100 +206,146 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
 
   Widget messagesTabDisplay(context, userId) {
     return SingleChildScrollView(
-      child: Column(children: <Widget>[
-        Visibility(
-          visible: myOwnGroups.length > 0,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 0),
-            child: Container(
-              child: Column(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: 
-                    Padding(
-                      padding: const EdgeInsets.only(left:8.0),
-                      child: Text(
-                        "Created Groups ",
-                        style: style2.copyWith(
-                                                  fontSize: 24,
-                                                  color: Color(0xffA0A3BD),
-                                                  fontWeight: FontWeight.w700,
-                                                  letterSpacing: 0.25
-                                                  ),
+      child: Stack(
+        children:[
+          Positioned(
+            height: 185,
+            width: 370,
+            top: 0,
+            left: -80,
+            child: Image.asset('assets/Rectangle1.png'),
+          ),
+          Positioned(
+            height: 185,
+            width: 370,
+            top: 137,
+            left: -80,
+            child: Image.asset('assets/Rectangle0.png'),
+          ),
+//          Positioned(
+//            height: 154.5,
+//            width: 309,
+//            top: 0,
+//            left: 0,
+//            child: Image.asset('assets/Rectangle4.png'),
+//          ),
+//          Positioned(
+//            height: 154.5,
+//            width: 309,
+//            top: 153,
+//            left: 0,
+//            child: Image.asset('assets/Rectangle5.png'),
+//          ),
+          Positioned(
+            height: 154.5,
+            width: 309,
+            top: 307,
+            left: 130,
+            child: Image.asset('assets/Rectangle2.png'),
+          ),
+          Positioned(
+            height: 154.5,
+            width: 309,
+            top: 460,
+            left: 130,
+            child: Image.asset('assets/Rectangle3.png'),
+          ),
+          Column(children: <Widget>[
+            Visibility(
+              visible: myOwnGroups.length > 0,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 0),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child:
+                        Padding(
+                          padding: const EdgeInsets.only(left:8.0),
+                          child: Text(
+                            "Created Groups ",
+                            style: style2.copyWith(
+                                fontSize: 24,
+                                color: Color(0xffA0A3BD),
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.25
+                            ),
+                          ),
+                        ),
                       ),
+                      SizedBox(height: 6),
+                      ListView.builder(
+                        itemCount: NotifyData.length,
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(top: 8, bottom: 8),
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return myOwnGroups.contains(NotifyData[index]['chatId'])
+                              ? recentChatDetailsCard(
+                            NotifyData[index],
+                            userId,
+                            0,
+                          )
+                              : Container();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, top: 8),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left:0.0),
+                  child: Text(
+                    "Following Groups ",
+                    style: style2.copyWith(
+                        fontSize: 24,
+                        color: Color(0xffA0A3BD),
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.25
                     ),
                   ),
-                  SizedBox(height: 6),
-                  ListView.builder(
-                    itemCount: NotifyData.length,
-                    shrinkWrap: true,
-                    padding: EdgeInsets.only(top: 8, bottom: 8),
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return myOwnGroups.contains(NotifyData[index]['chatId'])
-                          ? recentChatDetailsCard(
-                        NotifyData[index],
-                        userId,
-                        0,
-                      )
-                          : Container();
-                    },
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 8),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left:0.0),
-              child: Text(
-                "Following Groups ",
-                style: style2.copyWith(
-                                                    fontSize: 24,
-                                                    color: Color(0xffA0A3BD),
-                                                    fontWeight: FontWeight.w700,
-                                                    letterSpacing: 0.25
-                                                    ),
-              ),
+            followingGroupsP.length == 0
+                ? noGroupsFolllowed()
+                : ListView.builder(
+              itemCount: NotifyData.length,
+              shrinkWrap: true,
+              padding: EdgeInsets.only(top: 8),
+              physics: BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                var searchGroupForReadCount;
+                try {
+                  searchGroupForReadCount = widgetCountCheck.firstWhere(
+                          (data) =>
+                      data['chatId'] == NotifyData[index]['chatId']);
+                } catch (e) {
+                  print('error is ${e}');
+                  searchGroupForReadCount = {'readCount': 0};
+                }
+
+                return (followingGroupsP
+                    .contains(NotifyData[index]['chatId']))
+                    ? recentChatDetailsCard(
+                  NotifyData[index],
+                  userId,
+                  searchGroupForReadCount['readCount'] ?? 0,
+                )
+                    : Container();
+              },
             ),
-          ),
-        ),
-        followingGroupsP.length == 0
-            ? noGroupsFolllowed()
-            : ListView.builder(
-          itemCount: NotifyData.length,
-          shrinkWrap: true,
-          padding: EdgeInsets.only(top: 8),
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            var searchGroupForReadCount;
-            try {
-              searchGroupForReadCount = widgetCountCheck.firstWhere(
-                      (data) =>
-                  data['chatId'] == NotifyData[index]['chatId']);
-            } catch (e) {
-              print('error is ${e}');
-              searchGroupForReadCount = {'readCount': 0};
-            }
+            Container(color: Colors.pink,height: 500,width: double.infinity,child:  CarouselWithIndicatorDemo(),),
 
-            return (followingGroupsP
-                .contains(NotifyData[index]['chatId']))
-                ? recentChatDetailsCard(
-              NotifyData[index],
-              userId,
-              searchGroupForReadCount['readCount'] ?? 0,
-            )
-                : Container();
-          },
-        ),
-        Container(color: Colors.pink,height: 500,width: double.infinity,child:  CarouselWithIndicatorDemo(),),
-
-      ]),
+          ]),
+        ]
+      ),
     );
   }
 
@@ -990,7 +1036,6 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
         body: TabBarView(controller: _tabController, children: <Widget>[
           // first tab
           messagesTabDisplay(context, userId),
-
           // second tab
           followGroupsTabDisplay(context, userId)
         ]),
