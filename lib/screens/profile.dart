@@ -54,7 +54,7 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(
-                top: 15,
+                top: 60,
                 bottom: 100,
               ),
               padding: EdgeInsets.all(10),
@@ -76,6 +76,7 @@ class _ProfileState extends State<Profile> {
                 children: <Widget>[
                   SizedBox(height: 60),
                   CircleAvatar(
+                    backgroundColor: Color(0xffE4DAFF),
                     backgroundImage: AssetImage(
                       "assets/cm${random.nextInt(1000)}.jpeg",
                     ),
@@ -143,7 +144,7 @@ class _ProfileState extends State<Profile> {
                                 ))
                           ],
                         ),
-                        color: Theme.of(context).accentColor,
+                        color: Color(0xff2A00A2),
                         onPressed: () {
 
                           StateWidget.of(context).logOutUser();

@@ -20,6 +20,7 @@ import 'package:notification/util/auth.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
+import 'package:notification/widgets/circularTabIndicator.dart';
 import 'package:notification/widgets/displayChatsMenuItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
@@ -218,11 +219,11 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                     alignment: Alignment.topLeft,
                     child: 
                     Padding(
-                      padding: const EdgeInsets.only(left:8.0),
+                      padding: const EdgeInsets.only(left:2.0),
                       child: Text(
                         "Created Groups ",
                         style: style2.copyWith(
-                                                  fontSize: 24,
+                                                  fontSize: 16,
                                                   color: Color(0xffA0A3BD),
                                                   fontWeight: FontWeight.w700,
                                                   letterSpacing: 1
@@ -252,15 +253,15 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 8),
+          padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 0),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left:0.0),
+              padding: const EdgeInsets.only(left:2.0),
               child: Text(
                 "Following Groups ",
                 style: style2.copyWith(
-                                                    fontSize: 24,
+                                                    fontSize: 16,
                                                     color: Color(0xffA0A3BD),
                                                     fontWeight: FontWeight.w700,
                                                     letterSpacing: 0.25
@@ -274,7 +275,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
             : ListView.builder(
           itemCount: NotifyData.length,
           shrinkWrap: true,
-          padding: EdgeInsets.only(top: 8),
+          padding: EdgeInsets.only(top: 8, bottom: 8, right: 8, left: 6),
           physics: BouncingScrollPhysics(),
           itemBuilder: (context, index) {
             var searchGroupForReadCount;
@@ -297,7 +298,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                 : Container();
           },
         ),
-        Container(color: Colors.pink,height: 500,width: double.infinity,child:  CarouselWithIndicatorDemo(),),
+        // Container(color: Colors.pink,height: 500,width: double.infinity,child:  CarouselWithIndicatorDemo(),),
 
       ]),
     );
@@ -929,9 +930,9 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
     return Scaffold(
       // appBar: appBarWid(),
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(100),
+          preferredSize: Size.fromHeight(76.5),
           child: AppBar(
-            // backgroundColor: color1,
+             backgroundColor: Color(0xff2A00A2).withOpacity(0.8),
 
             flexibleSpace: Column(
               children: <Widget>[
@@ -939,15 +940,15 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                   height: 40,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 0.0, bottom: 0, left: 0),
+                  padding: const EdgeInsets.only(top: 4.0, bottom: 0, left: 10),
                   child: Container(
                     width: double.infinity,
                     child: Align(
                         alignment: Alignment.center,
                         child: Text(
                           'MyExperts',
-                          style: GoogleFonts.nunito(
-                              color: Colors.black38.withOpacity(0.9),
+                          style: GoogleFonts.inter(
+                              color: Colors.white.withOpacity(0.9),
                               fontSize: 24,
                               fontWeight: FontWeight.w900),
                         )),
@@ -955,9 +956,11 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                 ),
                 TabBar(
                   controller: _tabController,
-                  indicatorColor: Color(0xff14142B),
+                  indicatorColor: Color(0xff2A00A2),
                   unselectedLabelColor: Color(0xff6E7191),
-                  labelColor: Color(0xff14142B),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: CircleTabIndicator(color: Color(0xff2A00A2).withOpacity(0.8), radius: 4),
+                  labelColor: Colors.white,
                   
                   isScrollable: false,
                   labelStyle: style2.copyWith(
