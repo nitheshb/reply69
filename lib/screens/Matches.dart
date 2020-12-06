@@ -10,6 +10,7 @@ import 'package:notification/screens/matchDetails.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
+import 'package:notification/widgets/circularTabIndicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Color color1 = Colors.grey[600];
@@ -68,9 +69,11 @@ class _DisplayMatchesState extends State<DisplayMatches>
         title: TabBar(
           controller: _tabController,
           isScrollable: true,
-          indicatorColor: Color(0xff14142B),
+         indicatorColor: Color(0xff2A00A2),
                   unselectedLabelColor: Color(0xff6E7191),
-                  labelColor: Color(0xff14142B),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: CircleTabIndicator(color: Color(0xff2A00A2), radius: 4),
+                  labelColor: Color(0xff2A00A2),
                   
                   labelStyle: style2.copyWith(
                                                 fontSize: 16,

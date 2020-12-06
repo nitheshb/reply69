@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notification/controllers/firebaseController.dart';
 
@@ -46,7 +47,7 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
 //    var doc = Firestore.instance.collection('groups').where('createdBy',isEqualTo: widget.user).snapshots();
 //    print('docdatais:{$doc}');
     return Container(
-      decoration: widget.amiPrime ? new BoxDecoration (
+      decoration: false ? new BoxDecoration (
                  gradient: new LinearGradient(
                 colors: [
                   const Color(0xFF3366FF),
@@ -101,26 +102,28 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
               "${widget.groupName[0].toUpperCase() + widget.groupName.substring(1)}",
               maxLines: 1,
               style: GoogleFonts.poppins(
-                fontSize: 14,
-                                                fontWeight: FontWeight.w700,
-                                                letterSpacing: 0.75,
+                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                letterSpacing: 0.2,
    
-                        color: widget.amiPrime ?  Colors.white :Color(0xff6E7191),
+                        color: false ?  Colors.white :Color(0xff4E4B66),
 
                       ),
             ),
             subtitle: Text(
               "${widget.msg}",
               style: GoogleFonts.poppins (
-                      fontSize: 14,
-                      color: widget.amiPrime  ? Colors.white :Color(0xffA0A3BD),
-                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                      color: false  ? Colors.white :Color(0xffA0A3BD),
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.2,
                     ),
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
-            trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            trailing: Wrap(
+              spacing: 12,
+              // crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SizedBox(height: 10),
                 Text(
@@ -132,6 +135,29 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
                 ),
 
                 SizedBox(height: 5),
+                widget.amiPrime ? Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Color(0xffE4DAFF),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 11,
+                    minHeight: 11,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 2, left: 5, right: 5, bottom: 2),
+                    child:Container(
+                        height: 20,
+                        width: 20,
+                        child: Icon(
+                FontAwesomeIcons.crown,
+                color: Color(0xff5F2EEA),
+                size: 13,
+              ),
+                      ),
+                  ),
+                ) :Container(width: 0, height: 0),
                 widget.counter == "0"
                     ?SizedBox()
                     :InkWell(

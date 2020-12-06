@@ -20,6 +20,7 @@ import 'package:notification/util/auth.dart';
 import 'package:notification/util/data.dart';
 import 'package:notification/util/state.dart';
 import 'package:notification/util/state_widget.dart';
+import 'package:notification/widgets/circularTabIndicator.dart';
 import 'package:notification/widgets/displayChatsMenuItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
@@ -206,6 +207,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
 
   Widget messagesTabDisplay(context, userId) {
     return SingleChildScrollView(
+
       child: Stack(
         children:[
           Positioned(
@@ -273,6 +275,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                             ),
                           ),
                         ),
+
                       ),
                       SizedBox(height: 6),
                       ListView.builder(
@@ -295,6 +298,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                 ),
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.only(left: 8.0, top: 8),
               child: Align(
@@ -342,6 +346,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
               },
             ),
             Container(color: Colors.pink,height: 500,width: double.infinity,child:  CarouselWithIndicatorDemo(),),
+
 
           ]),
         ]
@@ -975,9 +980,9 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
     return Scaffold(
       // appBar: appBarWid(),
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(100),
+          preferredSize: Size.fromHeight(76.5),
           child: AppBar(
-            // backgroundColor: color1,
+             backgroundColor: Color(0xff2A00A2).withOpacity(0.8),
 
             flexibleSpace: Column(
               children: <Widget>[
@@ -985,15 +990,15 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                   height: 40,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 0.0, bottom: 0, left: 0),
+                  padding: const EdgeInsets.only(top: 4.0, bottom: 0, left: 10),
                   child: Container(
                     width: double.infinity,
                     child: Align(
                         alignment: Alignment.center,
                         child: Text(
                           'MyExperts',
-                          style: GoogleFonts.nunito(
-                              color: Colors.black38.withOpacity(0.9),
+                          style: GoogleFonts.inter(
+                              color: Colors.white.withOpacity(0.9),
                               fontSize: 24,
                               fontWeight: FontWeight.w900),
                         )),
@@ -1001,9 +1006,11 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                 ),
                 TabBar(
                   controller: _tabController,
-                  indicatorColor: Color(0xff14142B),
+                  indicatorColor: Color(0xff2A00A2),
                   unselectedLabelColor: Color(0xff6E7191),
-                  labelColor: Color(0xff14142B),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: CircleTabIndicator(color: Color(0xff2A00A2).withOpacity(0.8), radius: 4),
+                  labelColor: Colors.white,
                   
                   isScrollable: false,
                   labelStyle: style2.copyWith(
@@ -1536,7 +1543,7 @@ final List<Widget> imageSliders = imgList.map((item) => Container(
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
         child: Stack(
           children: <Widget>[
-            Image.network(item, fit: BoxFit.cover, width: 1000.0),
+            Image.network(item, fit: BoxFit.fill, width: 1000.0),
             Positioned(
               bottom: 0.0,
               left: 0.0,
@@ -1603,8 +1610,8 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicatorDemo> {
               children: imgList.map((url) {
                 int index = imgList.indexOf(url);
                 return Container(
-                  width: 8.0,
-                  height: 8.0,
+                  width: 4.0,
+                  height: 4.0,
                   margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,

@@ -426,7 +426,7 @@ class FirebaseController {
         .snapshots();
   }
 
-// create a new group PAGE 
+// create a new group PAGE
   createGroup(
       body,
       userId,
@@ -600,6 +600,23 @@ class FirebaseController {
           .collection('Chats')
           .document(chatId)
           .snapshots();
+    }
+  }
+
+  // update wallet money of the chatGroup
+  updateWalletMoney(chatId, amount, type) {
+    if (type == 'PrimeMembership') {
+      Firestore.instance.collection("Chats").document(chatId).setData(
+          {'membershipAmount': FieldValue.increment(amount)},
+          merge: true).then((doc) {
+        print("savedTEamsCounter, ${chatId}");
+      });
+    }else{
+       Firestore.instance.collection("Chats").document(chatId).setData(
+          {'applauseAmount': FieldValue.increment(amount)},
+          merge: true).then((doc) {
+        print("savedTEamsCounter, ${chatId}");
+      });
     }
   }
 
