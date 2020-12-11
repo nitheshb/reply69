@@ -100,7 +100,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                               widget.message == ""
                                   ? "Empty Message"
                                   : widget.message,
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.lato(
                                 fontSize: 16,
                                 color: Color(0xff4E4B66),
                                 fontWeight: FontWeight.w400,
@@ -174,7 +174,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                                       child: widget.date != null
                                           ? Text(
                                               "${widget.date}",
-                                              style: GoogleFonts.poppins(
+                                              style: GoogleFonts.lato(
                                                 fontSize: 12,
                                                 color: Color(0xffA0A3BD),
                                                 fontWeight: FontWeight.w400,
@@ -182,7 +182,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                                             )
                                           : Text(
                                               "07-10",
-                                              style: GoogleFonts.poppins(
+                                              style: GoogleFonts.lato(
                                                 fontSize: 12,
                                                 color: Color(0xffA0A3BD),
                                                 fontWeight: FontWeight.w400,
@@ -196,7 +196,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                                         left: 2),
                                     child: Text(
                                       "${widget.time}",
-                                      style: GoogleFonts.poppins(
+                                      style: GoogleFonts.lato(
                                         fontSize: 12,
                                         // color: Color(0xff3A4276),
                                         color: Color(0xffA0A3BD),

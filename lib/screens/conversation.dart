@@ -361,7 +361,7 @@ class _ConversationState extends State<Conversation> {
     // Do something when payment succeeds
     try {
       FirebaseController.instanace.updateWalletMoney(
-          widget.chatId,
+          widget.chatOwnerId,
           int.parse(widget.groupFullDetails.data['FeeDetails'][0]['fee']),
           'Prime');
           var now = new DateTime.now();
@@ -627,7 +627,7 @@ class _ConversationState extends State<Conversation> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text("Send to :",
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.lato(
                                 fontSize: 13,
                                 color: Color(0xff000000),
                                 fontWeight: FontWeight.w500,
@@ -664,7 +664,7 @@ class _ConversationState extends State<Conversation> {
                                           borderRadius:
                                               BorderRadius.circular(39)),
                                       child: Text("Common",
-                                          style: GoogleFonts.poppins(
+                                          style: GoogleFonts.lato(
                                               fontSize: 13,
                                               color: selectedRadio == 1
                                                   ? Color(0xff0096B7)
@@ -697,7 +697,7 @@ class _ConversationState extends State<Conversation> {
                                           borderRadius:
                                               BorderRadius.circular(39)),
                                       child: Text("Prime",
-                                          style: GoogleFonts.poppins(
+                                          style: GoogleFonts.lato(
                                               fontSize: 13,
                                               color: selectedRadio == 2
                                                   ? Color(0xffC30052)
@@ -730,7 +730,7 @@ class _ConversationState extends State<Conversation> {
                                           borderRadius:
                                               BorderRadius.circular(39)),
                                       child: Text("Non-Prime",
-                                          style: GoogleFonts.poppins(
+                                          style: GoogleFonts.lato(
                                               fontSize: 13,
                                               color: selectedRadio == 3
                                                   ? Color(0xff946200)
@@ -811,7 +811,7 @@ class _ConversationState extends State<Conversation> {
                                         )),
                                         SizedBox(width: 6),
                                         Text('Join Prime',
-                                            style: GoogleFonts.poppins(
+                                            style: GoogleFonts.lato(
                                                 fontWeight: FontWeight.w600,
                                                 color: Color(0xffF7F7FC),
                                                 // letterSpacing: 0.75,
@@ -871,7 +871,7 @@ class _ConversationState extends State<Conversation> {
                                         )),
                                         SizedBox(width: 8),
                                         Text('Applause',
-                                            style: GoogleFonts.poppins(
+                                            style: GoogleFonts.lato(
                                                 fontWeight: FontWeight.w600,
                                                 color: Color(0xFF5F2EEA),
                                                 // letterSpacing: 0.75,
@@ -971,7 +971,7 @@ class _ConversationState extends State<Conversation> {
                                   enabledBorder: InputBorder.none,
                                   hintText:
                                       "Write your message... ${messageCount}",
-                                  hintStyle: GoogleFonts.poppins(
+                                  hintStyle: GoogleFonts.lato(
                                       fontSize: 13,
                                       color: Color(0xffA0A3BD),
                                       fontWeight: FontWeight.w500,
@@ -1070,6 +1070,7 @@ class _ConversationState extends State<Conversation> {
                             topRight: const Radius.circular(10.0))),
                     child: MyTeamsBottomSheetClass(
                       chatId: widget.chatId,
+                      chatOwnerId: widget.chatOwnerId,
                       trxtype: 'Applause',
                     ),
                   )),
@@ -1103,7 +1104,7 @@ class _ConversationState extends State<Conversation> {
                     children: <Widget>[
                       Text(
                         "${widget.groupTitle.toString().toUpperCase()}",
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.lato(
                           fontSize: 16,
                           color: Color(0xff1B1A57),
                           fontWeight: FontWeight.w600,
@@ -1118,7 +1119,7 @@ class _ConversationState extends State<Conversation> {
                         padding: const EdgeInsets.only(left: 1.0),
                         child: Text(
                           "${NumberFormat.compact().format(widget.followersCount) ?? '0'} Followers ",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                             color: Color(0xff4F5E7B),
@@ -1219,7 +1220,7 @@ class _ConversationState extends State<Conversation> {
                     PopupMenuItem(
                       value: "Profile",
                       child: Text("Profile",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                             fontSize: 12,
                             color: Color(0xff3A4276),
                             fontWeight: FontWeight.w500,
@@ -1228,7 +1229,7 @@ class _ConversationState extends State<Conversation> {
                     PopupMenuItem(
                       value: "Report",
                       child: Text("Report",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                             fontSize: 12,
                             color: Color(0xff3A4276),
                             fontWeight: FontWeight.w500,
@@ -1281,7 +1282,7 @@ class _ConversationState extends State<Conversation> {
                     PopupMenuItem(
                       value: "Approve Payments",
                       child: Text("User Payments",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                               fontSize: 16,
                               color: Color(0xff14142B),
                               fontWeight: FontWeight.w400,
@@ -1290,7 +1291,7 @@ class _ConversationState extends State<Conversation> {
                     PopupMenuItem(
                       value: "Expired Memberships",
                       child: Text("Prime Members",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                               fontSize: 16,
                               color: Color(0xff14142B),
                               fontWeight: FontWeight.w400,
@@ -1299,7 +1300,7 @@ class _ConversationState extends State<Conversation> {
                     PopupMenuItem(
                       value: "Earnings",
                       child: Text("Earnings",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                               fontSize: 16,
                               color: Color(0xff14142B),
                               fontWeight: FontWeight.w400,
@@ -1308,7 +1309,7 @@ class _ConversationState extends State<Conversation> {
                     PopupMenuItem(
                       value: "Edit Details",
                       child: Text("Edit Profile",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                               fontSize: 16,
                               color: Color(0xff14142B),
                               fontWeight: FontWeight.w400,

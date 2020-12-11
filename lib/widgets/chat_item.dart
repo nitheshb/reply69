@@ -77,7 +77,7 @@ class _ChatItemState extends State<ChatItem> {
         title: Text(
           "${widget.name}",
           maxLines: 1,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 14,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w600,
@@ -85,7 +85,7 @@ class _ChatItemState extends State<ChatItem> {
         ),
         subtitle: Text(
           "${widget.msg}",
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 12,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w300,

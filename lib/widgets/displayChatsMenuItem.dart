@@ -101,21 +101,21 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
             title: Text(
               "${widget.groupName[0].toUpperCase() + widget.groupName.substring(1)}",
               maxLines: 1,
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
+              style: GoogleFonts.lato(
+                fontSize: 17,
+                                                fontWeight: FontWeight.w800,
                                                 letterSpacing: 0.2,
    
-                        color: false ?  Colors.white :Color(0xff4E4B66),
+                        color: false ?  Colors.white : Color(0xff1D1C1D) ,
 
                       ),
             ),
             subtitle: Text(
               "${widget.msg}",
-              style: GoogleFonts.poppins (
+              style: GoogleFonts.lato (
                       fontSize: 13,
-                      color: false  ? Colors.white :Color(0xffA0A3BD),
-                      fontWeight: FontWeight.w600,
+                      color: false  ? Colors.white :Colors.black,
+                      fontWeight: FontWeight.w400,
                       letterSpacing: 0.2,
                     ),
               overflow: TextOverflow.ellipsis,
@@ -158,7 +158,7 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
                       ),
                   ),
                 ) :Container(width: 0, height: 0),
-                widget.counter == "0"
+                widget.counter == "0" || widget.amiOwner
                     ?SizedBox()
                     :InkWell(
                       onTap: () {
@@ -174,7 +174,7 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
                       child:Container(
                   padding: EdgeInsets.all(1),
                   decoration: BoxDecoration(
-                    color: Color(0xffFFF4DF),
+                    color: Color(0xffCB2955),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   constraints: BoxConstraints(
@@ -182,12 +182,12 @@ class _ChatMenuIconState extends State<ChatMenuIcon> {
                     minHeight: 11,
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(top: 2, left: 5, right: 5, bottom: 2),
+                    padding: EdgeInsets.only(top: 2, left: 5, right: 5, bottom: 4),
                     child:Text(
                       "${widget.counter}",
-                      style: GoogleFonts.poppins (
-                      fontSize: 13,
-                      color: Color(0xffC30052),
+                      style: GoogleFonts.lato (
+                      fontSize: 12,
+                      color: Color(0xffffffff),
                       fontWeight: FontWeight.w500,
                     ),
                       textAlign: TextAlign.center,

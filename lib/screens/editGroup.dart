@@ -261,7 +261,7 @@ class _EditGroupProfileState extends State<EditGroupProfile> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Profile",
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.lato(
               fontSize: 18,
               color: Color(0xff3A4276),
               fontWeight: FontWeight.w800,
@@ -324,7 +324,7 @@ class _EditGroupProfileState extends State<EditGroupProfile> {
                 SizedBox(height: 10),
                 Text(
                   '${widget.groupName.toUpperCase()}',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.lato(
                     fontSize: 15,
                     color: Color(0xff3A4276),
                     fontWeight: FontWeight.w800,
@@ -333,7 +333,7 @@ class _EditGroupProfileState extends State<EditGroupProfile> {
                 SizedBox(height: 3),
                 Text(
                   "Editing Group Profile",
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.lato(
                     fontSize: 15,
                     color: Color(0xff3A4276),
                     fontWeight: FontWeight.w500,
@@ -563,7 +563,7 @@ class _EditGroupProfileState extends State<EditGroupProfile> {
                                                           50)),
                                               child: Text(
                                                 "Save Group",
-                                                style: GoogleFonts.poppins(
+                                                style: GoogleFonts.lato(
                                                   fontSize: 20,
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w500,
@@ -638,7 +638,7 @@ class _EditGroupProfileState extends State<EditGroupProfile> {
             // ),
 
             Text('Premium Group',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.lato(
                   fontSize: 15,
                   color: Color(0xff3A4276),
                   fontWeight: FontWeight.w500,
@@ -740,7 +740,7 @@ class _EditGroupProfileState extends State<EditGroupProfile> {
       children: <Widget>[
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 15,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,
@@ -775,7 +775,7 @@ class _EditGroupProfileState extends State<EditGroupProfile> {
       children: <Widget>[
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 15,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,
@@ -810,7 +810,7 @@ class _EditGroupProfileState extends State<EditGroupProfile> {
       children: <Widget>[
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 15,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,

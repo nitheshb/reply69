@@ -156,7 +156,7 @@ class _GroupMembersHomeState extends State<GroupMembersHome>
         child: Scaffold(
           appBar: AppBar(
             title: Text("Prime Members",
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.lato(
                   fontSize: 18,
                   color: Color(0xff3A4276),
                   fontWeight: FontWeight.w800,
@@ -167,7 +167,7 @@ class _GroupMembersHomeState extends State<GroupMembersHome>
                 child: FlatButton(
                   child: Text(
                     "Download Prime List",
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.lato(
                       fontSize: 12,
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
@@ -218,7 +218,7 @@ class _GroupMembersHomeState extends State<GroupMembersHome>
               labelColor: Theme.of(context).accentColor,
               unselectedLabelColor: Theme.of(context).textTheme.caption.color,
               isScrollable: false,
-              labelStyle: GoogleFonts.poppins(
+              labelStyle: GoogleFonts.lato(
                 fontSize: 14,
                 color: Color(0xff3A4276),
                 fontWeight: FontWeight.w600,
@@ -246,7 +246,7 @@ class _GroupMembersHomeState extends State<GroupMembersHome>
                     }
                     if (snapshot.hasData && snapshot.data.length == 0) {
                       return Text("No Members",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                             fontSize: 16,
                             color: Color(0xff3A4276),
                             fontWeight: FontWeight.w500,
@@ -294,7 +294,7 @@ class _GroupMembersHomeState extends State<GroupMembersHome>
                 visible: widget.expiredDataJson.length ==0,
                 child: Container(
                               child: Text("No Expired Members",
-                                  style: GoogleFonts.poppins(
+                                  style: GoogleFonts.lato(
                                     fontSize: 16,
                                     color: Color(0xff3A4276),
                                     fontWeight: FontWeight.w500,

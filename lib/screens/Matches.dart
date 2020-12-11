@@ -15,13 +15,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Color color1 = Colors.grey[600];
 
-final style2 = GoogleFonts.poppins(
+final style2 = GoogleFonts.lato(
     color: Colors.grey[600], fontSize: 13, fontWeight: FontWeight.w600);
 
-final style1 = GoogleFonts.poppins(
+final style1 = GoogleFonts.lato(
     color: Color(0xff352D80), fontSize: 18.5, fontWeight: FontWeight.w800);
 
-final style3 = GoogleFonts.poppins(
+final style3 = GoogleFonts.lato(
     color: Colors.black, fontSize: 16, fontWeight: FontWeight.w800);
 
 class DisplayMatches extends StatefulWidget {
@@ -136,7 +136,7 @@ class _DisplayMatchesState extends State<DisplayMatches>
                         ),
                         new Text(
                           'No ${categoryName} Matches Scedules',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                             fontSize: 12,
                             color: Color(0xff3A4276),
                             fontWeight: FontWeight.w500,
@@ -329,7 +329,7 @@ class _DisplayMatchesState extends State<DisplayMatches>
 //                                  Padding(
 //                                    padding: const EdgeInsets.only(top: 8.0),
 //                                    child: Text("${matchDetails['team-1']}",
-//                                        style: GoogleFonts.poppins(
+//                                        style: GoogleFonts.lato(
 //                                          fontSize: 15,
 //                                          color: Color(0xff3A4276),
 //                                          fontWeight: FontWeight.w800,
@@ -358,7 +358,7 @@ class _DisplayMatchesState extends State<DisplayMatches>
 //                                child: Column(
 //                                  children: <Widget>[
 //                                    Text("${matchDetails['type']}",
-//                                        style: GoogleFonts.poppins(
+//                                        style: GoogleFonts.lato(
 //                                          fontSize: 12,
 //                                          color: Color(0xff3A4276),
 //                                          fontWeight: FontWeight.w700,
@@ -366,7 +366,7 @@ class _DisplayMatchesState extends State<DisplayMatches>
 //                                    SizedBox(height: 30),
 //                                    Text(
 //                                        "${format.format(DateTime.fromMicrosecondsSinceEpoch(int.parse(ds['startTime']) * 1000))}",
-//                                        style: GoogleFonts.poppins(
+//                                        style: GoogleFonts.lato(
 //                                          fontSize: 12,
 //                                          color: Color(0xff3A4276),
 //                                          fontWeight: FontWeight.w500,
@@ -385,7 +385,7 @@ class _DisplayMatchesState extends State<DisplayMatches>
 //                                  Padding(
 //                                    padding: const EdgeInsets.only(top: 8.0),
 //                                    child: Text("${matchDetails['team-2']}",
-//                                        style: GoogleFonts.poppins(
+//                                        style: GoogleFonts.lato(
 //                                          fontSize: 15,
 //                                          color: Color(0xff3A4276),
 //                                          fontWeight: FontWeight.w800,

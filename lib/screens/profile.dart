@@ -85,7 +85,7 @@ class _ProfileState extends State<Profile> {
                   SizedBox(height: 10),
                   Text(
                     '${email}',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.lato(
                       fontSize: 18,
                       color: Color(0xff3A4276),
                       fontWeight: FontWeight.w700,
@@ -137,7 +137,7 @@ class _ProfileState extends State<Profile> {
                             ),
                             SizedBox(width: 4),
                             Text('Logout',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.lato(
                                   fontSize: 14,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
@@ -189,7 +189,7 @@ class _ProfileState extends State<Profile> {
                         Divider(),
                         Text(
                           "${_packageInfo.version}",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                             fontSize: 12,
                             color: Color(0xff3A4276),
                             fontWeight: FontWeight.w800,
@@ -208,7 +208,7 @@ class _ProfileState extends State<Profile> {
       children: <Widget>[
         Text(
           'NA',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 12,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w800,
@@ -217,7 +217,7 @@ class _ProfileState extends State<Profile> {
         SizedBox(height: 4),
         Text(
           title,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 12,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,

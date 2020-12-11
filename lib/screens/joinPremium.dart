@@ -221,7 +221,7 @@ class _JoinPremiumGroupState extends State<JoinPremiumGroup> {
     return FlatButton(
       child: Text(
         "Edit",
-        style: GoogleFonts.poppins(
+        style: GoogleFonts.lato(
           fontSize: 14,
           color: Colors.white,
           fontWeight: FontWeight.w500,
@@ -286,13 +286,13 @@ border: Border.all(color: AppTheme.ktheme),
                       child: Text(
                         true ? "Following" : "Follow",
                         style: true
-                            ? GoogleFonts.poppins(
+                            ? GoogleFonts.lato(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                           color: Color(0xffF7F7FC),
                           letterSpacing: 0.75
                         )
-                            : GoogleFonts.poppins(
+                            : GoogleFonts.lato(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                           color: AppTheme.ktheme,
@@ -360,12 +360,12 @@ border: Border.all(color: AppTheme.ktheme),
                       child: Text(
                         false ? "Following" : "Follow",
                         style: false
-                            ? GoogleFonts.poppins(
+                            ? GoogleFonts.lato(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                           color: Color(0xffF7F7FC),
                         )
-                            : GoogleFonts.poppins(
+                            : GoogleFonts.lato(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                           color: AppTheme.ktheme,
@@ -439,7 +439,7 @@ border: Border.all(color: AppTheme.ktheme),
         children: <Widget>[
           Text(
             value,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.lato(
               fontSize: 18,
               color: Color(0xff3A4276),
               fontWeight: FontWeight.w800,
@@ -450,7 +450,7 @@ border: Border.all(color: AppTheme.ktheme),
           ),
           Text(
             title,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.lato(
               fontSize: 12,
               color: Color(0xff3A4276),
               fontWeight: FontWeight.w500,
@@ -486,7 +486,7 @@ border: Border.all(color: AppTheme.ktheme),
         ),
         titleSpacing: 0,
         title: Text("Summary",
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.lato(
               fontSize: 18,
               color: Color(0xff3A4276),
               fontWeight: FontWeight.w800,
@@ -506,7 +506,7 @@ border: Border.all(color: AppTheme.ktheme),
                 children: [
                   TextSpan(
                     text: "Profile",
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.lato(
                       fontSize: 32,
                       color: Color(0xff14142B),
                       fontWeight: FontWeight.w700,
@@ -578,7 +578,7 @@ border: Border.all(color: AppTheme.ktheme),
                                 children: [
                                   Text(
                             "${widget.title.toUpperCase()}",
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.lato(
                                   fontSize: 16,
                                   color: Color(0xff6E7191),
                                   fontWeight: FontWeight.w600,
@@ -590,7 +590,7 @@ border: Border.all(color: AppTheme.ktheme),
                           ),
                           Text(
                             "by ${widget.groupOwnerName}",
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.lato(
                               fontSize: 16,
                               color: Color(0xff7E819E),
                               fontWeight: FontWeight.w600,
@@ -602,7 +602,7 @@ border: Border.all(color: AppTheme.ktheme),
                           ),
                           Text(
                             "${widget.followersCount} Followers",
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.lato(
                               fontSize: 16,
                               color: Color(0xff7E819E),
                               fontWeight: FontWeight.w600,
@@ -639,7 +639,7 @@ SizedBox(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               "Description",
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.lato(
                                 fontSize: 14,
                                 color: Color(0xff4E4B66),
                                 fontWeight: FontWeight.w400,
@@ -654,7 +654,7 @@ SizedBox(
                             padding: const EdgeInsets.only(left:8.0),
                             child: Text(
                               "NA",
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.lato(
                                 fontSize: 14,
                                 color: Color(0xff4E4B66),
                                 fontWeight: FontWeight.w400,
@@ -683,7 +683,7 @@ Center(
                   children: [
                     TextSpan(
                       text: "Just Rs ${widget.feeArray[0]['fee'] ?? 0} for ${widget.feeArray[0]['days'] ?? 0} days",
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.lato(
                         fontSize: 14,
                         color: Color(0xff4E4B66),
                         fontWeight: FontWeight.w400,
@@ -704,7 +704,7 @@ Center(
                   children: [
                     TextSpan(
                       text: "Send Payment at",
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.lato(
                         fontSize: 16,
                         color: Color(0xff3A4276),
                         fontWeight: FontWeight.w600,
@@ -725,7 +725,7 @@ Center(
                    
                     TextSpan(
                       text: " ${widget.paymentScreenshotNo}",
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.lato(
                         fontSize: 16,
                         color: Color(0xff3A4276),
                         fontWeight: FontWeight.w500,
@@ -948,7 +948,7 @@ Center(
                         color: Colors.transparent,
                         child: Text(
                           "Submit For Verification",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                             fontSize: 14,
                             color: Color(0xffBCA4FF),
                             fontWeight: FontWeight.w500,
@@ -1010,7 +1010,7 @@ Center(
                     ),
                     Text(
                       'Upload Payment Screenshot',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.lato(
                         fontSize: 16,
                         color: Colors.white,
                         fontWeight: FontWeight.w600,

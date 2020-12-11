@@ -67,7 +67,7 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>
     return Scaffold(
       appBar: AppBar(
         title: Text("Membership Requests",
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.lato(
               fontSize: 18,
               color: Color(0xff3A4276),
               fontWeight: FontWeight.w800,
@@ -79,7 +79,7 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>
           labelColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).textTheme.caption.color,
           isScrollable: false,
-          labelStyle: GoogleFonts.poppins(
+          labelStyle: GoogleFonts.lato(
             fontSize: 14,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w600,
@@ -229,7 +229,7 @@ class _JoinRequestApprovalState extends State<JoinRequestApproval>
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2)),
       child: Text(
         "${type == 2 ? "Reject" : "Accept"}",
-        style: GoogleFonts.poppins(
+        style: GoogleFonts.lato(
           fontSize: 18,
           color: Color(0xff3A4276),
           fontWeight: FontWeight.w500,

@@ -81,7 +81,7 @@ class _SignupPageState extends State<SignupPage> {
                               1,
                               Text(
                                 "Sign up",
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.lato(
                                   fontSize: 30,
                                   color: Color(0xff3A4276),
                                   fontWeight: FontWeight.w800,
@@ -94,7 +94,7 @@ class _SignupPageState extends State<SignupPage> {
                               1.2,
                               Text(
                                 "Create an account, It's free",
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.lato(
                                   fontSize: 16,
                                   color: Color(0xff3A4276),
                                   fontWeight: FontWeight.w500,
@@ -178,7 +178,7 @@ class _SignupPageState extends State<SignupPage> {
                                   borderRadius: BorderRadius.circular(50)),
                               child: Text(
                                 "Sign up",
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.lato(
                                   fontSize: 18,
                                   color: Color(0xff3A4276),
                                   fontWeight: FontWeight.w600,
@@ -192,14 +192,14 @@ class _SignupPageState extends State<SignupPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text("Already have an account?",
-                                  style: GoogleFonts.poppins(
+                                  style: GoogleFonts.lato(
                                     fontSize: 12,
                                     color: Color(0xff3A4276),
                                     fontWeight: FontWeight.w500,
                                   )),
                               Text(
                                 " Login",
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.lato(
                                   fontSize: 16,
                                   color: Color(0xff3A4276),
                                   fontWeight: FontWeight.w600,
@@ -220,7 +220,7 @@ class _SignupPageState extends State<SignupPage> {
       children: <Widget>[
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 14,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,
@@ -258,7 +258,7 @@ class _SignupPageState extends State<SignupPage> {
       children: <Widget>[
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 14,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,
@@ -295,7 +295,7 @@ class _SignupPageState extends State<SignupPage> {
       children: <Widget>[
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 14,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,
@@ -336,7 +336,7 @@ class _SignupPageState extends State<SignupPage> {
       children: <Widget>[
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 14,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,

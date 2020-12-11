@@ -113,7 +113,7 @@ print("===> my owngroups ${myOwnGroups}");
                 FontAwesomeIcons.calendarAlt,
               ),
               title: Text("Schedule",
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.lato(
                     fontSize: 12,
                     color: Color(0xff3A4276),
                     fontWeight: FontWeight.w500,
@@ -125,7 +125,7 @@ print("===> my owngroups ${myOwnGroups}");
                 Icons.message,
               ),
               title: Text("Chats",
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.lato(
                     fontSize: 12,
                     color: Color(0xff3A4276),
                     fontWeight: FontWeight.w500,
@@ -144,7 +144,7 @@ print("===> my owngroups ${myOwnGroups}");
                 Icons.settings,
               ),
               title: Text("Profile",
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.lato(
                     fontSize: 12,
                     color: Color(0xff3A4276),
                     fontWeight: FontWeight.w500,

@@ -588,6 +588,13 @@ class FirebaseController {
         .snapshots();
   }
 
+  fetchRevenuDetails(userId) {
+    return Firestore.instance
+        .collection('IAM')
+        .document(userId)
+          .snapshots();
+  }
+
   getChatContent(chatId, getChatContent) {
     if (getChatContent == "Prime") {
       // return Firestore.instance.collection('groups').document(chatId).snapshots();
@@ -604,18 +611,18 @@ class FirebaseController {
   }
 
   // update wallet money of the chatGroup
-  updateWalletMoney(chatId, amount, type) {
+  updateWalletMoney(chatOwnerId, amount, type) {
     if (type == 'PrimeMembership') {
-      Firestore.instance.collection("Chats").document(chatId).setData(
-          {'membershipAmount': FieldValue.increment(amount)},
+      Firestore.instance.collection("IAM").document(chatOwnerId).setData(
+          {'membershipAmount': FieldValue.increment(amount), 'walletMoney': FieldValue.increment(amount)},
           merge: true).then((doc) {
-        print("savedTEamsCounter, ${chatId}");
+        print("savedTEamsCounter, ${chatOwnerId}");
       });
     }else{
-       Firestore.instance.collection("Chats").document(chatId).setData(
-          {'applauseAmount': FieldValue.increment(amount)},
+       Firestore.instance.collection("IAM").document(chatOwnerId).setData(
+          {'applauseAmount': FieldValue.increment(amount), 'walletMoney': FieldValue.increment(amount)},
           merge: true).then((doc) {
-        print("savedTEamsCounter, ${chatId}");
+        print("savedTEamsCounter, ${chatOwnerId}");
       });
     }
   }

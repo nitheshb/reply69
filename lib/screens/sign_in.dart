@@ -15,7 +15,7 @@ import 'package:notification/util/validators.dart';
 import 'package:notification/widgets/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final style2 = GoogleFonts.poppins(
+final style2 = GoogleFonts.lato(
     color: Colors.grey[600], fontSize: 13, fontWeight: FontWeight.w600);
 class MySignInScreenHome extends StatefulWidget {
   @override
@@ -109,7 +109,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
                                       1.2,
                                       Text(
                                         "Login",
-                                        style: GoogleFonts.poppins(
+                                        style: GoogleFonts.lato(
                                           fontSize: 20,
                                           color: Color(0xff3A4276),
                                           fontWeight: FontWeight.w700,
@@ -347,7 +347,7 @@ class _MySignInScreenHomeState extends State<MySignInScreenHome> {
       children: <Widget>[
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 14,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,
@@ -432,7 +432,7 @@ TextStyle textStyle = Theme.of(context).textTheme.title;
       children: <Widget>[
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 14,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w500,

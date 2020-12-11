@@ -130,7 +130,7 @@ class _Profile3State extends State<Profile3> {
         ? FlatButton(
             child: Text(
               "Unfollow",
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.lato(
                 fontSize: 14,
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
@@ -164,7 +164,7 @@ class _Profile3State extends State<Profile3> {
         : FlatButton(
             child: Text(
               "Follow",
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.lato(
                 fontSize: 14,
                 color: Color(0xff3A4276),
                 fontWeight: FontWeight.w500,
@@ -270,7 +270,7 @@ class _Profile3State extends State<Profile3> {
         backgroundColor: Colors.white,
         title: Text(
           'Summary',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 18,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w800,
@@ -299,7 +299,7 @@ class _Profile3State extends State<Profile3> {
               children: [
                 TextSpan(
                   text: "Profile",
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.lato(
                     fontSize: 18,
                     color: Color(0xff3A4276),
                     fontWeight: FontWeight.w500,
@@ -354,7 +354,7 @@ class _Profile3State extends State<Profile3> {
                         ),
                         Text(
                           "${widget.title.toUpperCase()}",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                             fontSize: 20,
                             color: Color(0xff3A4276),
                             fontWeight: FontWeight.w800,
@@ -367,7 +367,7 @@ class _Profile3State extends State<Profile3> {
                           children: <Widget>[
                             Text(
                               "Predictor Name:  ",
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.lato(
                                 fontSize: 16,
                                 color: Color(0xff3A4276),
                                 fontWeight: FontWeight.w500,
@@ -375,7 +375,7 @@ class _Profile3State extends State<Profile3> {
                             ),
                             Text(
                               "${widget.groupOwnerName}",
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.lato(
                                 fontSize: 16,
                                 color: Color(0xff3A4276),
                                 fontWeight: FontWeight.w300,
@@ -388,7 +388,7 @@ class _Profile3State extends State<Profile3> {
                         ),
                         Text(
                           "Description",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                             fontSize: 16,
                             color: Color(0xff3A4276),
                             fontWeight: FontWeight.w500,
@@ -399,7 +399,7 @@ class _Profile3State extends State<Profile3> {
                         ),
                         Text(
                           "NA",
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.lato(
                             fontSize: 12,
                             color: Color(0xff3A4276),
                             fontWeight: FontWeight.w500,
@@ -439,7 +439,7 @@ class _Profile3State extends State<Profile3> {
                             children: <Widget>[
                               Text(
                                 "30-DAYS FEE",
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.lato(
                                   fontSize: 12,
                                   color: Color(0xff3A4276),
                                   fontWeight: FontWeight.w500,
@@ -466,7 +466,7 @@ class _Profile3State extends State<Profile3> {
                             children: <Widget>[
                               Text(
                                 "FOLLOWERS",
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.lato(
                                   fontSize: 12,
                                   color: Color(0xff3A4276),
                                   fontWeight: FontWeight.w500,
@@ -493,7 +493,7 @@ class _Profile3State extends State<Profile3> {
                             children: <Widget>[
                               Text(
                                 "RATING",
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.lato(
                                   fontSize: 12,
                                   color: Color(0xff3A4276),
                                   fontWeight: FontWeight.w500,

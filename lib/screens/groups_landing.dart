@@ -14,6 +14,7 @@ import 'package:notification/controllers/firebaseController.dart';
 import 'package:notification/pages/groupProfile1.dart';
 import 'package:notification/screens/conversation.dart';
 import 'package:notification/screens/createGroup.dart';
+import 'package:notification/screens/groupEarnings.dart';
 import 'package:notification/screens/main_screen.dart';
 import 'package:notification/util/NotifyJson.dart';
 import 'package:notification/util/auth.dart';
@@ -33,7 +34,7 @@ final Color color4 = Color(0xffFFF7F4);
 final Color color2 = AppTheme.kteal;
 final Color color1 = AppTheme.ktheme;
 
-final style2 = GoogleFonts.poppins(
+final style2 = GoogleFonts.lato(
     color: Colors.grey[600], fontSize: 13, fontWeight: FontWeight.w600);
 
 class GroupsLandingScreen extends StatefulWidget {
@@ -210,20 +211,20 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
 
       child: Stack(
         children:[
-          Positioned(
-            height: 185,
-            width: 370,
-            top: 0,
-            left: -80,
-            child: Image.asset('assets/Rectangle1.png'),
-          ),
-          Positioned(
-            height: 185,
-            width: 370,
-            top: 137,
-            left: -80,
-            child: Image.asset('assets/Rectangle0.png'),
-          ),
+          // Positioned(
+          //   height: 185,
+          //   width: 370,
+          //   top: 0,
+          //   left: -80,
+          //   child: Image.asset('assets/Rectangle1.png'),
+          // ),
+          // Positioned(
+          //   height: 185,
+          //   width: 370,
+          //   top: 137,
+          //   left: -80,
+          //   child: Image.asset('assets/Rectangle0.png'),
+          // ),
 //          Positioned(
 //            height: 154.5,
 //            width: 309,
@@ -238,25 +239,25 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
 //            left: 0,
 //            child: Image.asset('assets/Rectangle5.png'),
 //          ),
-          Positioned(
-            height: 154.5,
-            width: 309,
-            top: 307,
-            left: 130,
-            child: Image.asset('assets/Rectangle2.png'),
-          ),
-          Positioned(
-            height: 154.5,
-            width: 309,
-            top: 460,
-            left: 130,
-            child: Image.asset('assets/Rectangle3.png'),
-          ),
+          // Positioned(
+          //   height: 154.5,
+          //   width: 309,
+          //   top: 307,
+          //   left: 130,
+          //   child: Image.asset('assets/Rectangle2.png'),
+          // ),
+          // Positioned(
+          //   height: 154.5,
+          //   width: 309,
+          //   top: 460,
+          //   left: 130,
+          //   child: Image.asset('assets/Rectangle3.png'),
+          // ),
           Column(children: <Widget>[
             Visibility(
               visible: myOwnGroups.length > 0,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 0, 0),
+                padding: const EdgeInsets.fromLTRB(8.0, 16.0, 0, 0),
                 child: Container(
                   child: Column(
                     children: <Widget>[
@@ -264,24 +265,76 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                         alignment: Alignment.topLeft,
                         child:
                         Padding(
-                          padding: const EdgeInsets.only(left:8.0),
-                          child: Text(
-                            "Created Groups ",
-                            style: style2.copyWith(
-                                fontSize: 24,
-                                color: Color(0xffA0A3BD),
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.25
-                            ),
+                          padding: const EdgeInsets.only(left:8.0, right: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Created Groups ",
+                                style: style2.copyWith(
+                                    fontSize: 22,
+                                    color: Color(0xff4E4B66),
+                                    fontWeight: FontWeight.w700,
+                                    
+                                ),
+                              ),
+
+
+                              InkWell(
+                                onTap:(){
+                                    Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (BuildContext context) => GroupEarnings(userId:userId),
+                      ));
+                                },
+                                child: Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.greenAccent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 11,
+                    minHeight: 11,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 2, left: 5, right: 5, bottom: 4),
+                    child:Container(
+                        
+                        child: Row(
+                          children: [
+                            Icon(
+                FontAwesomeIcons.wallet,
+                color: Color(0xff5F2EEA),
+                size: 18,
+              ),
+              SizedBox(width: 6),
+              Text(
+                                  "Income",
+                                  style: style2.copyWith(
+                                      fontSize: 16,
+                                      color: Color(0xff5F2EEA),
+                                      fontWeight: FontWeight.w700,
+                                      
+                                  ),
+                                ),
+                          ],
+                        ),
+                      ),
+                  ),
+                ),
+                              )
+                            ],
                           ),
                         ),
 
                       ),
-                      SizedBox(height: 6),
+                      SizedBox(height: 2),
                       ListView.builder(
                         itemCount: NotifyData.length,
                         shrinkWrap: true,
-                        padding: EdgeInsets.only(top: 8, bottom: 8),
+                        padding: EdgeInsets.only(top: 0, bottom: 8,right: 8),
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           return myOwnGroups.contains(NotifyData[index]['chatId'])
@@ -304,14 +357,14 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(left:0.0),
+                  padding: const EdgeInsets.only(left:8.0),
                   child: Text(
                     "Following Groups ",
                     style: style2.copyWith(
-                        fontSize: 24,
-                        color: Color(0xffA0A3BD),
+                        fontSize: 22,
+                        color: Color(0xff4E4B66),
                         fontWeight: FontWeight.w700,
-                        letterSpacing: 0.25
+                       
                     ),
                   ),
                 ),
@@ -322,7 +375,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                 : ListView.builder(
               itemCount: NotifyData.length,
               shrinkWrap: true,
-              padding: EdgeInsets.only(top: 8),
+              padding: EdgeInsets.only(top: 0, left:8, right: 8),
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                 var searchGroupForReadCount;
@@ -345,7 +398,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                     : Container();
               },
             ),
-            Container(color: Colors.pink,height: 500,width: double.infinity,child:  CarouselWithIndicatorDemo(),),
+            // Container(color: Colors.pink,height: 500,width: double.infinity,child:  CarouselWithIndicatorDemo(),),
 
 
           ]),
@@ -451,8 +504,8 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                                   hintText: 'Search Group Name....',
                                   isDense: true,                      // Added this
 
-                                  hintStyle: GoogleFonts.poppins(
-    color: Color(0xffA0A3BD), fontSize: 16, fontWeight: FontWeight.w600),
+                                  hintStyle: GoogleFonts.lato(
+    color: Color(0xff4E4B66), fontSize: 16, fontWeight: FontWeight.w600),
                                   prefixIcon:
                                   Icon(Icons.search, color: color3, size: 28))),
                         ),
@@ -980,26 +1033,26 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
     return Scaffold(
       // appBar: appBarWid(),
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(76.5),
+          preferredSize: Size.fromHeight(96.5),
           child: AppBar(
-             backgroundColor: Color(0xff2A00A2).withOpacity(0.8),
+             backgroundColor: Color(0xff2A00A2).withOpacity(0.9),
 
             flexibleSpace: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 40,
+                  height: 60,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0, bottom: 0, left: 10),
                   child: Container(
                     width: double.infinity,
                     child: Align(
-                        alignment: Alignment.center,
+                        alignment: Alignment.topLeft,
                         child: Text(
-                          'MyExperts',
-                          style: GoogleFonts.inter(
-                              color: Colors.white.withOpacity(0.9),
-                              fontSize: 24,
+                          'TopExperts',
+                          style: GoogleFonts.lato(
+                              color: Colors.white,
+                              fontSize: 20,
                               fontWeight: FontWeight.w900),
                         )),
                   ),
@@ -1007,7 +1060,7 @@ class _GroupsLandingScreenState extends State<GroupsLandingScreen>
                 TabBar(
                   controller: _tabController,
                   indicatorColor: Color(0xff2A00A2),
-                  unselectedLabelColor: Color(0xff6E7191),
+                  unselectedLabelColor: Colors.grey,
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicator: CircleTabIndicator(color: Color(0xff2A00A2).withOpacity(0.8), radius: 4),
                   labelColor: Colors.white,
@@ -1340,12 +1393,12 @@ border: Border.all(color: AppTheme.ktheme),
                       child: Text(
                         isFollow ? "Following" : "Follow",
                         style: isFollow
-                            ? GoogleFonts.poppins(
+                            ? GoogleFonts.lato(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                           color: Color(0xffF7F7FC),
                         )
-                            : GoogleFonts.poppins(
+                            : GoogleFonts.lato(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                           color: AppTheme.ktheme,

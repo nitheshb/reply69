@@ -201,7 +201,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                   padding: const EdgeInsets.only(left:15.0),
                   child: Text(
                     "Become Fantasy Sports Expert",
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.lato(
                       fontSize: 32,
                       color: Color(0xff14142B),
                       fontWeight: FontWeight.w700,
@@ -214,7 +214,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                   padding: const EdgeInsets.only(left:18.0),
                   child: Text(
                     "Create Group",
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.lato(
                       fontSize: 24,
                       color: Color(0xff4E4B66),
                       fontWeight: FontWeight.w700,
@@ -513,7 +513,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                         child: Center(
                                           child: Text(
                                             "Create Group",
-                                            style: GoogleFonts.poppins(
+                                            style: GoogleFonts.lato(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 18,
                                               color: Color(0xffFCFCFC),
@@ -584,7 +584,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
 //          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text('Prime Group Details',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.lato(
                   fontSize: 16,
                   color: Color(0xff3A4276),
                   fontWeight: FontWeight.w700,
@@ -665,7 +665,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                     isDense: true,
                     hint: new Text(
                       "Select State",
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.lato(
                         fontSize: 14,
                         color: Color(0xff3A4276),
                         fontWeight: FontWeight.w600,
@@ -743,7 +743,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
       children: <Widget>[
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.lato(
             fontSize: 16,
             color: Color(0xff3A4276),
             fontWeight: FontWeight.w700,
@@ -780,7 +780,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
             filled: true,
             fillColor: Color(0xffEFF0F6),
             hintText: "UPI / Phone Number",
-            hintStyle:GoogleFonts.poppins(
+            hintStyle:GoogleFonts.lato(
                 fontSize: 14,
                 color: Color(0xffA0A3BD),
                 fontWeight: FontWeight.w400,
@@ -810,7 +810,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
       children: <Widget>[
 //        Text(
 //          label,
-//          style: GoogleFonts.poppins(
+//          style: GoogleFonts.lato(
 //            fontSize: 16,
 //            color: Color(0xff3A4276),
 //            fontWeight: FontWeight.w700,
@@ -845,7 +845,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
             filled: true,
             fillColor: Color(0xffEFF0F6),
             hintText: label,
-            hintStyle:GoogleFonts.poppins(
+            hintStyle:GoogleFonts.lato(
                 fontSize: 14,
                 color: Color(0xffA0A3BD),
                 fontWeight: FontWeight.w400,
@@ -875,7 +875,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
       children: <Widget>[
 //        Text(
 //          label,
-//          style: GoogleFonts.poppins(
+//          style: GoogleFonts.lato(
 //            fontSize: 16,
 //            color: Color(0xff3A4276),
 //            fontWeight: FontWeight.w700,
@@ -909,7 +909,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
             filled: true,
             fillColor: Color(0xffEFF0F6),
             hintText: label,
-            hintStyle:GoogleFonts.poppins(
+            hintStyle:GoogleFonts.lato(
                 fontSize: 14,
                 color: Color(0xffA0A3BD),
                 fontWeight: FontWeight.w400,
@@ -972,7 +972,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                     SizedBox(width: 4.0),
                     Text(
                       "   Upload group profile picture",
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.lato(
                         fontSize: 14,
                         color: Color(0xffA0A3BD),
                         fontWeight: FontWeight.w400,
@@ -1004,7 +1004,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
           filled: true,
           fillColor: Color(0xffEFF0F6),
           hintText: "Group Name",
-          hintStyle:GoogleFonts.poppins(
+          hintStyle:GoogleFonts.lato(
               fontSize: 14,
               color: Color(0xffA0A3BD),
               fontWeight: FontWeight.w400,

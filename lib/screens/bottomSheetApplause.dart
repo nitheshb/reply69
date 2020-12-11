@@ -11,9 +11,9 @@ import 'package:notification/controllers/firebaseController.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class MyTeamsBottomSheetClass extends StatefulWidget {
-  MyTeamsBottomSheetClass({Key key, this.chatId, this.trxtype}) : super(key: key);
+  MyTeamsBottomSheetClass({Key key, this.chatId, this.trxtype, this.chatOwnerId}) : super(key: key);
 
-  final String chatId, trxtype;
+  final String chatId, trxtype, chatOwnerId;
   @override
   _MyTeamsBottomSheetClassState createState() =>
       new _MyTeamsBottomSheetClassState();
@@ -141,7 +141,7 @@ class _MyTeamsBottomSheetClassState extends State<MyTeamsBottomSheetClass> {
     // Do something when payment succeeds
     try {
       FirebaseController.instanace
-          .updateWalletMoney(widget.chatId, payMoney, Trxtype);
+          .updateWalletMoney(widget.chatOwnerId, payMoney, Trxtype);
       Fluttertoast.showToast(msg: "Transaction Successful...Thank you");
       print('payment success');
     } catch (e) {
