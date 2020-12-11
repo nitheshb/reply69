@@ -334,9 +334,9 @@ class _ConversationState extends State<Conversation> {
     var options = {
       'key': 'rzp_live_edn0izaZh4NpX1',
       'amount': int.parse(payMoney + "00"),
-      'name': 'BID365',
-      'description': 'Just Do it...!',
-      'prefill': {'contact': '9849000525', 'email': "nithe.nithesh@gmail.com"},
+      'name': 'Chat11',
+      'description': 'prime Membership ${widget.groupTitle.toString().toUpperCase()}!',
+      // 'prefill': {'contact': '9000000000', 'email': "nithe.nithesh@gmail.com"},
       // 'prefill': { 'email': widget.emailId},
       'external': {
         'wallets': ['paytm']
