@@ -115,7 +115,7 @@ class _MyTeamsBottomSheetClassState extends State<MyTeamsBottomSheetClass> {
       'key': 'rzp_live_edn0izaZh4NpX1',
       'amount': int.parse(paymentController.text + "00"),
       'name': 'BID365',
-      'description': 'Just Do it...!',
+      'description': 'Just Do it1...!',
       'prefill': {'contact': '9849000525', 'email': "nithe.nithesh@gmail.com"},
       // 'prefill': { 'email': widget.emailId},
       'external': {
@@ -176,6 +176,7 @@ class _MyTeamsBottomSheetClassState extends State<MyTeamsBottomSheetClass> {
               //  textAlign: TextAlign.left,
               style: style3.copyWith(
                 fontSize: 15,
+                color: Color(0xFF5F2EEA)
               ),
             ),
             preferredSize: Size.fromHeight(0.0)),
@@ -205,17 +206,17 @@ class _MyTeamsBottomSheetClassState extends State<MyTeamsBottomSheetClass> {
                       bottom: 6,
                     ),
                   ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "Support by",
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.grey.withOpacity(0.6),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   child: Center(
+                  //     child: Text(
+                  //       "Support by",
+                  //       style: TextStyle(
+                  //         fontSize: 14.0,
+                  //         color: Color(0xFF5F2EEA).withOpacity(0.6),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Container(
                     padding: EdgeInsets.only(top: 16, left: 16),
                     child: Text(
@@ -380,47 +381,61 @@ class _MyTeamsBottomSheetClassState extends State<MyTeamsBottomSheetClass> {
                   SizedBox(
                     height: 16,
                   ),
-                  Container(
-                    height: 60,
-                    padding: EdgeInsets.only(left: 50, right: 50, bottom: 20),
-                    child: Row(
-                      children: <Widget>[
-                        Flexible(
-                          child: Container(
-                            decoration: new BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: new BorderRadius.circular(4.0),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.black.withOpacity(0.5),
-                                    offset: Offset(0, 1),
-                                    blurRadius: 5.0),
-                              ],
-                            ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                borderRadius: new BorderRadius.circular(4.0),
-                                onTap: () async {
-                                  print(widget.chatId);
+
+
+                  InkWell(
+                              onTap: () {
+                                print(widget.chatId);
                                   openCheckout();
-                                },
-                                child: Center(
-                                  child: Text(
-                                    'Add cash'.toUpperCase(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.greenAccent,
-                                        fontSize: 12.0),
+                              },
+                              child: Center(
+                                child: Container(
+                                  height: 45.0,
+                                  width: 170.0,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Color(0xFF5F2EEA),
+                                          style: BorderStyle.solid,
+                                          width: 3.0),
+                                      borderRadius: BorderRadius.circular(40.0),
+                                      color: Color(0xFF5F2EEA)),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(46, 8.0, 20, 8),
+                                    child: Center(
+                                      child: Row(
+                                        children: [
+                                        
+                                          SizedBox(width: 6),
+                                          Text( 'Send'.toUpperCase(),
+                                              style: GoogleFonts.poppins(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xffF7F7FC),
+                                                  // letterSpacing: 0.75,
+                                                  fontSize: 16.0)),
+                                                    SizedBox(width: 4),
+                                          Center(
+                                              //             child: Image.asset(
+                                              //   'assets/win.png',
+                                              //   width: 30.0,
+                                              //   height: 70.0,
+                                              // )
+                                              child: Container(
+                                            width: 20.0,
+                                            height: 70.0,
+                                            child: Icon(
+                                              FontAwesomeIcons.heart,
+                                              color: Color(0xffF7F7FC),
+                                              size: 14,
+                                            ),
+                                          )),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                              )),
+            
                 ],
               ),
             )),
